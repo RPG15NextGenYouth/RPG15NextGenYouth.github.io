@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แอปประเมินทางจิตวิทยา</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .font-kanit {
+            font-family: 'Kanit', sans-serif;
+        }
+        .card {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .hidden-card {
+            opacity: 0;
+            transform: scale(0.95);
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+        }
+        .visible-card {
+            opacity: 1;
+            transform: scale(1);
+            position: static;
+            pointer-events: auto;
+        }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        /* Print styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #results, #results * {
+                visibility: visible;
+            }
+            #results {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
+            
+            <!-- Main Menu View -->
+            <div id="mainMenu" class="card visible-card">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 font-kanit">แอปประเมินทางจิตวิทยา</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">แอปพลิเคชันนี้ประกอบด้วยแบบประเมินมาตรฐาน 3 ชุด เพื่อคัดกรองภาวะทางจิตใจ พร้อมรับคำแนะนำส่วนบุคคลจาก AI</p>
+                </div>
+
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                    <p class="font-bold text-blue-800">นี่เป็นหนึ่งในโปรเจคประกวดในโครงการ</p>
+                    <p class="font-bold text-blue-800">“เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
+                    <p class="text-sm text-blue-700 mt-2">ประกวดโครงงาน เท่ได้ต้องไม่บูลลี่</p>
+                    <p class="text-sm text-blue-700">โดยโรงเรียนราชประชานุเคราะห์ 15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
+                </div>
+
+                <!-- AI Heart-Check Feature -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-gray-800 font-kanit">✨ AI ช่วยเช็คใจ</h3>
+                    <p class="text-sm text-gray-600 mb-3">ไม่แน่ใจว่าต้องทำแบบประเมินไหน? ลองเล่าความรู้สึกของคุณให้เราฟัง แล้ว AI จะช่วยแนะนำแบบประเมินที่เหมาะสมให้</p>
+                    <div id="aiCheckCard" class="p-4 border-2 border-dashed rounded-lg">
+                        <textarea id="aiCheckInput" class="w-full h-24 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="พิมพ์ความรู้สึกหรือเรื่องที่ไม่สบายใจของคุณที่นี่..."></textarea>
+                        <button id="aiCheckBtn" onclick="getAiCheck()" class="mt-3 w-full bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors duration-300">ให้ AI ช่วยวิเคราะห์</button>
+                        <div id="aiCheckResult" class="hidden mt-3 p-3 bg-indigo-50 rounded-lg"></div>
+                    </div>
+                </div>
+
+
+                <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4 font-kanit">หรือเลือกแบบประเมินที่ต้องการทำ</h3>
+                <div class="space-y-4">
+                    <!-- ST-20 Card -->
+                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-blue-600 text-lg">20</p><p class="text-xs">คำถาม</p>
+                            </div>
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-blue-600 text-lg">0-60</p><p class="text-xs">คะแนน</p>
+                            </div>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (20 ข้อ)</h4>
+                            <p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 5-7 นาที</p>
+                        </div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
+                            <button onclick="startAssessment('st20')" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button>
+                        </div>
+                    </div>
+                    <!-- 8Q Card -->
+                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-red-600 text-lg">9</p><p class="text-xs">คำถาม</p>
+                            </div>
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-red-600 text-sm">ใช่/ไม่ใช่</p><p class="text-xs">คำตอบ</p>
+                            </div>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="font-bold text-lg font-kanit">8Q แบบประเมินการฆ่าตัวตาย</h4>
+                            <p class="text-sm text-gray-600">ประเมินความคิดฆ่าตัวตาย แผนการ และประวัติการพยายาม ใช้เวลาประมาณ 3-4 นาที</p>
+                        </div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
+                            <button onclick="startAssessment('q8')" class="w-full sm:w-auto bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-colors duration-300">เริ่มทำ</button>
+                        </div>
+                    </div>
+                    <!-- PHQ-A Card -->
+                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                         <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-green-600 text-lg">9</p><p class="text-xs">คำถาม</p>
+                            </div>
+                            <div class="p-2 bg-gray-100 rounded">
+                                <p class="font-bold text-green-600 text-lg">0-27</p><p class="text-xs">คะแนน</p>
+                            </div>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="font-bold text-lg font-kanit">PHQ-A แบบประเมินซึมเศร้า</h4>
+                            <p class="text-sm text-gray-600">คัดกรองอาการซึมเศร้าในวัยรุ่นในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 3-4 นาที</p>
+                        </div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
+                            <button onclick="startAssessment('phqa')" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-300">เริ่มทำ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment View -->
+            <div id="assessmentView" class="card hidden-card">
+                <button onclick="goBackToMenu()" class="absolute top-0 right-0 mt-4 mr-4 text-gray-400 hover:text-gray-600 no-print z-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                <div id="header-section">
+                    <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-blue-600 mb-2 font-kanit"></h1>
+                    <p id="assessmentDescription" class="text-center text-gray-600 mb-6"></p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-8 overflow-hidden">
+                        <div id="progressBar" class="bg-blue-500 h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <form id="assessmentForm">
+                    <div id="questionsContainer"></div>
+                    <div class="flex justify-between items-center mt-8">
+                        <button type="button" id="prevBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">ย้อนกลับ</button>
+                        <div id="stepCounter" class="text-sm text-gray-500"></div>
+                        <button type="button" id="nextBtn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">ถัดไป</button>
+                        <button type="submit" id="submitBtn" class="hidden bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">ส่งคำตอบ</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="card hidden-card text-center py-8">
+                <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="mt-4 text-gray-600">กำลังประมวลผล...</p>
+            </div>
+
+            <!-- Results View -->
+            <div id="results" class="card hidden-card">
+                 <!-- Result content will be injected here -->
+            </div>
+        </div>
+        <footer class="text-center text-sm text-gray-500 mt-6">
+            จัดทำโดย RPG15 Next Gen Youth
+        </footer>
+    </div>
+
+    <script>
+    // --- CONFIGURATION ---
+    const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8"; // Gemini API Key
+
+    // --- DOM ELEMENTS ---
+    const mainMenu = document.getElementById('mainMenu');
+    const assessmentView = document.getElementById('assessmentView');
+    const loading = document.getElementById('loading');
+    const resultsDiv = document.getElementById('results');
+    const form = document.getElementById('assessmentForm');
+    const questionsContainer = document.getElementById('questionsContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressBar = document.getElementById('progressBar');
+    const stepCounter = document.getElementById('stepCounter');
+    const assessmentTitle = document.getElementById('assessmentTitle');
+    const assessmentDescription = document.getElementById('assessmentDescription');
+    const aiCheckInput = document.getElementById('aiCheckInput');
+    const aiCheckResult = document.getElementById('aiCheckResult');
+    const aiCheckBtn = document.getElementById('aiCheckBtn');
+
+    // --- STATE ---
+    let currentAssessmentId = null;
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+
+    // --- ASSESSMENT DATA ---
+    const assessments = {
+        'phqa': {
+            title: 'PHQ-A (ภาวะซึมเศร้าในวัยรุ่น)',
+            description: 'ในช่วง 2 สัปดาห์ที่ผ่านมา คุณมีอาการต่อไปนี้บ่อยแค่ไหน?',
+            questions: [
+                { id: 'phqa_1', text: "รู้สึกซึม เศร้า หงุดหงิด หรือสิ้นหวัง" },
+                { id: 'phqa_2', text: "เบื่อ ไม่ค่อยสนใจหรือไม่เพลิดเพลิน เวลาทำสิ่งต่างๆ" },
+                { id: 'phqa_3', text: "นอนหลับยาก รู้สึกง่วงทั้งวัน หรือนอนมากเกินไป" },
+                { id: 'phqa_4', text: "ไม่อยากอาหาร น้ำหนักลด หรือกินมากกว่าปกติ" },
+                { id: 'phqa_5', text: "รู้สึกเหนื่อยล้า หรือไม่ค่อยมีพลัง" },
+                { id: 'phqa_6', text: "รู้สึกแย่กับตัวเอง หรือรู้สึกว่าตัวเองล้มเหลว หรือทำให้ตัวเองหรือครอบครัวผิดหวัง" },
+                { id: 'phqa_7', text: "จดจ่อกับสิ่งต่างๆ ได้ยาก เช่น ทำการบ้าน อ่านหนังสือ หรือดูโทรทัศน์" },
+                { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือในทางตรงกันข้ามคือ กระสับกระส่ายหรือกระวนกระวาย จนต้องเคลื่อนไหวไปมามากกว่าปกติ" },
+                { id: 'phqa_9', text: "คิดว่าถ้าตายไปเสียจะดีกว่า หรือคิดจะทำร้ายตัวเองด้วยวิธีใดวิธีหนึ่ง" },
+                { id: 'phqa_s1', text: "ในช่วง 1 เดือนที่ผ่านมา ท่านเคยมีความคิดอยากทำร้ายตัวเองหรือไม่?", isSupplementary: true },
+                { id: 'phqa_s2', text: "ท่านเคยพยายามทำร้ายตนเองหรือไม่?", isSupplementary: true },
+            ],
+            options: [
+                { text: "ไม่มีเลย", value: 0 }, { text: "มีบางวัน (1-6 วัน)", value: 1 },
+                { text: "มีมากกว่า 7 วัน", value: 2 }, { text: "มีแทบทุกวัน", value: 3 }
+            ],
+            supplementaryOptions: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
+            interpret: (score, answers) => {
+                let level, advice, colorClass;
+                if (score <= 4) { level = "ไม่มีภาวะซึมเศร้า"; advice = "สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ"; colorClass = 'text-green-600'; }
+                else if (score <= 9) { level = "มีภาวะซึมเศร้าเล็กน้อย"; advice = "ควรหากิจกรรมที่ช่วยผ่อนคลายอารมณ์ หรือปรึกษาบุคคลใกล้ชิดที่ไว้ใจ"; colorClass = 'text-yellow-600'; }
+                else if (score <= 14) { level = "มีภาวะซึมเศร้าปานกลาง"; advice = "ควรปรึกษาผู้เชี่ยวชาญ เช่น จิตแพทย์ หรือนักจิตวิทยา เพื่อประเมินและรับการบำบัดรักษา"; colorClass = 'text-orange-600'; }
+                else if (score <= 19) { level = "มีภาวะซึมเศร้ามาก"; advice = "จำเป็นต้องปรึกษาแพทย์อย่างเร่งด่วน เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-600'; }
+                else { level = "มีภาวะซึมเศร้ารุนแรง"; advice = "เสี่ยงอันตรายสูง จำเป็นต้องพบแพทย์เพื่อรับการรักษาทันที"; colorClass = 'text-red-800'; }
+                return { level, advice, colorClass };
+            }
+        },
+        'q8': {
+            title: '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)',
+            description: 'กรุณาตอบคำถามเกี่ยวกับความคิดและความรู้สึกของคุณใน 1 เดือนที่ผ่านมา',
+            questions: [
+                { id: 'q8_1', text: "ในเดือนที่ผ่านมารวมทั้งวันนี้คิดอยากตายหรือคิดว่าตายไปจะดีกว่า", weight: 1 },
+                { id: 'q8_2', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้อยากทำร้ายตัวเองหรือทำให้ตัวเองบาดเจ็บ", weight: 2 },
+                { id: 'q8_3', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้คิดเกี่ยวกับการฆ่าตัวตาย", weight: 6 },
+                { id: 'q8_3_followup', text: "ท่านไม่สามารถควบคุมความอยากฆ่าตัวตายที่ท่านคิดอยู่นั้นได้ หรือบอกไม่ได้ว่าจะไม่ทำตามความคิดนั้น", weight: 8, dependsOn: { qId: 'q8_3', value: '1' } },
+                { id: 'q8_4', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้มีแผนการที่จะฆ่าตัวตาย", weight: 8 },
+                { id: 'q8_5', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้เตรียมการที่จะทำร้ายตัวเองหรือเตรียมการจะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ", weight: 9 },
+                { id: 'q8_6', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้ทำให้ตนเองบาดเจ็บแต่ไม่ตั้งใจที่ทำให้เสียชีวิต", weight: 4 },
+                { id: 'q8_7', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ ได้พยายามฆ่าตัวตายโดยคาดหวัง/ตั้งใจที่จะให้ตาย", weight: 10 },
+                { id: 'q8_8', text: "ตลอดชีวิตที่ผ่านมาท่านเคยพยายามฆ่าตัวตาย", weight: 4 }
+            ],
+            options: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
+            interpret: (score) => {
+                let level, advice, colorClass;
+                if (score === 0) { level = "ไม่มีแนวโน้มฆ่าตัวตายในปัจจุบัน"; advice = "ยังไม่พบความเสี่ยง แต่หากมีความคิดเหล่านี้เกิดขึ้น ควรปรึกษาผู้ใกล้ชิดหรือผู้เชี่ยวชาญทันที"; colorClass = 'text-green-600'; }
+                else if (score <= 8) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับน้อย"; advice = "ควรได้รับการดูแลทางด้านจิตใจ พูดคุยกับคนที่ไว้ใจ และเฝ้าระวังอาการอย่างใกล้ชิด"; colorClass = 'text-yellow-600'; }
+                else if (score <= 16) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับปานกลาง"; advice = "ควรพบผู้เชี่ยวชาญเพื่อช่วยเหลือแก้ไขปัญหา และให้ญาติดูแลอย่างใกล้ชิด ติดตามประเมินอาการทุกสัปดาห์"; colorClass = 'text-orange-600'; }
+                else { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับรุนแรง"; advice = "จำเป็นต้องได้รับการดูแลจากแพทย์ผู้เชี่ยวชาญอย่างเร่งด่วนที่สุด อาจจำเป็นต้องเข้ารับการรักษาในโรงพยาบาล"; colorClass = 'text-red-800'; }
+                return { level, advice, colorClass };
+            }
+        },
+        'st20': {
+            title: 'แบบประเมินความเครียด (20 ข้อ)',
+            description: 'ในเวลา 2 สัปดาห์ที่ผ่านมานี้ ท่านมีอาการ พฤติกรรมหรือความรู้สึกต่อไปนี้มากน้อยเพียงใด',
+            questions: [
+                { id: 'st20_1', text: "นอนไม่หลับหรือคิดมากหรือกังวลใจ" }, { id: 'st20_2', text: "รู้สึกหงุดหงิดรำคาญใจ" },
+                { id: 'st20_3', text: "ทำอะไรไม่ได้เลยเพราะประสาทตึงเครียด" }, { id: 'st20_4', text: "มีความวุ่นวายใจ" },
+                { id: 'st20_5', text: "ไม่อยากพบปะผู้คน" }, { id: 'st20_6', text: "ปวดหัวข้างเดียวหรือปวดขมับทั้งสองข้าง" },
+                { id: 'st20_7', text: "รู้สึกไม่มีความสุขหรือเศร้าหมอง" }, { id: 'st20_8', text: "รู้สึกหมดหวังในชีวิต" },
+                { id: 'st20_9', text: "รู้สึกว่าชีวิตตนเองไม่มีคุณค่า" }, { id: 'st20_10', text: "กระวนกระวายอยู่ตลอดเวลา" },
+                { id: 'st20_11', text: "รู้สึกว่าตนเองไม่มีสมาธิ" }, { id: 'st20_12', text: "รู้สึกเพลียไม่มีแรงจะทำอะไร" },
+                { id: 'st20_13', text: "รู้สึกเหนื่อยไม่อยากจะทำอะไร" }, { id: 'st20_14', text: "มีอาการหัวใจเต้นแรง" },
+                { id: 'st20_15', text: "เสียงสั่น ปากสั่น หรือมือสั่นเวลาไม่พอใจ" }, { id: 'st20_16', text: "รู้สึกกลัวผิดพลาด" },
+                { id: 'st20_17', text: "ปวดหรือเกร็งกล้ามเนื้อบริเวณท้ายทอย หลัง หรือไหล่" }, { id: 'st20_18', text: "ตื่นเต้นง่ายกับเหตุการณ์ที่ไม่คุ้นเคย" },
+                { id: 'st20_19', text: "มึนงงหรือเวียนศีรษะ" }, { id: 'st20_20', text: "ความสุขทางเพศลดลง หรือเบื่อหน่ายในการดูแลตนเองให้เป็นที่สนใจของเพศตรงข้าม" }
+            ],
+            options: [
+                { text: "ไม่เคยเลย", value: 0 }, { text: "เป็นครั้งคราว", value: 1 },
+                { text: "เป็นบ่อยๆ", value: 2 }, { text: "เป็นประจำ", value: 3 }
+            ],
+            interpret: (score) => {
+                let level, advice, colorClass;
+                if (score <= 5) { level = "เครียดต่ำกว่าปกติมาก"; advice = "อาจหมายถึงท่านเป็นคนเฉื่อยชา ขาดแรงจูงใจ หรืออาจพึงพอใจในชีวิตดีอยู่แล้ว"; colorClass = 'text-gray-600'; }
+                else if (score <= 17) { level = "เครียดในระดับปกติ"; advice = "ความเครียดระดับนี้เป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้"; colorClass = 'text-green-600'; }
+                else if (score <= 25) { level = "เครียดสูงกว่าปกติเล็กน้อย"; advice = "กำลังมีปัญหาบางอย่างและยังแก้ไม่ได้ ควรหากิจกรรมผ่อนคลาย เช่น ออกกำลังกาย พักผ่อน"; colorClass = 'text-yellow-600'; }
+                else if (score <= 29) { level = "เครียดสูงกว่าปกติปานกลาง"; advice = "อาจมีปัญหาที่รุนแรง ควรเร่งแก้ปัญหาและฝึกเทคนิคคลายเครียด เช่น การฝึกหายใจ ทำสมาธิ"; colorClass = 'text-orange-600'; }
+                else { level = "เครียดสูงมาก"; advice = "อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อขอคำปรึกษา"; colorClass = 'text-red-800'; }
+                return { level, advice, colorClass };
+            }
+        }
+    };
+    
+    // --- FUNCTIONS ---
+
+    function switchView(viewId) {
+        ['mainMenu', 'assessmentView', 'loading', 'results'].forEach(id => {
+            const el = document.getElementById(id);
+            if (id === viewId) {
+                el.classList.remove('hidden-card');
+                el.classList.add('visible-card');
+            } else {
+                el.classList.remove('visible-card');
+                el.classList.add('hidden-card');
+            }
+        });
+    }
+    
+    window.goBackToMenu = function() {
+        switchView('mainMenu');
+    }
+
+    window.startAssessment = function(assessmentId) {
+        currentAssessmentId = assessmentId;
+        questions = assessments[assessmentId].questions;
+        currentQuestionIndex = 0;
+        userAnswers = {};
+        assessmentTitle.textContent = assessments[assessmentId].title;
+        assessmentDescription.textContent = assessments[assessmentId].description;
+        switchView('assessmentView');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        while (currentQuestionIndex < questions.length) {
+            const qData = questions[currentQuestionIndex];
+            if (qData.dependsOn) {
+                const dependencyAnswer = userAnswers[qData.dependsOn.qId];
+                if (dependencyAnswer !== qData.dependsOn.value) {
+                    currentQuestionIndex++;
+                    continue; 
+                }
+            }
+            break; 
+        }
+
+        if (currentQuestionIndex >= questions.length) {
+            submitForm();
+            return;
+        }
+
+        questionsContainer.innerHTML = '';
+        const qData = questions[currentQuestionIndex];
+        
+        const visibleQuestions = questions.filter((q, index) => {
+            if (index > currentQuestionIndex) return false;
+            if (!q.dependsOn) return true;
+            return userAnswers[q.dependsOn.qId] === q.dependsOn.value;
+        });
+        const questionNumber = visibleQuestions.length;
+        const totalVisibleQuestions = questions.filter(q => !q.dependsOn || userAnswers[q.dependsOn.qId] === q.dependsOn.value).length;
+
+        const options = qData.isSupplementary ? assessments[currentAssessmentId].supplementaryOptions : assessments[currentAssessmentId].options;
+        let optionsHtml = options.map(opt => `
+            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-200 has-[:checked]:bg-blue-100 has-[:checked]:border-blue-400">
+                <input type="radio" name="${qData.id}" value="${opt.value}" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300" required ${userAnswers[qData.id] == opt.value ? 'checked' : ''}>
+                <span class="ml-4 text-gray-700">${opt.text}</span>
+            </label>
+        `).join('');
+
+        questionsContainer.innerHTML = `<p class="text-lg font-semibold text-gray-900">${questionNumber}. ${qData.text}</p><div class="space-y-3 mt-4">${optionsHtml}</div>`;
+
+        updateNavigation(questionNumber, totalVisibleQuestions);
+    }
+    
+    function updateNavigation(current, total) {
+        prevBtn.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+        const isLastQuestion = current === total;
+        nextBtn.classList.toggle('hidden', isLastQuestion);
+        submitBtn.classList.toggle('hidden', !isLastQuestion);
+        stepCounter.textContent = `คำถามที่ ${current} / ${total}`;
+        progressBar.style.width = `${(current / total) * 100}%`;
+    }
+
+    function handleNext() {
+        const qId = questions[currentQuestionIndex].id;
+        const selected = form.querySelector(`input[name="${qId}"]:checked`);
+        if (!selected) {
+            alert('กรุณาเลือกคำตอบ');
+            return;
+        }
+        userAnswers[qId] = selected.value;
+        currentQuestionIndex++;
+        renderQuestion();
+    }
+
+    function handlePrev() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            while (currentQuestionIndex > 0) {
+                const qData = questions[currentQuestionIndex];
+                if (qData.dependsOn) {
+                    const dependencyAnswer = userAnswers[qData.dependsOn.qId];
+                    if (dependencyAnswer !== qData.dependsOn.value) {
+                       currentQuestionIndex--;
+                       continue;
+                    }
+                }
+                break;
+            }
+            renderQuestion();
+        }
+    }
+
+    function calculateResults() {
+        let score = 0;
+        const assessment = assessments[currentAssessmentId];
+        assessment.questions.forEach(q => {
+            if (q.isSupplementary) return;
+            const answerVal = userAnswers[q.id];
+            if (answerVal === undefined) return;
+
+            if (currentAssessmentId === 'q8') {
+                if (q.id === 'q8_3_followup') {
+                     if (answerVal === '0') { score += q.weight; }
+                } else if (answerVal === '1') {
+                    score += q.weight;
+                }
+            } else {
+                score += parseInt(answerVal, 10);
+            }
+        });
+        return { score, answers: userAnswers };
+    }
+
+    async function getAiAdvice(score, level, assessmentId) {
+        const adviceContainer = document.getElementById('aiAdviceContainer');
+        const adviceContent = document.getElementById('aiAdviceContent');
+        const adviceLoading = document.getElementById('aiAdviceLoading');
+        const getAdviceBtn = document.getElementById('getAdviceBtn');
+
+        if (!adviceContainer || !adviceContent || !adviceLoading || !getAdviceBtn) return;
+        
+        getAdviceBtn.classList.add('hidden');
+        adviceContainer.classList.remove('hidden');
+        adviceLoading.classList.remove('hidden');
+        adviceContent.classList.add('hidden');
+
+        let prompt = "";
+        if (assessmentId === 'st20') {
+            prompt = `You are a helpful and compassionate mental health assistant. A user has completed a stress assessment. Their result is '${level}' with a score of ${score}. Based on this, please provide 3-4 practical, encouraging, and personalized tips for them to manage their stress. The advice should be simple, easy to follow, and presented in a supportive tone. Start with a warm and encouraging sentence. Format the tips as a bulleted list using markdown (*). Respond in Thai.`;
+        } else if (assessmentId === 'phqa') {
+            prompt = `You are a helpful and compassionate mental health assistant. A user has completed a depression screening (PHQ-A). Their result is '${level}' with a score of ${score}. Based on this, please provide 3-4 gentle, supportive, and actionable suggestions that could help them cope with these feelings. Emphasize that these are supportive suggestions and not a replacement for professional help. The advice should be simple, not overwhelming, and presented in a very caring tone. Start with a warm and empathetic sentence. Format the suggestions as a bulleted list using markdown (*). Respond in Thai.`;
+        }
+
+        let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+        const payload = { contents: chatHistory };
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+        
+        try {
+            let response;
+            let retries = 3;
+            let delay = 1000;
+            for (let i = 0; i < retries; i++) {
+                response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) break;
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+            }
+
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+
+            const result = await response.json();
+            const text = result.candidates[0].content.parts[0].text;
+            
+            const htmlText = text
+                .replace(/^\s*\*\s/gm, '<li>') 
+                .replace(/$/gm, '</li>')   
+                .replace(/\n/g, '');       
+            
+            adviceContent.innerHTML = `<ul>${htmlText}</ul>`;
+
+        } catch (error) {
+            console.error("Error fetching AI advice:", error);
+            adviceContent.innerHTML = '<p class="text-red-500">ขออภัยค่ะ ไม่สามารถเรียกข้อมูลคำแนะนำได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง</p>';
+        } finally {
+            adviceLoading.classList.add('hidden');
+            adviceContent.classList.remove('hidden');
+        }
+    }
+    
+    async function getAiCheck() {
+        const userInput = aiCheckInput.value;
+        if (!userInput.trim()) {
+            alert("กรุณาพิมพ์ข้อความก่อนให้ AI วิเคราะห์");
+            return;
+        }
+
+        aiCheckBtn.disabled = true;
+        aiCheckBtn.textContent = "กำลังวิเคราะห์...";
+        aiCheckResult.classList.remove('hidden');
+        aiCheckResult.innerHTML = `<div class="flex items-center justify-center"><svg class="animate-spin h-5 w-5 text-indigo-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังประมวลผล...</div>`;
+        
+        const prompt = `You are a friendly and empathetic AI assistant for a mental health app. A user has shared how they are feeling. Your task is to analyze their text, provide a gentle one-sentence summary of their main feeling, and then, based on the text, recommend ONE of the following assessments: 'PHQ-A (แบบประเมินซึมเศร้า)', 'แบบประเมินความเครียด (20 ข้อ)', or '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)'. If there are any mentions of self-harm, suicide, or wanting to die, you MUST recommend the '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)'. If the text is more about sadness, loss of interest, or hopelessness, recommend 'PHQ-A (แบบประเมินซึมเศร้า)'. If it's more about pressure, being overwhelmed, or physical symptoms like headaches, recommend 'แบบประเมินความเครียด (20 ข้อ)'. If it's unclear, gently state that and list all three. Present the output clearly in Thai. The output should be just the summary and the recommendation. User's text: "${userInput}"`;
+
+        let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+        const payload = { contents: chatHistory };
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error('API request failed');
+            
+            const result = await response.json();
+            const text = result.candidates[0].content.parts[0].text;
+
+            let recommendedId = null;
+            if (text.includes("8Q")) {
+                recommendedId = 'q8';
+            } else if (text.includes("PHQ-A")) {
+                recommendedId = 'phqa';
+            } else if (text.includes("ความเครียด")) {
+                recommendedId = 'st20';
+            }
+
+            let resultHtml = `<p class="text-indigo-800">${text}</p>`;
+            if (recommendedId) {
+                resultHtml += `<button onclick="startAssessment('${recommendedId}')" class="mt-2 w-full bg-indigo-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-indigo-600 text-sm">เริ่มทำแบบประเมินนี้</button>`;
+            }
+            aiCheckResult.innerHTML = resultHtml;
+
+        } catch (error) {
+            console.error("Error with AI Check:", error);
+            aiCheckResult.innerHTML = `<p class="text-red-500">ขออภัยค่ะ เกิดข้อผิดพลาดในการวิเคราะห์</p>`;
+        } finally {
+            aiCheckBtn.disabled = false;
+            aiCheckBtn.textContent = "ให้ AI ช่วยวิเคราะห์";
+        }
+    }
+
+
+    function displayResults(resultData) {
+        const { score, answers } = resultData;
+        const assessment = assessments[currentAssessmentId];
+        const interpretation = assessment.interpret(score, answers);
+        let resultsHtml = `<h2 class="text-3xl font-bold text-center text-blue-800 mb-6 font-kanit">ผลการประเมิน: ${assessment.title}</h2>`;
+
+        resultsHtml += `
+            <div class="border-2 rounded-xl p-6 mb-6 shadow-md bg-white">
+                <p class="text-lg mt-2">คะแนนรวม: <span class="font-bold">${score}</span></p>
+                <p class="text-lg mt-1">ระดับ: <span class="font-bold ${interpretation.colorClass}">${interpretation.level}</span></p>
+                <div class="mt-4 pt-4 border-t">
+                    <h4 class="font-semibold text-gray-700 font-kanit">คำแนะนำ:</h4>
+                    <p class="text-gray-600">${interpretation.advice}</p>
+                </div>
+            </div>`;
+
+        if (currentAssessmentId === 'st20' || currentAssessmentId === 'phqa') {
+            resultsHtml += `
+            <div class="mt-6 no-print">
+                <div id="aiAdviceContainer" class="hidden p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 class="font-bold font-kanit text-purple-800">✨ คำแนะนำเพิ่มเติมจาก AI</h4>
+                    <div id="aiAdviceLoading" class="mt-2 text-center hidden">
+                        <svg class="animate-spin h-6 w-6 text-purple-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <p class="text-sm text-purple-700">กำลังสร้างคำแนะนำสำหรับคุณ...</p>
+                    </div>
+                    <div id="aiAdviceContent" class="mt-2 text-purple-900 text-sm prose prose-li:my-1"></div>
+                </div>
+                <div class="text-center mt-4">
+                    <button id="getAdviceBtn" onclick="getAiAdvice(${score}, '${interpretation.level}', '${currentAssessmentId}')" class="bg-purple-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-700 transition-colors duration-300">
+                        ✨ ขอคำแนะนำเพิ่มเติมจาก AI
+                    </button>
+                </div>
+            </div>`;
+        }
+        
+        let recommendationHtml = '';
+        if (currentAssessmentId === 'phqa' && answers['phqa_9'] > 0) {
+            recommendationHtml = `<div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700 no-print">
+                <p>เนื่องจากคุณมีความคิดเกี่ยวกับการทำร้ายตนเอง เราขอแนะนำให้ทำ <button onclick="startAssessment('q8')" class="font-bold underline">แบบประเมิน 8Q</button> เพื่อประเมินความเสี่ยงเพิ่มเติม</p>
+            </div>`;
+        }
+        if (currentAssessmentId === 'st20' && (answers['st20_8'] >= 2 || answers['st20_9'] >= 2)) {
+             recommendationHtml = `<div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700 no-print">
+                <p>เนื่องจากคุณมีความรู้สึกหมดหวังหรือไร้ค่า เราขอแนะนำให้ทำ <button onclick="startAssessment('phqa')" class="font-bold underline">แบบประเมิน PHQ-A</button> และ <button onclick="startAssessment('q8')" class="font-bold underline">8Q</button> เพิ่มเติม</p>
+            </div>`;
+        }
+        resultsHtml += recommendationHtml;
+
+        // NEW: Mental Health Support Contact Section
+        resultsHtml += `
+            <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 no-print">
+                <p class="font-bold font-kanit">หากต้องการปรึกษาปัญหาสุขภาพจิต</p>
+                <p class="mt-2">
+                    โทร <a href="tel:1323" class="underline font-semibold">1323</a> (ตลอด 24 ชั่วโมง)
+                </p>
+                <p class="mt-1">
+                    หรือ แชทเพจเฟสบุ๊ค <a href="https://www.facebook.com/share/1EPdhJGFNb/" target="_blank" rel="noopener noreferrer" class="underline font-semibold">1323 ปรึกษาปัญหาสุขภาพจิต</a>
+                </p>
+            </div>
+        `;
+
+        resultsHtml += `
+            <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+                <p class="font-bold">⚠️หมายเหตุ: ผลการประเมินนี้เป็นเพียงการคัดกรองเบื้องต้น ไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์ได้</p>
+            </div>
+            <div class="text-center mt-8 flex flex-wrap justify-center gap-4 no-print">
+                <button onclick="goBackToMenu()" class="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600">กลับสู่เมนูหลัก</button>
+                <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700">พิมพ์/บันทึกผล</button>
+                <a href="https://forms.gle/E33xuCHJh6k7w6UD6" target="_blank" rel="noopener noreferrer" class="bg-teal-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-600">
+                    ทำแบบสำรวจการใช้งาน
+                </a>
+            </div>
+        `;
+        resultsDiv.innerHTML = resultsHtml;
+        switchView('results');
+    }
+    
+    async function submitForm(e) {
+        if(e) e.preventDefault();
+
+        const qId = questions[currentQuestionIndex].id;
+        const selected = form.querySelector(`input[name="${qId}"]:checked`);
+        if (!selected) {
+            alert('กรุณาเลือกคำตอบสำหรับคำถามสุดท้าย');
+            return;
+        }
+        userAnswers[qId] = selected.value;
+
+        switchView('loading');
+
+        const resultData = calculateResults();
+        
+        // This part is now disabled as SCRIPT_URL is empty
+        const SCRIPT_URL = '';
+        if (SCRIPT_URL) {
+            const formData = new FormData();
+            formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
+            formData.append('assessment_id', currentAssessmentId);
+            formData.append('score', resultData.score);
+            const interpretation = assessments[currentAssessmentId].interpret(resultData.score, resultData.answers);
+            formData.append('interpretation_level', interpretation.level);
+
+            for (const [key, value] of Obj
