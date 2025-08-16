@@ -654,4 +654,26 @@
             const interpretation = assessments[currentAssessmentId].interpret(resultData.score, resultData.answers);
             formData.append('interpretation_level', interpretation.level);
 
-            for (const [key, value] of Obj
+            for (const [key, value] of Object.entries(resultData.answers)) {
+                formData.append(key, value);
+            }
+            
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+            } catch (error) {
+                console.error('Error saving data to Google Sheet:', error);
+            }
+        }
+
+        setTimeout(() => displayResults(resultData), 500);
+    }
+
+    // --- EVENT LISTENERS ---
+    nextBtn.addEventListener('click', handleNext);
+    prevBtn.addEventListener('click', handlePrev);
+    form.addEventListener('submit', submitForm);
+
+    </script>
+</body>
+</html>
+
