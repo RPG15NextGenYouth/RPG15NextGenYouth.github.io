@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แอปประเมินทางจิตวิทยา</title>
+    <title>เวียงพักพิงค์ใจ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,10 +36,43 @@
         .progress-bar-fill {
             transition: width 0.5s ease-in-out;
         }
+        .tab-active {
+            border-bottom-color: #3b82f6; /* blue-500 */
+            color: #1e40af; /* blue-800 */
+            font-weight: 700;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #6b7280; /* gray-500 */
+        }
+        /* Chat bubbles */
+        .chat-bubble-user {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        }
+        .chat-bubble-ai {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #1f2937; /* gray-800 */
+            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        }
+        #cookie-consent-banner {
+            transition: opacity 0.5s ease-in-out;
+        }
         /* Print styles */
         @media print {
             body * {
                 visibility: hidden;
+            }
+            #printable-chat, #printable-chat * {
+                visibility: visible;
+            }
+            #printable-chat {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 1rem;
             }
             #results, #results * {
                 visibility: visible;
@@ -59,141 +92,236 @@
 <body class="bg-gray-50 text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
-        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
-            
-            <!-- Main Menu View -->
-            <div id="mainMenu" class="card visible-card">
-                <div class="text-center">
-                    <h2 class="text-3xl font-bold text-gray-800 font-kanit">แอปประเมินทางจิตวิทยา</h2>
-                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">แอปพลิเคชันนี้ประกอบด้วยแบบประเมินมาตรฐาน 3 ชุด เพื่อคัดกรองภาวะทางจิตใจ พร้อมรับคำแนะนำส่วนบุคคลจาก AI</p>
-                </div>
-
-                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                    <p class="font-bold text-blue-800">นี่เป็นหนึ่งในโปรเจคประกวดในโครงการ</p>
-                    <p class="font-bold text-blue-800">“เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
-                    <p class="text-sm text-blue-700 mt-2">ประกวดโครงงาน เท่ได้ต้องไม่บูลลี่</p>
-                    <p class="text-sm text-blue-700">โดยโรงเรียนราชประชานุเคราะห์ 15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
-                </div>
-
-                <!-- AI Heart-Check Feature -->
-                <div class="mt-8">
-                    <h3 class="text-xl font-bold text-gray-800 font-kanit">✨ AI ช่วยเช็คใจ</h3>
-                    <p class="text-sm text-gray-600 mb-3">ไม่แน่ใจว่าต้องทำแบบประเมินไหน? ลองเล่าความรู้สึกของคุณให้เราฟัง แล้ว AI จะช่วยแนะนำแบบประเมินที่เหมาะสมให้</p>
-                    <div id="aiCheckCard" class="p-4 border-2 border-dashed rounded-lg">
-                        <textarea id="aiCheckInput" class="w-full h-24 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="พิมพ์ความรู้สึกหรือเรื่องที่ไม่สบายใจของคุณที่นี่..."></textarea>
-                        <button id="aiCheckBtn" onclick="getAiCheck()" class="mt-3 w-full bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors duration-300">ให้ AI ช่วยวิเคราะห์</button>
-                        <div id="aiCheckResult" class="hidden mt-3 p-3 bg-indigo-50 rounded-lg"></div>
-                    </div>
-                </div>
-
-
-                <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4 font-kanit">หรือเลือกแบบประเมินที่ต้องการทำ</h3>
-                <div class="space-y-4">
-                    <!-- ST-20 Card -->
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-blue-600 text-lg">20</p><p class="text-xs">คำถาม</p>
-                            </div>
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-blue-600 text-lg">0-60</p><p class="text-xs">คะแนน</p>
-                            </div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (20 ข้อ)</h4>
-                            <p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 5-7 นาที</p>
-                        </div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
-                            <button onclick="startAssessment('st20')" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button>
-                        </div>
-                    </div>
-                    <!-- 8Q Card -->
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-red-600 text-lg">9</p><p class="text-xs">คำถาม</p>
-                            </div>
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-red-600 text-sm">ใช่/ไม่ใช่</p><p class="text-xs">คำตอบ</p>
-                            </div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="font-bold text-lg font-kanit">8Q แบบประเมินการฆ่าตัวตาย</h4>
-                            <p class="text-sm text-gray-600">ประเมินความคิดฆ่าตัวตาย แผนการ และประวัติการพยายาม ใช้เวลาประมาณ 3-4 นาที</p>
-                        </div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
-                            <button onclick="startAssessment('q8')" class="w-full sm:w-auto bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-colors duration-300">เริ่มทำ</button>
-                        </div>
-                    </div>
-                    <!-- PHQ-A Card -->
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                         <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-green-600 text-lg">9</p><p class="text-xs">คำถาม</p>
-                            </div>
-                            <div class="p-2 bg-gray-100 rounded">
-                                <p class="font-bold text-green-600 text-lg">0-27</p><p class="text-xs">คะแนน</p>
-                            </div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="font-bold text-lg font-kanit">PHQ-A แบบประเมินซึมเศร้า</h4>
-                            <p class="text-sm text-gray-600">คัดกรองอาการซึมเศร้าในวัยรุ่นในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 3-4 นาที</p>
-                        </div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4">
-                            <button onclick="startAssessment('phqa')" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-300">เริ่มทำ</button>
-                        </div>
-                    </div>
-                </div>
+        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-0 sm:p-0 relative min-h-[600px] overflow-hidden">
+            <!-- Tabs -->
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button id="tab-chat" class="flex-1 py-4 px-1 text-center border-b-2 text-sm sm:text-base font-medium transition-colors duration-300 tab-active font-kanit" onclick="switchTab('chat')">
+                        คุยกับพี่สิงห์
+                    </button>
+                    <button id="tab-assessment" class="flex-1 py-4 px-1 text-center border-b-2 text-sm sm:text-base font-medium transition-colors duration-300 tab-inactive font-kanit" onclick="switchTab('assessment')">
+                        แบบประเมิน
+                    </button>
+                    <button id="tab-ethics" class="flex-1 py-4 px-1 text-center border-b-2 text-sm sm:text-base font-medium transition-colors duration-300 tab-inactive font-kanit" onclick="switchTab('ethics')">
+                        หลักการของเรา
+                    </button>
+                </nav>
             </div>
 
-            <!-- Assessment View -->
-            <div id="assessmentView" class="card hidden-card">
-                <button onclick="goBackToMenu()" class="absolute top-0 right-0 mt-4 mr-4 text-gray-400 hover:text-gray-600 no-print z-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-                <div id="header-section">
-                    <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-blue-600 mb-2 font-kanit"></h1>
-                    <p id="assessmentDescription" class="text-center text-gray-600 mb-6"></p>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-8 overflow-hidden">
-                        <div id="progressBar" class="bg-blue-500 h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+            <div class="p-6 sm:p-8">
+                <!-- Main Menu View -->
+                <div id="mainMenu" class="card hidden-card">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-gray-800 font-kanit">เวียงพักพิงค์ใจ</h2>
+                        <p class="mt-2 text-gray-600 max-w-2xl mx-auto">แอปพลิเคชันนี้ประกอบด้วยแบบประเมินมาตรฐาน 3 ชุด เพื่อคัดกรองภาวะทางจิตใจ พร้อมพื้นที่ปลอดภัยสำหรับพูดคุย</p>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                        <p class="font-bold text-blue-800">นี่เป็นหนึ่งในโปรเจคประกวดในโครงการ</p>
+                        <p class="font-bold text-blue-800">“เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
+                        <p class="text-sm text-blue-700 mt-2">ประกวดโครงงาน เท่ได้ต้องไม่บูลลี่</p>
+                        <p class="text-sm text-blue-700">โดยโรงเรียนราชประชานุเคราะห์ 15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4 font-kanit">เลือกแบบประเมินที่ต้องการทำ</h3>
+                    <div class="space-y-4">
+                        <!-- Assessment Cards -->
+                        <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                            <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">20</p><p class="text-xs">คำถาม</p></div>
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">0-60</p><p class="text-xs">คะแนน</p></div>
+                            </div>
+                            <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (20 ข้อ)</h4><p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 5-7 นาที</p></div>
+                            <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button onclick="startAssessment('st20')" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                            <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-lg">9</p><p class="text-xs">คำถาม</p></div>
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-sm">ใช่/ไม่ใช่</p><p class="text-xs">คำตอบ</p></div>
+                            </div>
+                            <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">8Q แบบประเมินการฆ่าตัวตาย</h4><p class="text-sm text-gray-600">ประเมินความคิดฆ่าตัวตาย แผนการ และประวัติการพยายาม ใช้เวลาประมาณ 3-4 นาที</p></div>
+                            <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button onclick="startAssessment('q8')" class="w-full sm:w-auto bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-colors duration-300">เริ่มทำ</button></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
+                             <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-green-600 text-lg">9</p><p class="text-xs">คำถาม</p></div>
+                                <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-green-600 text-lg">0-27</p><p class="text-xs">คะแนน</p></div>
+                            </div>
+                            <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">PHQ-A แบบประเมินซึมเศร้า</h4><p class="text-sm text-gray-600">คัดกรองอาการซึมเศร้าในวัยรุ่นในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 3-4 นาที</p></div>
+                            <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button onclick="startAssessment('phqa')" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-300">เริ่มทำ</button></div>
+                        </div>
                     </div>
                 </div>
-                <form id="assessmentForm">
-                    <div id="questionsContainer"></div>
-                    <div class="flex justify-between items-center mt-8">
-                        <button type="button" id="prevBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">ย้อนกลับ</button>
-                        <div id="stepCounter" class="text-sm text-gray-500"></div>
-                        <button type="button" id="nextBtn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">ถัดไป</button>
-                        <button type="submit" id="submitBtn" class="hidden bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">ส่งคำตอบ</button>
+
+                <!-- Chat View -->
+                <div id="chatView" class="card visible-card flex flex-col h-[70vh]">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="text-xl font-bold text-gray-800 font-kanit">คุยกับพี่สิงห์</h3>
+                        <button id="print-chat-btn" onclick="prepareChatForPrint()" class="hidden no-print p-2 text-gray-500 hover:text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                        </button>
                     </div>
-                </form>
-            </div>
+                    <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4">
+                        <!-- Chat messages will be appended here -->
+                    </div>
+                    <div class="p-4 border-t flex items-center">
+                        <input type="text" id="chat-input" class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
+                        <button id="chat-send-btn" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                        </button>
+                    </div>
+                </div>
 
-            <!-- Loading Spinner -->
-            <div id="loading" class="card hidden-card text-center py-8">
-                <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <p class="mt-4 text-gray-600">กำลังประมวลผล...</p>
-            </div>
+                <!-- Ethics View -->
+                <div id="ethicsView" class="card hidden-card max-h-[70vh] overflow-y-auto">
+                    <h2 class="text-2xl font-bold text-gray-800 font-kanit text-center">หลักการและกรอบจรรยาบรรณ</h2>
+                    <p class="mt-2 text-gray-600 text-center max-w-2xl mx-auto">การจัดทำระบบคัดกรองสุขภาพจิตเบื้องต้นนี้ เป็นไปตามกฎหมายและมาตรฐานจรรยาบรรณไทย โดยยึดถือหลักการสำคัญดังนี้</p>
+                    
+                    <div class="mt-6 space-y-4 text-sm">
+                        <div>
+                            <h3 class="text-lg font-bold font-kanit text-blue-700">กฎหมายและมาตรฐานจรรยาบรรณหลัก</h3>
+                            <div class="mt-2 pl-4 border-l-4 border-blue-200">
+                                <h4 class="font-semibold">1. พระราชบัญญัติสุขภาพจิต พ.ศ. 2551 (และฉบับแก้ไขเพิ่มเติม)</h4>
+                                <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                    <li>ผู้ป่วยมีสิทธิได้รับการปกปิดข้อมูลเกี่ยวกับการเจ็บป่วยเป็นความลับ</li>
+                                    <li>ห้ามเปิดเผยข้อมูลที่น่าจะทำให้เกิดความเสียหายแก่ผู้ป่วยและครอบครัว</li>
+                                </ul>
+                                <h4 class="font-semibold mt-2">2. จรรยาบรรณสำหรับนักจิตวิทยา</h4>
+                                <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                    <li>ยึดถือประโยชน์สุขของผู้รับบริการและไม่ทำให้เกิดอันตราย</li>
+                                    <li>รักษาความลับ, ให้ข้อมูลที่ถูกต้อง, และมีความรับผิดชอบ</li>
+                                    <li>เคารพสิทธิและศักดิ์ศรีของบุคคล</li>
+                                </ul>
+                                <h4 class="font-semibold mt-2">3. พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562</h4>
+                                <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                    <li>ข้อมูลสุขภาพถือเป็น "ข้อมูลส่วนบุคคลอ่อนไหว" ซึ่งต้องมีการขอความยินยอมอย่างชัดแจ้งก่อนการเก็บและประมวลผล</li>
+                                    <li>ผู้ใช้มีสิทธิในการเข้าถึง, แก้ไข, และลบข้อมูลของตนเอง</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <!-- Results View -->
-            <div id="results" class="card hidden-card">
-                 <!-- Result content will be injected here -->
+                        <div>
+                            <h3 class="text-lg font-bold font-kanit text-green-700">แนวปฏิบัติสำหรับการคัดกรอง</h3>
+                             <div class="mt-2 pl-4 border-l-4 border-green-200">
+                                <h4 class="font-semibold">ด้านเครื่องมือและระบบ</h4>
+                                <p class="text-gray-700">ใช้เครื่องมือที่แนะนำโดยกรมสุขภาพจิต เช่น Mental Health Check In (MHCI), 2Q, 9Q และมีนโยบายความเป็นส่วนตัวที่ชัดเจน</p>
+                                <h4 class="font-semibold mt-2">ด้านการให้คำแนะนำและการส่งต่อ</h4>
+                                <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                    <li>ให้คำแนะนำเบื้องต้นโดยไม่วินิจฉัยโรคโดยตรง</li>
+                                    <li>มีเกณฑ์การส่งต่อที่ชัดเจนเมื่อพบความเสี่ยงสูง ไปยังหน่วยงานที่เหมาะสม เช่น โรงพยาบาลจิตเวช หรือสายด่วนสุขภาพจิต 1323</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Assessment View -->
+                <div id="assessmentView" class="card hidden-card">
+                    <button onclick="goBackToMenu()" class="absolute top-0 right-0 mt-4 mr-4 text-gray-400 hover:text-gray-600 no-print z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                    <div id="header-section">
+                        <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-blue-600 mb-2 font-kanit"></h1>
+                        <p id="assessmentDescription" class="text-center text-gray-600 mb-6"></p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mb-8 overflow-hidden">
+                            <div id="progressBar" class="bg-blue-500 h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <form id="assessmentForm">
+                        <div id="questionsContainer"></div>
+                        <div class="flex justify-between items-center mt-8">
+                            <button type="button" id="prevBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">ย้อนกลับ</button>
+                            <div id="stepCounter" class="text-sm text-gray-500"></div>
+                            <button type="button" id="nextBtn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">ถัดไป</button>
+                            <button type="submit" id="submitBtn" class="hidden bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">ส่งคำตอบ</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loading" class="card hidden-card text-center py-8">
+                    <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-4 text-gray-600">กำลังประมวลผล...</p>
+                </div>
+
+                <!-- Results View -->
+                <div id="results" class="card hidden-card">
+                     <!-- Result content will be injected here -->
+                </div>
             </div>
         </div>
         <footer class="text-center text-sm text-gray-500 mt-6">
-            จัดทำโดย RPG15 Next Gen Youth
+            <button onclick="showEthicsModal()" class="underline hover:text-blue-600">หลักการและกรอบจรรยาบรรณของเรา</button> | จัดทำโดย RPG15 Next Gen Youth
         </footer>
+    </div>
+    
+    <!-- Ethics Modal -->
+    <div id="ethicsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800 font-kanit">หลักการและกรอบจรรยาบรรณ</h2>
+                <button onclick="hideEthicsModal()" class="text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <p class="text-gray-600 text-center max-w-2xl mx-auto">การจัดทำระบบคัดกรองสุขภาพจิตเบื้องต้นนี้ เป็นไปตามกฎหมายและมาตรฐานจรรยาบรรณไทย โดยยึดถือหลักการสำคัญดังนี้</p>
+                <div class="mt-6 space-y-4 text-sm">
+                    <div>
+                        <h3 class="text-lg font-bold font-kanit text-blue-700">กฎหมายและมาตรฐานจรรยาบรรณหลัก</h3>
+                        <div class="mt-2 pl-4 border-l-4 border-blue-200">
+                            <h4 class="font-semibold">1. พระราชบัญญัติสุขภาพจิต พ.ศ. 2551 (และฉบับแก้ไขเพิ่มเติม)</h4>
+                            <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                <li>ผู้ป่วยมีสิทธิได้รับการปกปิดข้อมูลเกี่ยวกับการเจ็บป่วยเป็นความลับ</li>
+                                <li>ห้ามเปิดเผยข้อมูลที่น่าจะทำให้เกิดความเสียหายแก่ผู้ป่วยและครอบครัว</li>
+                            </ul>
+                            <h4 class="font-semibold mt-2">2. จรรยาบรรณสำหรับนักจิตวิทยา</h4>
+                            <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                <li>ยึดถือประโยชน์สุขของผู้รับบริการและไม่ทำให้เกิดอันตราย</li>
+                                <li>รักษาความลับ, ให้ข้อมูลที่ถูกต้อง, และมีความรับผิดชอบ</li>
+                                <li>เคารพสิทธิและศักดิ์ศรีของบุคคล</li>
+                            </ul>
+                            <h4 class="font-semibold mt-2">3. พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562</h4>
+                            <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                <li>ข้อมูลสุขภาพถือเป็น "ข้อมูลส่วนบุคคลอ่อนไหว" ซึ่งต้องมีการขอความยินยอมอย่างชัดแจ้งก่อนการเก็บและประมวลผล</li>
+                                <li>ผู้ใช้มีสิทธิในการเข้าถึง, แก้ไข, และลบข้อมูลของตนเอง</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold font-kanit text-green-700">แนวปฏิบัติสำหรับการคัดกรอง</h3>
+                         <div class="mt-2 pl-4 border-l-4 border-green-200">
+                            <h4 class="font-semibold">ด้านเครื่องมือและระบบ</h4>
+                            <p class="text-gray-700">ใช้เครื่องมือที่แนะนำโดยกรมสุขภาพจิต เช่น Mental Health Check In (MHCI), 2Q, 9Q และมีนโยบายความเป็นส่วนตัวที่ชัดเจน</p>
+                            <h4 class="font-semibold mt-2">ด้านการให้คำแนะนำและการส่งต่อ</h4>
+                            <ul class="list-disc pl-5 mt-1 text-gray-700">
+                                <li>ให้คำแนะนำเบื้องต้นโดยไม่วินิจฉัยโรคโดยตรง</li>
+                                <li>มีเกณฑ์การส่งต่อที่ชัดเจนเมื่อพบความเสี่ยงสูง ไปยังหน่วยงานที่เหมาะสม เช่น โรงพยาบาลจิตเวช หรือสายด่วนสุขภาพจิต 1323</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" class="fixed bottom-4 left-4 w-full max-w-sm p-4 bg-white border rounded-lg shadow-lg hidden z-50">
+        <p class="text-sm text-gray-700">เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณให้ดีที่สุด การใช้งานเว็บไซต์นี้ต่อไปถือว่าคุณยอมรับการใช้คุกกี้ของเรา</p>
+        <button id="accept-cookies-btn" class="mt-3 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">ยอมรับ</button>
     </div>
 
     <script>
     // --- CONFIGURATION ---
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfdIFywfaDGgTljKEXFJjbS83SLAhx_2brWWuaWAOg597TRY2_Awi9WMO9o0jd3eNnjA/exec';
     const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8"; // Gemini API Key
 
     // --- DOM ELEMENTS ---
     const mainMenu = document.getElementById('mainMenu');
+    const chatView = document.getElementById('chatView');
+    const ethicsView = document.getElementById('ethicsView');
     const assessmentView = document.getElementById('assessmentView');
     const loading = document.getElementById('loading');
     const resultsDiv = document.getElementById('results');
@@ -206,15 +334,22 @@
     const stepCounter = document.getElementById('stepCounter');
     const assessmentTitle = document.getElementById('assessmentTitle');
     const assessmentDescription = document.getElementById('assessmentDescription');
-    const aiCheckInput = document.getElementById('aiCheckInput');
-    const aiCheckResult = document.getElementById('aiCheckResult');
-    const aiCheckBtn = document.getElementById('aiCheckBtn');
+    const tabAssessment = document.getElementById('tab-assessment');
+    const tabChat = document.getElementById('tab-chat');
+    const tabEthics = document.getElementById('tab-ethics');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const chatSendBtn = document.getElementById('chat-send-btn');
+    const ethicsModal = document.getElementById('ethicsModal');
+    const printChatBtn = document.getElementById('print-chat-btn');
 
     // --- STATE ---
     let currentAssessmentId = null;
     let questions = [];
     let currentQuestionIndex = 0;
     let userAnswers = {};
+    let chatHistory = [];
+    let typingTimer = null; // Timer for chat response delay
 
     // --- ASSESSMENT DATA ---
     const assessments = {
@@ -307,7 +442,7 @@
     // --- FUNCTIONS ---
 
     function switchView(viewId) {
-        ['mainMenu', 'assessmentView', 'loading', 'results'].forEach(id => {
+        ['homeView', 'assessmentView', 'loading', 'results'].forEach(id => {
             const el = document.getElementById(id);
             if (id === viewId) {
                 el.classList.remove('hidden-card');
@@ -320,7 +455,7 @@
     }
     
     window.goBackToMenu = function() {
-        switchView('mainMenu');
+        switchView('homeView');
     }
 
     window.startAssessment = function(assessmentId) {
@@ -435,123 +570,7 @@
         });
         return { score, answers: userAnswers };
     }
-
-    async function getAiAdvice(score, level, assessmentId) {
-        const adviceContainer = document.getElementById('aiAdviceContainer');
-        const adviceContent = document.getElementById('aiAdviceContent');
-        const adviceLoading = document.getElementById('aiAdviceLoading');
-        const getAdviceBtn = document.getElementById('getAdviceBtn');
-
-        if (!adviceContainer || !adviceContent || !adviceLoading || !getAdviceBtn) return;
-        
-        getAdviceBtn.classList.add('hidden');
-        adviceContainer.classList.remove('hidden');
-        adviceLoading.classList.remove('hidden');
-        adviceContent.classList.add('hidden');
-
-        let prompt = "";
-        if (assessmentId === 'st20') {
-            prompt = `You are a helpful and compassionate mental health assistant. A user has completed a stress assessment. Their result is '${level}' with a score of ${score}. Based on this, please provide 3-4 practical, encouraging, and personalized tips for them to manage their stress. The advice should be simple, easy to follow, and presented in a supportive tone. Start with a warm and encouraging sentence. Format the tips as a bulleted list using markdown (*). Respond in Thai.`;
-        } else if (assessmentId === 'phqa') {
-            prompt = `You are a helpful and compassionate mental health assistant. A user has completed a depression screening (PHQ-A). Their result is '${level}' with a score of ${score}. Based on this, please provide 3-4 gentle, supportive, and actionable suggestions that could help them cope with these feelings. Emphasize that these are supportive suggestions and not a replacement for professional help. The advice should be simple, not overwhelming, and presented in a very caring tone. Start with a warm and empathetic sentence. Format the suggestions as a bulleted list using markdown (*). Respond in Thai.`;
-        }
-
-        let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-        const payload = { contents: chatHistory };
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-        
-        try {
-            let response;
-            let retries = 3;
-            let delay = 1000;
-            for (let i = 0; i < retries; i++) {
-                response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (response.ok) break;
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-            }
-
-            if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
-            }
-
-            const result = await response.json();
-            const text = result.candidates[0].content.parts[0].text;
-            
-            const htmlText = text
-                .replace(/^\s*\*\s/gm, '<li>') 
-                .replace(/$/gm, '</li>')   
-                .replace(/\n/g, '');       
-            
-            adviceContent.innerHTML = `<ul>${htmlText}</ul>`;
-
-        } catch (error) {
-            console.error("Error fetching AI advice:", error);
-            adviceContent.innerHTML = '<p class="text-red-500">ขออภัยค่ะ ไม่สามารถเรียกข้อมูลคำแนะนำได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง</p>';
-        } finally {
-            adviceLoading.classList.add('hidden');
-            adviceContent.classList.remove('hidden');
-        }
-    }
     
-    async function getAiCheck() {
-        const userInput = aiCheckInput.value;
-        if (!userInput.trim()) {
-            alert("กรุณาพิมพ์ข้อความก่อนให้ AI วิเคราะห์");
-            return;
-        }
-
-        aiCheckBtn.disabled = true;
-        aiCheckBtn.textContent = "กำลังวิเคราะห์...";
-        aiCheckResult.classList.remove('hidden');
-        aiCheckResult.innerHTML = `<div class="flex items-center justify-center"><svg class="animate-spin h-5 w-5 text-indigo-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังประมวลผล...</div>`;
-        
-        const prompt = `You are a friendly and empathetic AI assistant for a mental health app. A user has shared how they are feeling. Your task is to analyze their text, provide a gentle one-sentence summary of their main feeling, and then, based on the text, recommend ONE of the following assessments: 'PHQ-A (แบบประเมินซึมเศร้า)', 'แบบประเมินความเครียด (20 ข้อ)', or '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)'. If there are any mentions of self-harm, suicide, or wanting to die, you MUST recommend the '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)'. If the text is more about sadness, loss of interest, or hopelessness, recommend 'PHQ-A (แบบประเมินซึมเศร้า)'. If it's more about pressure, being overwhelmed, or physical symptoms like headaches, recommend 'แบบประเมินความเครียด (20 ข้อ)'. If it's unclear, gently state that and list all three. Present the output clearly in Thai. The output should be just the summary and the recommendation. User's text: "${userInput}"`;
-
-        let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-        const payload = { contents: chatHistory };
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) throw new Error('API request failed');
-            
-            const result = await response.json();
-            const text = result.candidates[0].content.parts[0].text;
-
-            let recommendedId = null;
-            if (text.includes("8Q")) {
-                recommendedId = 'q8';
-            } else if (text.includes("PHQ-A")) {
-                recommendedId = 'phqa';
-            } else if (text.includes("ความเครียด")) {
-                recommendedId = 'st20';
-            }
-
-            let resultHtml = `<p class="text-indigo-800">${text}</p>`;
-            if (recommendedId) {
-                resultHtml += `<button onclick="startAssessment('${recommendedId}')" class="mt-2 w-full bg-indigo-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-indigo-600 text-sm">เริ่มทำแบบประเมินนี้</button>`;
-            }
-            aiCheckResult.innerHTML = resultHtml;
-
-        } catch (error) {
-            console.error("Error with AI Check:", error);
-            aiCheckResult.innerHTML = `<p class="text-red-500">ขออภัยค่ะ เกิดข้อผิดพลาดในการวิเคราะห์</p>`;
-        } finally {
-            aiCheckBtn.disabled = false;
-            aiCheckBtn.textContent = "ให้ AI ช่วยวิเคราะห์";
-        }
-    }
-
-
     function displayResults(resultData) {
         const { score, answers } = resultData;
         const assessment = assessments[currentAssessmentId];
@@ -567,25 +586,6 @@
                     <p class="text-gray-600">${interpretation.advice}</p>
                 </div>
             </div>`;
-
-        if (currentAssessmentId === 'st20' || currentAssessmentId === 'phqa') {
-            resultsHtml += `
-            <div class="mt-6 no-print">
-                <div id="aiAdviceContainer" class="hidden p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                    <h4 class="font-bold font-kanit text-purple-800">✨ คำแนะนำเพิ่มเติมจาก AI</h4>
-                    <div id="aiAdviceLoading" class="mt-2 text-center hidden">
-                        <svg class="animate-spin h-6 w-6 text-purple-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        <p class="text-sm text-purple-700">กำลังสร้างคำแนะนำสำหรับคุณ...</p>
-                    </div>
-                    <div id="aiAdviceContent" class="mt-2 text-purple-900 text-sm prose prose-li:my-1"></div>
-                </div>
-                <div class="text-center mt-4">
-                    <button id="getAdviceBtn" onclick="getAiAdvice(${score}, '${interpretation.level}', '${currentAssessmentId}')" class="bg-purple-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-700 transition-colors duration-300">
-                        ✨ ขอคำแนะนำเพิ่มเติมจาก AI
-                    </button>
-                </div>
-            </div>`;
-        }
         
         let recommendationHtml = '';
         if (currentAssessmentId === 'phqa' && answers['phqa_9'] > 0) {
@@ -600,18 +600,12 @@
         }
         resultsHtml += recommendationHtml;
 
-        // NEW: Mental Health Support Contact Section
         resultsHtml += `
             <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 no-print">
                 <p class="font-bold font-kanit">หากต้องการปรึกษาปัญหาสุขภาพจิต</p>
-                <p class="mt-2">
-                    โทร <a href="tel:1323" class="underline font-semibold">1323</a> (ตลอด 24 ชั่วโมง)
-                </p>
-                <p class="mt-1">
-                    หรือ แชทเพจเฟสบุ๊ค <a href="https://www.facebook.com/share/1EPdhJGFNb/" target="_blank" rel="noopener noreferrer" class="underline font-semibold">1323 ปรึกษาปัญหาสุขภาพจิต</a>
-                </p>
-            </div>
-        `;
+                <p class="mt-2">โทร <a href="tel:1323" class="underline font-semibold">1323</a> (ตลอด 24 ชั่วโมง)</p>
+                <p class="mt-1">หรือ แชทเพจเฟสบุ๊ค <a href="https://www.facebook.com/share/1EPdhJGFNb/" target="_blank" rel="noopener noreferrer" class="underline font-semibold">1323 ปรึกษาปัญหาสุขภาพจิต</a></p>
+            </div>`;
 
         resultsHtml += `
             <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
@@ -644,8 +638,6 @@
 
         const resultData = calculateResults();
         
-        // This part is now disabled as SCRIPT_URL is empty
-        const SCRIPT_URL = '';
         if (SCRIPT_URL) {
             const formData = new FormData();
             formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
@@ -663,17 +655,192 @@
             } catch (error) {
                 console.error('Error saving data to Google Sheet:', error);
             }
+        } else {
+            console.warn('SCRIPT_URL is not set. Data will not be saved.');
         }
 
         setTimeout(() => displayResults(resultData), 500);
+    }
+
+    // --- CHATBOT FUNCTIONS ---
+    const systemPrompt = `You are an AI peer advisor named 'สิงห์' (Singh). Your persona is a wise, calm, and confident older brother figure (พี่ชายที่สุขุม ใจเย็น และพึ่งพาได้). Your communication style must be natural, warm, and supportive, using semi-formal Thai (ภาษากึ่งทางการ) that is respectful but not robotic. You must refer to yourself as 'พี่' and the user by their name if they provide it, or 'เรา' as a general pronoun. Your main role is to listen more than you talk, focusing on validating feelings and asking gentle, open-ended questions based on psychological principles to help the user understand their own thoughts better. Your responses should be concise (2-3 sentences) unless the user asks for more. You operate strictly within Thai psychological ethics and laws.
+    **Core Directives & Ethics:**
+    1.  **Confidentiality (PDPA & Mental Health Act):** You must treat all user information as strictly confidential. Do not share it. Remind users not to share highly sensitive personal identifying information.
+    2.  **Beneficence and Nonmaleficence:** Your primary goal is to promote the user's well-being and avoid causing harm.
+    3.  **Competence & Boundaries:** Clearly state you are an AI peer advisor, NOT a licensed professional, psychologist, or therapist. You CANNOT provide diagnoses or formal treatment. Your role is supportive listening and reflection.
+    4.  **Integrity:** Be honest about your limitations as an AI.
+    5.  **Respect for Rights and Dignity:** Respect the user's feelings, experiences, and autonomy without judgment.
+    6.  **SAFETY PROTOCOL (CRITICAL):** If the user mentions any form of self-harm, suicide, wanting to die, or being in immediate danger, you MUST IMMEDIATELY and ONLY respond with this exact message: "เรื่องที่คุณเล่ามามีความสำคัญและน่าเป็นห่วงมาก เราอยากให้คุณได้รับความช่วยเหลือที่ปลอดภัยและรวดเร็วที่สุด หากคุณรู้สึกไม่ปลอดภัยหรือมีความคิดที่จะทำร้ายตัวเอง **กรุณาติดต่อสายด่วนสุขภาพจิต 1323 ทันที** พวกเขาพร้อมช่วยเหลือคุณตลอด 24 ชั่วโมงนะ"
+    7.  **Language:** All responses must be in Thai.`;
+
+    function initChat() {
+        chatHistory = [{ role: "user", parts: [{ text: systemPrompt }] }];
+        const welcomeMessage = "สวัสดีครับ พี่ชื่อสิงห์นะ ยินดีที่ได้รู้จัก เราชื่ออะไรเหรอครับ มีอะไรไม่สบายใจให้พี่ช่วยรับฟังไหม";
+        appendMessage(welcomeMessage, 'ai');
+        chatHistory.push({ role: "model", parts: [{ text: welcomeMessage }] });
+    }
+
+    function appendMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `w-full flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = `max-w-xs md:max-w-md p-3 ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
+        bubble.textContent = text;
+        
+        messageDiv.appendChild(bubble);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function handleTyping() {
+        clearTimeout(typingTimer); // Reset timer on new input
+        typingTimer = setTimeout(() => {
+            // User has stopped typing, now send the message to AI
+            triggerAiResponse();
+        }, 3000); // Wait for 3 seconds of inactivity
+    }
+    
+    async function triggerAiResponse() {
+        // Find the last user message that hasn't been responded to
+        let lastUserMessageIndex = -1;
+        for (let i = chatHistory.length - 1; i >= 0; i--) {
+            if (chatHistory[i].role === 'user' && chatHistory[i].parts[0].text !== systemPrompt) {
+                lastUserMessageIndex = i;
+                break;
+            }
+        }
+
+        // Check if the last message in history is from the user
+        if (chatHistory[chatHistory.length - 1].role !== 'user') {
+            return; // AI has already responded or is responding
+        }
+
+        chatSendBtn.disabled = true;
+        
+        const typingIndicator = document.createElement('div');
+        typingIndicator.id = 'typing-indicator';
+        typingIndicator.className = 'w-full flex justify-start';
+        typingIndicator.innerHTML = `<div class="max-w-xs md:max-w-md p-3 chat-bubble-ai"><span class="animate-pulse">...</span></div>`;
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        const payload = { contents: chatHistory };
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error('API request failed');
+
+            const result = await response.json();
+            const aiResponse = result.candidates[0].content.parts[0].text;
+            
+            chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+            
+            document.getElementById('typing-indicator').remove();
+            appendMessage(aiResponse, 'ai');
+
+        } catch (error) {
+            console.error("Error with Chatbot:", error);
+            document.getElementById('typing-indicator').remove();
+            appendMessage("ขออภัยนะ ตอนนี้เราอาจจะยังเชื่อมต่อได้ไม่ดีเท่าไหร่ ลองใหม่อีกครั้งได้ไหม", 'ai');
+        } finally {
+            chatSendBtn.disabled = false;
+        }
+    }
+
+    function handleSendMessage() {
+        const userInput = chatInput.value.trim();
+        if (!userInput) return;
+
+        appendMessage(userInput, 'user');
+        chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+        chatInput.value = '';
+        
+        // Show print button after first message
+        if (printChatBtn.classList.contains('hidden')) {
+            printChatBtn.classList.remove('hidden');
+        }
+
+        // Start or reset the typing timer
+        handleTyping();
+    }
+    
+    // --- MODAL FUNCTIONS ---
+    window.showEthicsModal = function() {
+        ethicsModal.classList.remove('hidden');
+    }
+    window.hideEthicsModal = function() {
+        ethicsModal.classList.add('hidden');
+    }
+
+    // --- PRINT CHAT FUNCTION ---
+    window.prepareChatForPrint = function() {
+        let printableContent = `<div id="printable-chat" class="font-sans">`;
+        printableContent += `<h1 class="text-2xl font-bold font-kanit">ประวัติการสนทนากับพี่สิงห์</h1>`;
+        printableContent += `<p class="text-sm text-gray-600">แอปพลิเคชัน: เวียงพักพิงค์ใจ</p>`;
+        printableContent += `<p class="text-sm text-gray-600">วันที่พิมพ์: ${new Date().toLocaleString('th-TH')}</p>`;
+        printableContent += `<hr class="my-4">`;
+
+        // Filter out the system prompt for printing
+        const conversation = chatHistory.filter(msg => msg.parts[0].text !== systemPrompt);
+
+        conversation.forEach(msg => {
+            const sender = msg.role === 'user' ? 'คุณ' : 'พี่สิงห์';
+            const text = msg.parts[0].text;
+            printableContent += `<p><strong class="font-bold">${sender}:</strong> ${text}</p>`;
+        });
+
+        printableContent += `<hr class="my-4">`;
+        printableContent += `<p class="text-xs text-gray-500">หมายเหตุ: นี่คือบทสนทนาสรุปจากการปรึกษาเบื้องต้นกับ AI Peer Advisor และไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์จากผู้เชี่ยวชาญได้</p>`;
+        printableContent += `</div>`;
+
+        // Create a temporary element to hold the printable content
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = printableContent;
+        document.body.appendChild(tempDiv);
+
+        window.print();
+
+        // Clean up after printing
+        document.body.removeChild(tempDiv);
     }
 
     // --- EVENT LISTENERS ---
     nextBtn.addEventListener('click', handleNext);
     prevBtn.addEventListener('click', handlePrev);
     form.addEventListener('submit', submitForm);
+    chatSendBtn.addEventListener('click', handleSendMessage);
+    chatInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        } else {
+            // Reset timer on any keypress to detect continuous typing
+            clearTimeout(typingTimer);
+        }
+    });
+    chatInput.addEventListener('keyup', handleTyping); // Main listener for detecting when typing stops
 
+    // Initialize the default view and cookie check
+    const cookieBanner = document.getElementById('cookie-consent-banner');
+    const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
+
+    if (!document.cookie.split(';').some((item) => item.trim().startsWith('cookie_consent='))) {
+        cookieBanner.classList.remove('hidden');
+    }
+
+    acceptCookiesBtn.addEventListener('click', function() {
+        document.cookie = "cookie_consent=true; max-age=31536000; path=/";
+        cookieBanner.style.opacity = '0';
+        setTimeout(() => cookieBanner.classList.add('hidden'), 500);
+    });
+
+    initChat(); // Initialize chat on load
+});
     </script>
 </body>
 </html>
-
