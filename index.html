@@ -51,7 +51,6 @@
             transition: opacity 0.5s ease-in-out;
         }
         
-        /* FIXED: Print styles */
         #printable-content {
             display: none;
         }
@@ -67,16 +66,28 @@
                 display: block !important;
             }
         }
+        /* Disabled overlay */
+        .disabled-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 20;
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- FIXED: Added a dedicated container for printing -->
     <div id="printable-content" class="p-8"></div>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
         <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
             
+            <div id="disabled-overlay" class="disabled-overlay hidden"></div>
+
             <!-- Home View -->
             <div id="homeView" class="card visible-card">
                 <div class="text-center">
@@ -89,7 +100,6 @@
                     <h3 class="text-xl font-bold text-gray-800 font-kanit">คุยกับพี่สิงห์</h3>
                     <div class="mt-2 flex flex-col h-[60vh] border rounded-lg overflow-hidden">
                         <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4">
-                            <!-- Chat messages will be appended here -->
                         </div>
                         <div class="p-4 border-t flex items-center bg-gray-50">
                             <input type="text" id="chat-input" class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
@@ -110,18 +120,17 @@
 
                 <h3 class="text-xl font-bold text-gray-800 mt-10 mb-4 font-kanit">แบบประเมินสุขภาพจิตเบื้องต้น</h3>
                 <div class="space-y-4">
-                    <!-- Assessment Cards -->
                     <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
                         <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">20</p><p class="text-xs">คำถาม</p></div>
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">0-60</p><p class="text-xs">คะแนน</p></div>
+                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">5</p><p class="text-xs">คำถาม</p></div>
+                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">0-15</p><p class="text-xs">คะแนน</p></div>
                         </div>
-                        <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (20 ข้อ)</h4><p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 5-7 นาที</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-st20-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button></div>
+                        <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (ST-5)</h4><p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 2-3 นาที</p></div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-st5-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button></div>
                     </div>
                     <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
                         <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-lg">9</p><p class="text-xs">คำถาม</p></div>
+                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-lg">8</p><p class="text-xs">คำถาม</p></div>
                             <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-sm">ใช่/ไม่ใช่</p><p class="text-xs">คำตอบ</p></div>
                         </div>
                         <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">8Q แบบประเมินการฆ่าตัวตาย</h4><p class="text-sm text-gray-600">ประเมินความคิดฆ่าตัวตาย แผนการ และประวัติการพยายาม ใช้เวลาประมาณ 3-4 นาที</p></div>
@@ -178,54 +187,40 @@
             </div>
         </div>
         <footer class="text-center text-sm text-gray-500 mt-6 no-print">
-            <button id="show-ethics-btn" class="underline hover:text-blue-600">หลักการและกรอบจรรยาบรรณของเรา</button> | จัดทำโดย RPG15 Next Gen Youth
+            <button id="show-ethics-btn" class="underline hover:text-blue-600">ข้อตกลงและเงื่อนไขการใช้งาน</button> | จัดทำโดย RPG15 Next Gen Youth
         </footer>
     </div>
     
-    <!-- Ethics Modal -->
-    <div id="ethicsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 no-print">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h2 class="text-xl font-bold text-gray-800 font-kanit">หลักการและกรอบจรรยาบรรณ</h2>
-                <button id="hide-ethics-btn" class="text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+    <!-- UPDATED: Ethics Modal is now Consent Modal -->
+    <div id="consentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 no-print">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+            <div class="p-4 border-b">
+                <h2 class="text-xl font-bold text-gray-800 font-kanit text-center">ข้อตกลงและเงื่อนไขการใช้งาน</h2>
             </div>
-            <div class="p-6 overflow-y-auto">
-                <p class="text-gray-600 text-center max-w-2xl mx-auto">การจัดทำระบบคัดกรองสุขภาพจิตเบื้องต้นนี้ เป็นไปตามกฎหมายและมาตรฐานจรรยาบรรณไทย โดยยึดถือหลักการสำคัญดังนี้</p>
-                <div class="mt-6 space-y-4 text-sm">
+            <div class="p-6 overflow-y-auto text-sm">
+                <p class="font-bold text-center mb-4">โปรดอ่านและทำความเข้าใจก่อนเริ่มใช้งาน</p>
+                
+                <div class="space-y-4">
                     <div>
-                        <h3 class="text-lg font-bold font-kanit text-blue-700">กฎหมายและมาตรฐานจรรยาบรรณหลัก</h3>
-                        <div class="mt-2 pl-4 border-l-4 border-blue-200">
-                            <h4 class="font-semibold">1. พระราชบัญญัติสุขภาพจิต พ.ศ. 2551 (และฉบับแก้ไขเพิ่มเติม)</h4>
-                            <ul class="list-disc pl-5 mt-1 text-gray-700">
-                                <li>ผู้ป่วยมีสิทธิได้รับการปกปิดข้อมูลเกี่ยวกับการเจ็บป่วยเป็นความลับ</li>
-                                <li>ห้ามเปิดเผยข้อมูลที่น่าจะทำให้เกิดความเสียหายแก่ผู้ป่วยและครอบครัว</li>
-                            </ul>
-                            <h4 class="font-semibold mt-2">2. จรรยาบรรณสำหรับนักจิตวิทยา</h4>
-                            <ul class="list-disc pl-5 mt-1 text-gray-700">
-                                <li>ยึดถือประโยชน์สุขของผู้รับบริการและไม่ทำให้เกิดอันตราย</li>
-                                <li>รักษาความลับ, ให้ข้อมูลที่ถูกต้อง, และมีความรับผิดชอบ</li>
-                                <li>เคารพสิทธิและศักดิ์ศรีของบุคคล</li>
-                            </ul>
-                            <h4 class="font-semibold mt-2">3. พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562</h4>
-                            <ul class="list-disc pl-5 mt-1 text-gray-700">
-                                <li>ข้อมูลสุขภาพถือเป็น "ข้อมูลส่วนบุคคลอ่อนไหว" ซึ่งต้องมีการขอความยินยอมอย่างชัดแจ้งก่อนการเก็บและประมวลผล</li>
-                                <li>ผู้ใช้มีสิทธิในการเข้าถึง, แก้ไข, และลบข้อมูลของตนเอง</li>
-                            </ul>
-                        </div>
+                        <h3 class="font-bold font-kanit text-blue-700">1. ขอบเขตการให้บริการ</h3>
+                        <p>แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือ **คัดกรองสุขภาพจิตเบื้องต้น** และเป็น **พื้นที่ปลอดภัยในการให้คำปรึกษาโดย AI Peer Advisor (พี่สิงห์)** เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</p>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold font-kanit text-green-700">แนวปฏิบัติสำหรับการคัดกรอง</h3>
-                         <div class="mt-2 pl-4 border-l-4 border-green-200">
-                            <h4 class="font-semibold">ด้านเครื่องมือและระบบ</h4>
-                            <p class="text-gray-700">ใช้เครื่องมือที่แนะนำโดยกรมสุขภาพจิต เช่น Mental Health Check In (MHCI), 2Q, 9Q และมีนโยบายความเป็นส่วนตัวที่ชัดเจน</p>
-                            <h4 class="font-semibold mt-2">ด้านการให้คำแนะนำและการส่งต่อ</h4>
-                            <ul class="list-disc pl-5 mt-1 text-gray-700">
-                                <li>ให้คำแนะนำเบื้องต้นโดยไม่วินิจฉัยโรคโดยตรง</li>
-                                <li>มีเกณฑ์การส่งต่อที่ชัดเจนเมื่อพบความเสี่ยงสูง ไปยังหน่วยงานที่เหมาะสม เช่น โรงพยาบาลจิตเวช หรือสายด่วนสุขภาพจิต 1323</li>
-                            </ul>
-                        </div>
+                        <h3 class="font-bold font-kanit text-red-700">2. การจัดการภาวะฉุกเฉิน</h3>
+                        <p>AI "พี่สิงห์" ถูกออกแบบมาเพื่อแนะนำช่องทางช่วยเหลือที่เหมาะสมหากตรวจพบความเสี่ยง เช่น การทำร้ายตัวเอง หรือความรุนแรงในครอบครัว อย่างไรก็ตาม **แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน** หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold font-kanit text-green-700">3. การคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h3>
+                        <ul class="list-disc pl-5 mt-1 space-y-1">
+                            <li>**การรักษาความลับ:** การสนทนากับ "พี่สิงห์" จะถูกเก็บเป็นความลับ</li>
+                            <li>**การเก็บข้อมูลเพื่อพัฒนา:** เพื่อวัตถุประสงค์ในการประเมินผลและพัฒนาโครงการ **เราจะมีการเก็บข้อมูลผลการประเมินของท่าน (เช่น คะแนนรวม, ระดับความเสี่ยง) โดยไม่มีการระบุตัวตน (Anonymized Data)** ข้อมูลนี้จะไม่สามารถเชื่อมโยงกลับมาถึงตัวท่านได้</li>
+                            <li>**ความยินยอม:** การกดปุ่ม "ยอมรับและเริ่มใช้งาน" ด้านล่าง ถือว่าท่านได้รับทราบและยินยอมให้มีการเก็บข้อมูลตามที่ระบุไว้ข้างต้น</li>
+                        </ul>
                     </div>
                 </div>
+            </div>
+            <div class="p-4 border-t text-center">
+                 <button id="accept-consent-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">ยอมรับและเริ่มใช้งาน</button>
             </div>
         </div>
     </div>
@@ -304,7 +299,10 @@
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const chatSendBtn = document.getElementById('chat-send-btn');
-        const ethicsModal = document.getElementById('ethicsModal');
+        const consentModal = document.getElementById('consentModal');
+        const acceptConsentBtn = document.getElementById('accept-consent-btn');
+        const showEthicsBtn = document.getElementById('show-ethics-btn');
+        const disabledOverlay = document.getElementById('disabled-overlay');
         const printChatBtn = document.getElementById('print-chat-btn');
         const emergencyBtn = document.getElementById('emergency-btn');
         const emergencyModal = document.getElementById('emergencyModal');
@@ -318,7 +316,7 @@
         let userAnswers = {};
         let chatHistory = [];
 
-        // --- ASSESSMENT DATA ---
+        // --- ASSESSMENT DATA (UPDATED) ---
         const assessments = {
             'phqa': {
                 title: 'PHQ-A (ภาวะซึมเศร้าในวัยรุ่น)',
@@ -333,21 +331,18 @@
                     { id: 'phqa_7', text: "จดจ่อกับสิ่งต่างๆ ได้ยาก เช่น ทำการบ้าน อ่านหนังสือ หรือดูโทรทัศน์" },
                     { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือในทางตรงกันข้ามคือ กระสับกระส่ายหรือกระวนกระวาย จนต้องเคลื่อนไหวไปมามากกว่าปกติ" },
                     { id: 'phqa_9', text: "คิดว่าถ้าตายไปเสียจะดีกว่า หรือคิดจะทำร้ายตัวเองด้วยวิธีใดวิธีหนึ่ง" },
-                    { id: 'phqa_s1', text: "ในช่วง 1 เดือนที่ผ่านมา ท่านเคยมีความคิดอยากทำร้ายตัวเองหรือไม่?", isSupplementary: true },
-                    { id: 'phqa_s2', text: "ท่านเคยพยายามทำร้ายตนเองหรือไม่?", isSupplementary: true },
                 ],
                 options: [
-                    { text: "ไม่มีเลย", value: 0 }, { text: "มีบางวัน (1-6 วัน)", value: 1 },
+                    { text: "ไม่มีเลย", value: 0 }, { text: "มีบางวัน", value: 1 },
                     { text: "มีมากกว่า 7 วัน", value: 2 }, { text: "มีแทบทุกวัน", value: 3 }
                 ],
-                supplementaryOptions: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
-                interpret: (score, answers) => {
+                interpret: (score) => {
                     let level, advice, colorClass;
-                    if (score <= 4) { level = "ไม่มีภาวะซึมเศร้า"; advice = "สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ"; colorClass = 'text-green-600'; }
+                    if (score <= 4) { level = "ไม่มีภาวะซึมเศร้า"; advice = "ขณะนี้ยังไม่พบภาวะซึมเศร้าที่ชัดเจน"; colorClass = 'text-green-600'; }
                     else if (score <= 9) { level = "มีภาวะซึมเศร้าเล็กน้อย"; advice = "ควรหากิจกรรมที่ช่วยผ่อนคลายอารมณ์ หรือปรึกษาบุคคลใกล้ชิดที่ไว้ใจ"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 14) { level = "มีภาวะซึมเศร้าปานกลาง"; advice = "ควรปรึกษาผู้เชี่ยวชาญ เช่น จิตแพทย์ หรือนักจิตวิทยา เพื่อประเมินและรับการบำบัดรักษา"; colorClass = 'text-orange-600'; }
-                    else if (score <= 19) { level = "มีภาวะซึมเศร้ามาก"; advice = "จำเป็นต้องปรึกษาแพทย์อย่างเร่งด่วน เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-600'; }
-                    else { level = "มีภาวะซึมเศร้ารุนแรง"; advice = "เสี่ยงอันตรายสูง จำเป็นต้องพบแพทย์เพื่อรับการรักษาทันที"; colorClass = 'text-red-800'; }
+                    else if (score <= 14) { level = "มีภาวะซึมเศร้าปานกลาง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-orange-600'; }
+                    else if (score <= 19) { level = "มีภาวะซึมเศร้ามาก"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-600'; }
+                    else { level = "มีภาวะซึมเศร้ารุนแรง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-800'; }
                     return { level, advice, colorClass };
                 }
             },
@@ -358,7 +353,7 @@
                     { id: 'q8_1', text: "ในเดือนที่ผ่านมารวมทั้งวันนี้คิดอยากตายหรือคิดว่าตายไปจะดีกว่า", weight: 1 },
                     { id: 'q8_2', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้อยากทำร้ายตัวเองหรือทำให้ตัวเองบาดเจ็บ", weight: 2 },
                     { id: 'q8_3', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้คิดเกี่ยวกับการฆ่าตัวตาย", weight: 6 },
-                    { id: 'q8_3_followup', text: "ท่านไม่สามารถควบคุมความอยากฆ่าตัวตายที่ท่านคิดอยู่นั้นได้ หรือบอกไม่ได้ว่าจะไม่ทำตามความคิดนั้น", weight: 8, dependsOn: { qId: 'q8_3', value: '1' } },
+                    { id: 'q8_3_followup', text: "ท่านไม่สามารถควบคุมความอยากฆ่าตัวตายที่ท่านคิดอยู่นั้นได้ หรือบอกไม่ได้ว่าคงจะไม่ทำตามความคิดนั้น ในขณะนี้", weight: 8, dependsOn: { qId: 'q8_3', value: '1' } },
                     { id: 'q8_4', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้มีแผนการที่จะฆ่าตัวตาย", weight: 8 },
                     { id: 'q8_5', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้เตรียมการที่จะทำร้ายตัวเองหรือเตรียมการจะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ", weight: 9 },
                     { id: 'q8_6', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้ทำให้ตนเองบาดเจ็บแต่ไม่ตั้งใจที่ทำให้เสียชีวิต", weight: 4 },
@@ -375,20 +370,15 @@
                     return { level, advice, colorClass };
                 }
             },
-            'st20': {
-                title: 'แบบประเมินความเครียด (20 ข้อ)',
+            'st5': {
+                title: 'แบบประเมินความเครียด (ST-5)',
                 description: 'ในเวลา 2 สัปดาห์ที่ผ่านมานี้ ท่านมีอาการ พฤติกรรมหรือความรู้สึกต่อไปนี้มากน้อยเพียงใด',
                 questions: [
-                    { id: 'st20_1', text: "นอนไม่หลับหรือคิดมากหรือกังวลใจ" }, { id: 'st20_2', text: "รู้สึกหงุดหงิดรำคาญใจ" },
-                    { id: 'st20_3', text: "ทำอะไรไม่ได้เลยเพราะประสาทตึงเครียด" }, { id: 'st20_4', text: "มีความวุ่นวายใจ" },
-                    { id: 'st20_5', text: "ไม่อยากพบปะผู้คน" }, { id: 'st20_6', text: "ปวดหัวข้างเดียวหรือปวดขมับทั้งสองข้าง" },
-                    { id: 'st20_7', text: "รู้สึกไม่มีความสุขหรือเศร้าหมอง" }, { id: 'st20_8', text: "รู้สึกหมดหวังในชีวิต" },
-                    { id: 'st20_9', text: "รู้สึกว่าชีวิตตนเองไม่มีคุณค่า" }, { id: 'st20_10', text: "กระวนกระวายอยู่ตลอดเวลา" },
-                    { id: 'st20_11', text: "รู้สึกว่าตนเองไม่มีสมาธิ" }, { id: 'st20_12', text: "รู้สึกเพลียไม่มีแรงจะทำอะไร" },
-                    { id: 'st20_13', text: "รู้สึกเหนื่อยไม่อยากจะทำอะไร" }, { id: 'st20_14', text: "มีอาการหัวใจเต้นแรง" },
-                    { id: 'st20_15', text: "เสียงสั่น ปากสั่น หรือมือสั่นเวลาไม่พอใจ" }, { id: 'st20_16', text: "รู้สึกกลัวผิดพลาด" },
-                    { id: 'st20_17', text: "ปวดหรือเกร็งกล้ามเนื้อบริเวณท้ายทอย หลัง หรือไหล่" }, { id: 'st20_18', text: "ตื่นเต้นง่ายกับเหตุการณ์ที่ไม่คุ้นเคย" },
-                    { id: 'st20_19', text: "มึนงงหรือเวียนศีรษะ" }, { id: 'st20_20', text: "ความสุขทางเพศลดลง หรือเบื่อหน่ายในการดูแลตนเองให้เป็นที่สนใจของเพศตรงข้าม" }
+                    { id: 'st5_1', text: "นอนไม่หลับหรือคิดมากหรือกังวลใจ" },
+                    { id: 'st5_2', text: "รู้สึกหงุดหงิดรำคาญใจ" },
+                    { id: 'st5_3', text: "ทำอะไรไม่ได้เลยเพราะประสาทตึงเครียด" },
+                    { id: 'st5_4', text: "มีความวุ่นวายใจ" },
+                    { id: 'st5_5', text: "ไม่อยากพบปะผู้คน" }
                 ],
                 options: [
                     { text: "ไม่เคยเลย", value: 0 }, { text: "เป็นครั้งคราว", value: 1 },
@@ -396,11 +386,10 @@
                 ],
                 interpret: (score) => {
                     let level, advice, colorClass;
-                    if (score <= 5) { level = "เครียดต่ำกว่าปกติมาก"; advice = "อาจหมายถึงท่านเป็นคนเฉื่อยชา ขาดแรงจูงใจ หรืออาจพึงพอใจในชีวิตดีอยู่แล้ว"; colorClass = 'text-gray-600'; }
-                    else if (score <= 17) { level = "เครียดในระดับปกติ"; advice = "ความเครียดระดับนี้เป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้"; colorClass = 'text-green-600'; }
-                    else if (score <= 25) { level = "เครียดสูงกว่าปกติเล็กน้อย"; advice = "กำลังมีปัญหาบางอย่างและยังแก้ไม่ได้ ควรหากิจกรรมผ่อนคลาย เช่น ออกกำลังกาย พักผ่อน"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 29) { level = "เครียดสูงกว่าปกติปานกลาง"; advice = "อาจมีปัญหาที่รุนแรง ควรเร่งแก้ปัญหาและฝึกเทคนิคคลายเครียด เช่น การฝึกหายใจ ทำสมาธิ"; colorClass = 'text-orange-600'; }
-                    else { level = "เครียดสูงมาก"; advice = "อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อขอคำปรึกษา"; colorClass = 'text-red-800'; }
+                    if (score <= 4) { level = "เครียดน้อย"; advice = "ท่านมีความเครียดอยู่ในเกณฑ์ปกติ ซึ่งอาจเป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้"; colorClass = 'text-green-600'; }
+                    else if (score <= 7) { level = "เครียดปานกลาง"; advice = "ท่านมีความเครียดสูงกว่าปกติเล็กน้อย ควรหากิจกรรมผ่อนคลาย เช่น ออกกำลังกาย พักผ่อน"; colorClass = 'text-yellow-600'; }
+                    else if (score <= 9) { level = "เครียดมาก"; advice = "ท่านมีความเครียดอยู่ในระดับสูง ควรเร่งแก้ปัญหาและฝึกเทคนิคคลายเครียด เช่น การฝึกหายใจ ทำสมาธิ"; colorClass = 'text-orange-600'; }
+                    else { level = "เครียดมากที่สุด"; advice = "ท่านมีความเครียดสูงมาก อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิต"; colorClass = 'text-red-800'; }
                     return { level, advice, colorClass };
                 }
             }
@@ -558,11 +547,7 @@
                     <p>เนื่องจากคุณมีความคิดเกี่ยวกับการทำร้ายตนเอง เราขอแนะนำให้ทำ <button onclick="startAssessment('q8')" class="font-bold underline">แบบประเมิน 8Q</button> เพื่อประเมินความเสี่ยงเพิ่มเติม</p>
                 </div>`;
             }
-            if (currentAssessmentId === 'st20' && (answers['st20_8'] >= 2 || answers['st20_9'] >= 2)) {
-                 recommendationHtml = `<div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700 no-print">
-                    <p>เนื่องจากคุณมีความรู้สึกหมดหวังหรือไร้ค่า เราขอแนะนำให้ทำ <button onclick="startAssessment('phqa')" class="font-bold underline">แบบประเมิน PHQ-A</button> และ <button onclick="startAssessment('q8')" class="font-bold underline">8Q</button> เพิ่มเติม</p>
-                </div>`;
-            }
+            
             resultsHtml += recommendationHtml;
 
             resultsHtml += `
@@ -628,7 +613,6 @@
         }
 
         // --- CHATBOT FUNCTIONS ---
-        // UPDATED: New system prompt with actionable safety advice integrated
         const systemPrompt = `You are an AI peer advisor named 'สิงห์' (Singh). Your persona is a wise, calm, and confident older brother figure (พี่ชายที่สุขุม ใจเย็น และพึ่งพาได้). Your communication style must be natural, warm, and supportive, using semi-formal Thai (ภาษากึ่งทางการ) that is respectful but not robotic. You must refer to yourself as 'พี่' and the user by their name if they provide it, or 'เรา' as a general pronoun. Your main role is to listen more than you talk, focusing on validating feelings and asking gentle, open-ended questions based on psychological principles to help the user understand their own thoughts better. Your responses should be concise (2-3 sentences) unless the user asks for more. You operate strictly within Thai psychological ethics and laws.
         **Core Directives & Ethics:**
         1.  **Confidentiality (PDPA & Mental Health Act):** You must treat all user information as strictly confidential. Do not share it. Remind users not to share highly sensitive personal identifying information.
@@ -724,15 +708,18 @@
             triggerAiResponse();
         }
         
-        // --- MODAL FUNCTIONS ---
-        window.showEthicsModal = function() {
-            ethicsModal.classList.remove('hidden');
-        }
-        window.hideEthicsModal = function() {
-            ethicsModal.classList.add('hidden');
+        // --- MODAL & CONSENT FUNCTIONS ---
+        function showConsentModal() {
+            consentModal.classList.remove('hidden');
+            disabledOverlay.classList.remove('hidden');
         }
 
-        // --- PRINT FUNCTIONS (FIXED) ---
+        function hideConsentModal() {
+            consentModal.classList.add('hidden');
+            disabledOverlay.classList.add('hidden');
+        }
+
+        // --- PRINT FUNCTIONS ---
         window.prepareChatForPrint = function() {
             let printableHtml = `<div class="font-sans">`;
             printableHtml += `<h1 class="text-2xl font-bold font-kanit mb-2">ประวัติการสนทนากับพี่สิงห์</h1>`;
@@ -758,7 +745,6 @@
 
         window.printResults = function() {
             const resultsContent = document.getElementById('results').cloneNode(true);
-            // Remove non-printable elements from the clone
             resultsContent.querySelectorAll('.no-print').forEach(el => el.remove());
             printableContent.innerHTML = resultsContent.innerHTML;
             window.print();
@@ -776,12 +762,11 @@
             }
         });
 
-        document.getElementById('start-st20-btn').addEventListener('click', () => startAssessment('st20'));
+        document.getElementById('start-st5-btn').addEventListener('click', () => startAssessment('st5'));
         document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
         document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
         document.getElementById('back-to-menu-btn').addEventListener('click', goBackToMenu);
-        document.getElementById('show-ethics-btn').addEventListener('click', showEthicsModal);
-        document.getElementById('hide-ethics-btn').addEventListener('click', hideEthicsModal);
+        showEthicsBtn.addEventListener('click', showConsentModal);
         printChatBtn.addEventListener('click', prepareChatForPrint);
 
         emergencyBtn.addEventListener('click', () => {
@@ -790,9 +775,21 @@
         hideEmergencyBtn.addEventListener('click', () => {
             emergencyModal.classList.add('hidden');
         });
+        
+        acceptConsentBtn.addEventListener('click', () => {
+            localStorage.setItem('consentGiven', 'true');
+            hideConsentModal();
+        });
 
 
-        // --- Initialize the default view and cookie check ---
+        // --- INITIALIZE APP ---
+        if (!localStorage.getItem('consentGiven')) {
+            showConsentModal();
+        } else {
+             disabledOverlay.classList.add('hidden');
+             consentModal.classList.add('hidden');
+        }
+
         const cookieBanner = document.getElementById('cookie-consent-banner');
         const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
 
@@ -806,7 +803,7 @@
             setTimeout(() => cookieBanner.classList.add('hidden'), 500);
         });
 
-        initChat(); // Initialize chat on load
+        initChat(); 
     });
     </script>
 </body>
