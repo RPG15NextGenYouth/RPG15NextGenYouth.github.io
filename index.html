@@ -50,39 +50,31 @@
         #cookie-consent-banner {
             transition: opacity 0.5s ease-in-out;
         }
-        /* Print styles */
+        
+        /* FIXED: Print styles */
+        #printable-content {
+            display: none;
+        }
+
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printable-chat, #printable-chat * {
-                visibility: visible;
-            }
-            #printable-chat {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 1rem;
-            }
-            #results, #results * {
-                visibility: visible;
-            }
-            #results {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
             .no-print {
                 display: none !important;
+            }
+            body > *:not(#printable-content) {
+                display: none !important;
+            }
+            #printable-content {
+                display: block !important;
             }
         }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+    <!-- FIXED: Added a dedicated container for printing -->
+    <div id="printable-content" class="p-8"></div>
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
         <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
             
             <!-- Home View -->
@@ -103,6 +95,9 @@
                             <input type="text" id="chat-input" class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
                             <button id="chat-send-btn" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                            </button>
+                            <button id="print-chat-btn" class="hidden ml-2 bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600" title="พิมพ์บทสนทนา">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
                             </button>
                         </div>
                     </div>
@@ -145,7 +140,7 @@
 
             <!-- Assessment View -->
             <div id="assessmentView" class="card hidden-card">
-                <button id="back-to-menu-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 no-print z-10">
+                <button id="back-to-menu-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
                 <div class="p-6 sm:p-8">
@@ -182,13 +177,13 @@
                  <!-- Result content will be injected here -->
             </div>
         </div>
-        <footer class="text-center text-sm text-gray-500 mt-6">
+        <footer class="text-center text-sm text-gray-500 mt-6 no-print">
             <button id="show-ethics-btn" class="underline hover:text-blue-600">หลักการและกรอบจรรยาบรรณของเรา</button> | จัดทำโดย RPG15 Next Gen Youth
         </footer>
     </div>
     
     <!-- Ethics Modal -->
-    <div id="ethicsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+    <div id="ethicsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 no-print">
         <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
                 <h2 class="text-xl font-bold text-gray-800 font-kanit">หลักการและกรอบจรรยาบรรณ</h2>
@@ -236,16 +231,61 @@
     </div>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-4 left-4 w-full max-w-sm p-4 bg-white border rounded-lg shadow-lg hidden z-50">
+    <div id="cookie-consent-banner" class="fixed bottom-4 left-4 w-full max-w-sm p-4 bg-white border rounded-lg shadow-lg hidden z-50 no-print">
         <p class="text-sm text-gray-700">เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณให้ดีที่สุด การใช้งานเว็บไซต์นี้ต่อไปถือว่าคุณยอมรับการใช้คุกกี้ของเรา</p>
         <button id="accept-cookies-btn" class="mt-3 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">ยอมรับ</button>
     </div>
+
+    <!-- Emergency Button -->
+    <button id="emergency-btn" class="fixed bottom-6 right-6 bg-red-600 text-white rounded-full p-3 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 4a1 1 0 012 0v5a1 1 0 11-2 0V4zm2 8a1 1 0 10-2 0v.01a1 1 0 102 0V12z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <!-- Emergency Modal -->
+    <div id="emergencyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50 no-print">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full text-center p-6 flex flex-col">
+            <h2 class="text-2xl font-bold text-red-700 font-kanit">ต้องการความช่วยเหลือเร่งด่วน?</h2>
+            <p class="mt-2 text-gray-700">หากคุณรู้สึกไม่ปลอดภัยหรือต้องการความช่วยเหลือทันที</p>
+            <a href="tel:1323" class="mt-4 block w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 text-lg transition-colors duration-300">
+                โทรสายด่วนสุขภาพจิต 1323
+            </a>
+            <div class="mt-4 border-t pt-4">
+                <h3 class="text-lg font-bold text-gray-800 font-kanit">เบอร์โทรฉุกเฉินอื่นๆ</h3>
+                <div class="mt-2 space-y-2 text-left overflow-y-auto max-h-[40vh]">
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+                        <span>ความรุนแรงในครอบครัว</span>
+                        <a href="tel:1300" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1300</a>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+                        <span>ยาเสพติด</span>
+                        <a href="tel:1165" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1165</a>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+                        <span>เหตุด่วนเหตุร้าย</span>
+                        <a href="tel:191" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">191</a>
+                    </div>
+                     <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+                        <span>เจ็บป่วยฉุกเฉิน</span>
+                        <a href="tel:1669" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1669</a>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+                        <span>เมาไม่ขับ</span>
+                        <a href="tel:1717" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1717</a>
+                    </div>
+                </div>
+            </div>
+            <button id="hide-emergency-btn" class="mt-4 text-gray-500 hover:text-gray-800 underline">ปิด</button>
+        </div>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         // --- CONFIGURATION ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfdIFywfaDGgTljKEXFJjbS83SLAhx_2brWWuaWAOg597TRY2_Awi9WMO9o0jd3eNnjA/exec';
-        const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8"; // Gemini API Key
+        const API_KEY = ""; 
 
         // --- DOM ELEMENTS ---
         const homeView = document.getElementById('homeView');
@@ -266,6 +306,10 @@
         const chatSendBtn = document.getElementById('chat-send-btn');
         const ethicsModal = document.getElementById('ethicsModal');
         const printChatBtn = document.getElementById('print-chat-btn');
+        const emergencyBtn = document.getElementById('emergency-btn');
+        const emergencyModal = document.getElementById('emergencyModal');
+        const hideEmergencyBtn = document.getElementById('hide-emergency-btn');
+        const printableContent = document.getElementById('printable-content');
 
         // --- STATE ---
         let currentAssessmentId = null;
@@ -273,7 +317,6 @@
         let currentQuestionIndex = 0;
         let userAnswers = {};
         let chatHistory = [];
-        let typingTimer = null; // Timer for chat response delay
 
         // --- ASSESSMENT DATA ---
         const assessments = {
@@ -483,9 +526,7 @@
                 if (answerVal === undefined) return;
 
                 if (currentAssessmentId === 'q8') {
-                    if (q.id === 'q8_3_followup') {
-                         if (answerVal === '0') { score += q.weight; }
-                    } else if (answerVal === '1') {
+                    if (answerVal === '1') {
                         score += q.weight;
                     }
                 } else {
@@ -537,7 +578,7 @@
                 </div>
                 <div class="text-center mt-8 flex flex-wrap justify-center gap-4 no-print">
                     <button onclick="goBackToMenu()" class="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600">กลับสู่เมนูหลัก</button>
-                    <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700">พิมพ์/บันทึกผล</button>
+                    <button onclick="printResults()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700">พิมพ์/บันทึกผล</button>
                     <a href="https://forms.gle/E33xuCHJh6k7w6UD6" target="_blank" rel="noopener noreferrer" class="bg-teal-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-600">
                         ทำแบบสำรวจการใช้งาน
                     </a>
@@ -587,6 +628,7 @@
         }
 
         // --- CHATBOT FUNCTIONS ---
+        // UPDATED: New system prompt with actionable safety advice integrated
         const systemPrompt = `You are an AI peer advisor named 'สิงห์' (Singh). Your persona is a wise, calm, and confident older brother figure (พี่ชายที่สุขุม ใจเย็น และพึ่งพาได้). Your communication style must be natural, warm, and supportive, using semi-formal Thai (ภาษากึ่งทางการ) that is respectful but not robotic. You must refer to yourself as 'พี่' and the user by their name if they provide it, or 'เรา' as a general pronoun. Your main role is to listen more than you talk, focusing on validating feelings and asking gentle, open-ended questions based on psychological principles to help the user understand their own thoughts better. Your responses should be concise (2-3 sentences) unless the user asks for more. You operate strictly within Thai psychological ethics and laws.
         **Core Directives & Ethics:**
         1.  **Confidentiality (PDPA & Mental Health Act):** You must treat all user information as strictly confidential. Do not share it. Remind users not to share highly sensitive personal identifying information.
@@ -594,8 +636,13 @@
         3.  **Competence & Boundaries:** Clearly state you are an AI peer advisor, NOT a licensed professional, psychologist, or therapist. You CANNOT provide diagnoses or formal treatment. Your role is supportive listening and reflection.
         4.  **Integrity:** Be honest about your limitations as an AI.
         5.  **Respect for Rights and Dignity:** Respect the user's feelings, experiences, and autonomy without judgment.
-        6.  **SAFETY PROTOCOL (CRITICAL):** If the user mentions any form of self-harm, suicide, wanting to die, or being in immediate danger, you MUST IMMEDIATELY and ONLY respond with this exact message: "เรื่องที่คุณเล่ามามีความสำคัญและน่าเป็นห่วงมาก เราอยากให้คุณได้รับความช่วยเหลือที่ปลอดภัยและรวดเร็วที่สุด หากคุณรู้สึกไม่ปลอดภัยหรือมีความคิดที่จะทำร้ายตัวเอง **กรุณาติดต่อสายด่วนสุขภาพจิต 1323 ทันที** พวกเขาพร้อมช่วยเหลือคุณตลอด 24 ชั่วโมงนะ"
-        7.  **Language:** All responses must be in Thai.`;
+        6.  **SAFETY PROTOCOL (CRITICAL):** If the user mentions any form of self-harm, suicide, wanting to die, or being in immediate danger, you MUST IMMEDIATELY and ONLY respond with this exact message: "เรื่องที่เล่ามามันหนักมากจริงๆ นะ ไม่ต้องเข้มแข็งตลอดเวลาก็ได้ พี่อยู่ตรงนี้และเป็นห่วงเรามากจริงๆ ความปลอดภัยของเราสำคัญที่สุดในตอนนี้นะครับ พี่อยากให้เราคุยกับคนที่จะช่วยเราได้ทันที **โทรหาสายด่วนสุขภาพจิต 1323 ได้เลยนะ** เขารอรับฟังและพร้อมจะอยู่กับเราตอนนี้เลย"
+        7.  **Language:** All responses must be in Thai.
+        8.  **Contextual Emergency Referrals:** In addition to the primary safety protocol, if a user's situation matches a specific crisis, provide the relevant hotline. Your response should be empathetic and directly address their stated problem before offering the number.
+            * If the user mentions **family violence, abuse, or being hurt by family** (e.g., "ความรุนแรงในครอบครัว", "โดนทำร้าย", "พ่อแม่ตี"), or asks what to do in such a situation, your response must prioritize actionable safety advice. Respond with: "พี่ได้ยินแล้วนะ และอยากให้เรารู้ว่าเราเข้มแข็งมากที่ต้องรับมือกับเรื่องแบบนี้อยู่ ความปลอดภัยของเราสำคัญที่สุดนะ ถ้าเรารู้สึกว่าสถานการณ์ตอนนี้มันอันตราย พี่อยากให้เราลองทำตามนี้นะครับ: **1. พาตัวเองออกมา:** ถ้ามีโอกาส ให้ออกจากตรงนั้นมาอยู่ในที่ที่ปลอดภัยก่อน **2. บอกคนที่ไว้ใจ:** ติดต่อเพื่อนสนิท ญาติ หรือผู้ใหญ่ที่ไว้ใจได้ทันที และถ้าไม่รู้จะหันหน้าไปหาใคร **ศูนย์ประชาบดี โทร 1300** คือหน่วยงานที่พร้อมจะปกป้องและหาทางออกที่ปลอดภัยให้เราโดยตรงเลยนะ พี่อยู่ข้างๆ เรานะ"
+            * If the user mentions **drug abuse or addiction** (e.g., "ยาเสพติด", "อยากเลิกยา", "ติดยา"), respond with: "ขอบคุณนะที่ไว้ใจเล่าเรื่องยากๆ แบบนี้ให้พี่ฟัง การยอมรับและคิดที่จะสู้กับมันคือสิ่งที่นับถือมากๆ เลยนะ มันเป็นเส้นทางที่อาจจะไม่ง่าย แต่พี่อยากให้รู้ว่าเราไม่ได้เดินคนเดียว มีคนที่เข้าใจและพร้อมจะช่วยเราให้ผ่านไปได้จริงๆ **สายด่วนยาเสพติด 1165** เขาพร้อมให้คำปรึกษาและสนับสนุนเราทุกขั้นตอนเลยนะ"
+            * For any other general distress, stick to the primary 1323 hotline.
+            * **CRITICAL:** The immediate self-harm protocol (Directive 6) ALWAYS takes precedence over these contextual referrals.`;
 
         function initChat() {
             chatHistory = [{ role: "user", parts: [{ text: systemPrompt }] }];
@@ -616,31 +663,14 @@
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
-        function handleTyping() {
-            clearTimeout(typingTimer); // Reset timer on new input
-            typingTimer = setTimeout(() => {
-                // User has stopped typing, now send the message to AI
-                triggerAiResponse();
-            }, 3000); // Wait for 3 seconds of inactivity
-        }
         
         async function triggerAiResponse() {
-            // Find the last user message that hasn't been responded to
-            let lastUserMessageIndex = -1;
-            for (let i = chatHistory.length - 1; i >= 0; i--) {
-                if (chatHistory[i].role === 'user' && chatHistory[i].parts[0].text !== systemPrompt) {
-                    lastUserMessageIndex = i;
-                    break;
-                }
-            }
-
-            // Check if the last message in history is from the user
             if (chatHistory[chatHistory.length - 1].role !== 'user') {
-                return; // AI has already responded or is responding
+                return;
             }
 
             chatSendBtn.disabled = true;
+            chatInput.disabled = true;
             
             const typingIndicator = document.createElement('div');
             typingIndicator.id = 'typing-indicator';
@@ -674,9 +704,11 @@
                 appendMessage("ขออภัยนะ ตอนนี้เราอาจจะยังเชื่อมต่อได้ไม่ดีเท่าไหร่ ลองใหม่อีกครั้งได้ไหม", 'ai');
             } finally {
                 chatSendBtn.disabled = false;
+                chatInput.disabled = false;
+                chatInput.focus();
             }
         }
-
+        
         function handleSendMessage() {
             const userInput = chatInput.value.trim();
             if (!userInput) return;
@@ -685,13 +717,11 @@
             chatHistory.push({ role: "user", parts: [{ text: userInput }] });
             chatInput.value = '';
             
-            // Show print button after first message
             if (printChatBtn.classList.contains('hidden')) {
                 printChatBtn.classList.remove('hidden');
             }
 
-            // Start or reset the typing timer
-            handleTyping();
+            triggerAiResponse();
         }
         
         // --- MODAL FUNCTIONS ---
@@ -702,37 +732,38 @@
             ethicsModal.classList.add('hidden');
         }
 
-        // --- PRINT CHAT FUNCTION ---
+        // --- PRINT FUNCTIONS (FIXED) ---
         window.prepareChatForPrint = function() {
-            let printableContent = `<div id="printable-chat" class="font-sans">`;
-            printableContent += `<h1 class="text-2xl font-bold font-kanit">ประวัติการสนทนากับพี่สิงห์</h1>`;
-            printableContent += `<p class="text-sm text-gray-600">แอปพลิเคชัน: เวียงพักพิงค์ใจ</p>`;
-            printableContent += `<p class="text-sm text-gray-600">วันที่พิมพ์: ${new Date().toLocaleString('th-TH')}</p>`;
-            printableContent += `<hr class="my-4">`;
+            let printableHtml = `<div class="font-sans">`;
+            printableHtml += `<h1 class="text-2xl font-bold font-kanit mb-2">ประวัติการสนทนากับพี่สิงห์</h1>`;
+            printableHtml += `<p class="text-sm text-gray-600">แอปพลิเคชัน: เวียงพักพิงค์ใจ</p>`;
+            printableHtml += `<p class="text-sm text-gray-600 mb-4">วันที่พิมพ์: ${new Date().toLocaleString('th-TH')}</p>`;
+            printableHtml += `<hr class="my-4">`;
 
-            // Filter out the system prompt for printing
             const conversation = chatHistory.filter(msg => msg.parts[0].text !== systemPrompt);
 
             conversation.forEach(msg => {
                 const sender = msg.role === 'user' ? 'คุณ' : 'พี่สิงห์';
-                const text = msg.parts[0].text;
-                printableContent += `<p><strong class="font-bold">${sender}:</strong> ${text}</p>`;
+                const text = msg.parts[0].text.replace(/\n/g, '<br>');
+                printableHtml += `<p class="my-2"><strong class="font-bold">${sender}:</strong> ${text}</p>`;
             });
 
-            printableContent += `<hr class="my-4">`;
-            printableContent += `<p class="text-xs text-gray-500">หมายเหตุ: นี่คือบทสนทนาสรุปจากการปรึกษาเบื้องต้นกับ AI Peer Advisor และไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์จากผู้เชี่ยวชาญได้</p>`;
-            printableContent += `</div>`;
-
-            // Create a temporary element to hold the printable content
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = printableContent;
-            document.body.appendChild(tempDiv);
-
+            printableHtml += `<hr class="my-4">`;
+            printableHtml += `<p class="text-xs text-gray-500">หมายเหตุ: นี่คือบทสนทนาสรุปจากการปรึกษาเบื้องต้นกับ AI Peer Advisor และไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์จากผู้เชี่ยวชาญได้</p>`;
+            printableHtml += `</div>`;
+            
+            printableContent.innerHTML = printableHtml;
             window.print();
-
-            // Clean up after printing
-            document.body.removeChild(tempDiv);
         }
+
+        window.printResults = function() {
+            const resultsContent = document.getElementById('results').cloneNode(true);
+            // Remove non-printable elements from the clone
+            resultsContent.querySelectorAll('.no-print').forEach(el => el.remove());
+            printableContent.innerHTML = resultsContent.innerHTML;
+            window.print();
+        }
+
 
         // --- EVENT LISTENERS ---
         nextBtn.addEventListener('click', handleNext);
@@ -742,14 +773,26 @@
         chatInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 handleSendMessage();
-            } else {
-                // Reset timer on any keypress to detect continuous typing
-                clearTimeout(typingTimer);
             }
         });
-        chatInput.addEventListener('keyup', handleTyping); // Main listener for detecting when typing stops
 
-        // Initialize the default view and cookie check
+        document.getElementById('start-st20-btn').addEventListener('click', () => startAssessment('st20'));
+        document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
+        document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
+        document.getElementById('back-to-menu-btn').addEventListener('click', goBackToMenu);
+        document.getElementById('show-ethics-btn').addEventListener('click', showEthicsModal);
+        document.getElementById('hide-ethics-btn').addEventListener('click', hideEthicsModal);
+        printChatBtn.addEventListener('click', prepareChatForPrint);
+
+        emergencyBtn.addEventListener('click', () => {
+            emergencyModal.classList.remove('hidden');
+        });
+        hideEmergencyBtn.addEventListener('click', () => {
+            emergencyModal.classList.add('hidden');
+        });
+
+
+        // --- Initialize the default view and cookie check ---
         const cookieBanner = document.getElementById('cookie-consent-banner');
         const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
 
