@@ -7,10 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Kanit:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Inter', 'Sarabun', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
         }
         .font-kanit {
             font-family: 'Kanit', sans-serif;
@@ -40,250 +41,185 @@
         .chat-bubble-user {
             background-color: #3b82f6; /* blue-500 */
             color: white;
-            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+            border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
         }
         .chat-bubble-ai {
-            background-color: #e5e7eb; /* gray-200 */
-            color: #1f2937; /* gray-800 */
-            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
-        }
-        #cookie-consent-banner {
-            transition: opacity 0.5s ease-in-out;
+            background-color: #e2e8f0; /* slate-200 */
+            color: #1e293b; /* slate-800 */
+            border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
         }
         
-        #printable-content {
-            display: none;
-        }
+        #printable-content { display: none; }
 
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body > *:not(#printable-content) {
-                display: none !important;
-            }
-            #printable-content {
-                display: block !important;
-            }
+            .no-print { display: none !important; }
+            body > *:not(#printable-content) { display: none !important; }
+            #printable-content { display: block !important; }
         }
-        /* Disabled overlay */
         .disabled-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(255, 255, 255, 0.7);
             z-index: 20;
             backdrop-filter: blur(4px);
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-slate-800">
 
-    <div id="printable-content" class="p-8"></div>
+    <div id="printable-content" class="p-8 bg-white"></div>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
-        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
+        <div id="main-container" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
             
-            <div id="disabled-overlay" class="disabled-overlay hidden"></div>
+            <div id="disabled-overlay" class="disabled-overlay rounded-2xl hidden"></div>
 
             <!-- Home View -->
             <div id="homeView" class="card visible-card">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-gray-800 font-kanit">Psych Ai Mental assessment</h2>
-                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">พื้นที่ปลอดภัยสำหรับพูดคุย พร้อมแบบประเมินสุขภาพจิตเบื้องต้น</p>
+                    <h1 class="text-4xl font-bold text-slate-800 font-kanit">Psych AI</h1>
+                    <p class="mt-2 text-slate-600 max-w-2xl mx-auto">พื้นที่ปลอดภัยสำหรับพูดคุย พร้อมแบบประเมินสุขภาพจิตเบื้องต้น</p>
                 </div>
 
                 <!-- Chat View -->
                 <div id="chatView" class="mt-8">
-                    <h3 class="text-xl font-bold text-gray-800 font-kanit">คุยกับพี่ไทร</h3>
-                    <div class="mt-2 flex flex-col h-[60vh] border rounded-lg overflow-hidden">
+                    <h2 class="text-xl font-bold text-slate-800 font-kanit">คุยกับพี่ไทร</h2>
+                    <div class="mt-3 flex flex-col h-[50vh] bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
                         <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4">
                         </div>
-                        <div class="p-4 border-t flex items-center bg-gray-50">
-                            <input type="text" id="chat-input" class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
-                            <button id="chat-send-btn" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600">
+                        <div class="p-3 border-t border-slate-200 flex items-center bg-white">
+                            <input type="text" id="chat-input" class="flex-grow p-3 border border-slate-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
+                            <button id="chat-send-btn" class="bg-blue-500 text-white p-3 rounded-r-xl hover:bg-blue-600 transition-colors shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                             </button>
-                            <button id="print-chat-btn" class="hidden ml-2 bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600" title="พิมพ์บทสนทนา">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                            </button>
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-10 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                    <p class="font-bold text-blue-800">นี่เป็นหนึ่งในโปรเจคประกวดในโครงการ “เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
-                    <p class="text-sm text-blue-700">ประกวดโครงงาน เท่ได้ต้องไม่บูลลี่ โดยโรงเรียนราชประชานุเคราะห์ 15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
-                </div>
-
-                <h3 class="text-xl font-bold text-gray-800 mt-10 mb-4 font-kanit">แบบประเมินสุขภาพจิตเบื้องต้น</h3>
+                
+                <h2 class="text-xl font-bold text-slate-800 mt-10 mb-4 font-kanit">แบบประเมินสุขภาพจิต</h2>
                 <div class="space-y-4">
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">5</p><p class="text-xs">คำถาม</p></div>
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-blue-600 text-lg">0-15</p><p class="text-xs">คะแนน</p></div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">แบบประเมินความเครียด (ST-5)</h4><p class="text-sm text-gray-600">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 2-3 นาที</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-st5-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">เริ่มทำ</button></div>
+                    <!-- ST-5 Card -->
+                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div></div>
+                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">แบบประเมินความเครียด (ST-5)</h3><p class="text-sm text-slate-500">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา</p></div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-st5-btn" class="w-full sm:w-auto bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                        <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-lg">8</p><p class="text-xs">คำถาม</p></div>
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-red-600 text-sm">ใช่/ไม่ใช่</p><p class="text-xs">คำตอบ</p></div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">8Q แบบประเมินการฆ่าตัวตาย</h4><p class="text-sm text-gray-600">ประเมินความคิดฆ่าตัวตาย แผนการ และประวัติการพยายาม ใช้เวลาประมาณ 3-4 นาที</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-q8-btn" class="w-full sm:w-auto bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-colors duration-300">เริ่มทำ</button></div>
+                    <!-- 8Q Card -->
+                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-red-300 transition-all duration-300">
+                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div></div>
+                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">8Q แบบประเมินการฆ่าตัวตาย</h3><p class="text-sm text-slate-500">ประเมินความคิดและความเสี่ยงในการฆ่าตัวตาย</p></div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-q8-btn" class="w-full sm:w-auto bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
-                         <div class="flex-shrink-0 grid grid-cols-2 gap-2 text-center w-32 mb-4 sm:mb-0 sm:mr-4">
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-green-600 text-lg">9</p><p class="text-xs">คำถาม</p></div>
-                            <div class="p-2 bg-gray-100 rounded"><p class="font-bold text-green-600 text-lg">0-27</p><p class="text-xs">คะแนน</p></div>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left"><h4 class="font-bold text-lg font-kanit">PHQ-A แบบประเมินซึมเศร้า</h4><p class="text-sm text-gray-600">คัดกรองอาการซึมเศร้าในวัยรุ่นในช่วง 2 สัปดาห์ที่ผ่านมา ใช้เวลาประมาณ 3-4 นาที</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-phqa-btn" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-300">เริ่มทำ</button></div>
+                    <!-- PHQ-A Card -->
+                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-green-300 transition-all duration-300">
+                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg></div></div>
+                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">PHQ-A แบบประเมินซึมเศร้า</h3><p class="text-sm text-slate-500">คัดกรองอาการซึมเศร้าในวัยรุ่น</p></div>
+                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-phqa-btn" class="w-full sm:w-auto bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
                     </div>
                 </div>
             </div>
 
             <!-- Assessment View -->
             <div id="assessmentView" class="card hidden-card">
-                <button id="back-to-menu-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
+                <button id="back-to-menu-btn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 z-10">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
                 <div class="p-6 sm:p-8">
                     <div id="header-section">
-                        <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-blue-600 mb-2 font-kanit"></h1>
-                        <p id="assessmentDescription" class="text-center text-gray-600 mb-6"></p>
-                        <div class="w-full bg-gray-200 rounded-full h-4 mb-8 overflow-hidden">
-                            <div id="progressBar" class="bg-blue-500 h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                        <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-slate-800 mb-2 font-kanit"></h1>
+                        <p id="assessmentDescription" class="text-center text-slate-500 mb-8"></p>
+                        <div class="w-full bg-slate-200 rounded-full h-3 mb-8 overflow-hidden">
+                            <div id="progressBar" class="bg-blue-500 h-3 rounded-full progress-bar-fill"></div>
                         </div>
                     </div>
                     <form id="assessmentForm">
                         <div id="questionsContainer"></div>
-                        <div class="flex justify-between items-center mt-8">
-                            <button type="button" id="prevBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">ย้อนกลับ</button>
-                            <div id="stepCounter" class="text-sm text-gray-500"></div>
-                            <button type="button" id="nextBtn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">ถัดไป</button>
-                            <button type="submit" id="submitBtn" class="hidden bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">ส่งคำตอบ</button>
+                        <div class="flex justify-between items-center mt-10">
+                            <button type="button" id="prevBtn" class="bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition-colors">ย้อนกลับ</button>
+                            <div id="stepCounter" class="text-sm text-slate-500"></div>
+                            <button type="button" id="nextBtn" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow">ถัดไป</button>
+                            <button type="submit" id="submitBtn" class="hidden bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition-colors shadow">ส่งคำตอบ</button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <!-- Loading Spinner -->
-            <div id="loading" class="card hidden-card text-center py-8">
-                <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <p class="mt-4 text-gray-600">กำลังประมวลผล...</p>
+            <div id="loading" class="card hidden-card text-center py-8 flex justify-center items-center h-full">
+                <div>
+                    <svg class="animate-spin h-12 w-12 text-blue-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-4 text-slate-500 font-medium">กำลังประมวลผล...</p>
+                </div>
             </div>
 
             <!-- Results View -->
-            <div id="results" class="card hidden-card p-6 sm:p-8">
-                 <!-- Result content will be injected here -->
-            </div>
+            <div id="results" class="card hidden-card p-6 sm:p-8"></div>
         </div>
-        <footer class="text-center text-sm text-gray-500 mt-6 no-print">
-            <button id="show-ethics-btn" class="underline hover:text-blue-600">ข้อตกลงและเงื่อนไขการใช้งาน</button> | จัดทำโดย RPG15 Next Gen Youth
+        <footer class="text-center text-sm text-slate-500 mt-8 no-print space-x-4">
+            <span>จัดทำโดย RPG15 Next Gen Youth</span>
+            <button id="show-ethics-btn" class="underline hover:text-blue-600">ข้อตกลงและเงื่อนไข</button>
         </footer>
     </div>
     
-    <!-- UPDATED: Ethics Modal is now Consent Modal -->
-    <div id="consentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 no-print">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-            <div class="p-4 border-b">
-                <h2 class="text-xl font-bold text-gray-800 font-kanit text-center">ข้อตกลงและเงื่อนไขการใช้งาน</h2>
+    <!-- Consent Modal -->
+    <div id="consentModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 no-print">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b">
+                <h2 class="text-xl font-bold text-slate-800 font-kanit text-center">ข้อตกลงและเงื่อนไขการใช้งาน</h2>
             </div>
-            <div class="p-6 overflow-y-auto text-sm">
-                <p class="font-bold text-center mb-4">โปรดอ่านและทำความเข้าใจก่อนเริ่มใช้งาน</p>
-                
+            <div class="p-6 overflow-y-auto text-sm text-slate-600 leading-relaxed">
+                <p class="font-bold text-center mb-4 text-slate-700">โปรดอ่านและทำความเข้าใจก่อนเริ่มใช้งาน</p>
                 <div class="space-y-4">
                     <div>
                         <h3 class="font-bold font-kanit text-blue-700">1. ขอบเขตการให้บริการ</h3>
-                        <p>แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือ **คัดกรองสุขภาพจิตเบื้องต้น** และเป็น **พื้นที่ปลอดภัยในการให้คำปรึกษาโดย AI Peer Advisor (พี่ไทร)** เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</p>
+                        <p>แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือคัดกรองสุขภาพจิตเบื้องต้น และเป็นพื้นที่ปลอดภัยในการให้คำปรึกษาโดย AI Peer Advisor (พี่ไทร) เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</p>
                     </div>
                     <div>
                         <h3 class="font-bold font-kanit text-red-700">2. การจัดการภาวะฉุกเฉิน</h3>
-                        <p>AI "พี่ไทร" ถูกออกแบบมาเพื่อแนะนำช่องทางช่วยเหลือที่เหมาะสมหากตรวจพบความเสี่ยง เช่น การทำร้ายตัวเอง หรือความรุนแรงในครอบครัว อย่างไรก็ตาม **แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน** หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</p>
+                        <p>AI "พี่ไทร" ถูกออกแบบมาเพื่อแนะนำช่องทางช่วยเหลือที่เหมาะสมหากตรวจพบความเสี่ยง แต่แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</p>
                     </div>
                     <div>
                         <h3 class="font-bold font-kanit text-green-700">3. การคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h3>
                         <ul class="list-disc pl-5 mt-1 space-y-1">
-                            <li>**การรักษาความลับ:** การสนทนากับ "พี่ไทร" จะถูกเก็บเป็นความลับ</li>
-                            <li>**การเก็บข้อมูลเพื่อพัฒนา:** เพื่อวัตถุประสงค์ในการประเมินผลและพัฒนาโครงการ **เราจะมีการเก็บข้อมูลผลการประเมินของท่าน (เช่น คะแนนรวม, ระดับความเสี่ยง) โดยไม่มีการระบุตัวตน (Anonymized Data)** ข้อมูลนี้จะไม่สามารถเชื่อมโยงกลับมาถึงตัวท่านได้</li>
-                            <li>**ความยินยอม:** การกดปุ่ม "ยอมรับและเริ่มใช้งาน" ด้านล่าง ถือว่าท่านได้รับทราบและยินยอมให้มีการเก็บข้อมูลตามที่ระบุไว้ข้างต้น</li>
-                        </ul>
-                    </div>
-                    <!-- NEW: Ethics Section -->
-                    <div>
-                        <h3 class="font-bold font-kanit text-purple-700">4. หลักจรรยาบรรณวิชาชีพ</h3>
-                        <p>การทำงานของ "พี่ไทร" และแอปพลิเคชันนี้ ยึดมั่นในหลักจรรยาบรรณของผู้ให้บริการด้านสุขภาพจิต ดังนี้:</p>
-                        <ul class="list-disc pl-5 mt-1 space-y-1">
-                            <li><b>การทำประโยชน์และไม่ทำอันตราย (Beneficence and Non-maleficence):</b> มุ่งสร้างประโยชน์สูงสุดและหลีกเลี่ยงการก่อให้เกิดอันตรายต่อผู้ใช้บริการ</li>
-                            <li><b>ความซื่อสัตย์และความรับผิดชอบ (Fidelity and Responsibility):</b> ปฏิบัติหน้าที่อย่างซื่อสัตย์และตระหนักถึงความรับผิดชอบต่อผู้ใช้บริการและสังคม</li>
-                            <li><b>ความซื่อตรง (Integrity):</b> ส่งเสริมความถูกต้องแม่นยำและความซื่อสัตย์ในการให้ข้อมูล</li>
-                            <li><b>ความยุติธรรม (Justice):</b> ให้บริการอย่างเท่าเทียมและปราศจากอคติ</li>
-                            <li><b>การเคารพสิทธิและศักดิ์ศรีของบุคคล (Respect for People's Rights and Dignity):</b> เคารพในความเป็นส่วนตัว การรักษาความลับ และการตัดสินใจด้วยตนเองของผู้ใช้บริการ</li>
+                            <li><b>การรักษาความลับ:</b> การสนทนากับ "พี่ไทร" จะถูกเก็บเป็นความลับ</li>
+                            <li><b>การเก็บข้อมูลเพื่อพัฒนา:</b> เพื่อวัตถุประสงค์ในการประเมินผลและพัฒนาโครงการ เราจะมีการเก็บข้อมูลผลการประเมินของท่าน (เช่น คะแนนรวม, ระดับความเสี่ยง) โดยไม่มีการระบุตัวตน (Anonymized Data) ข้อมูลนี้จะไม่สามารถเชื่อมโยงกลับมาถึงตัวท่านได้</li>
+                            <li><b>ความยินยอม:</b> การกดปุ่ม "ยอมรับและเริ่มใช้งาน" ด้านล่าง ถือว่าท่านได้รับทราบและยินยอมให้มีการเก็บข้อมูลตามที่ระบุไว้ข้างต้น</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="p-4 border-t text-center">
-                 <button id="accept-consent-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">ยอมรับและเริ่มใช้งาน</button>
+            <div class="p-4 bg-slate-50 border-t text-center rounded-b-xl">
+                 <button id="accept-consent-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow">ยอมรับและเริ่มใช้งาน</button>
             </div>
         </div>
     </div>
 
-    <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-4 left-4 w-full max-w-sm p-4 bg-white border rounded-lg shadow-lg hidden z-50 no-print">
-        <p class="text-sm text-gray-700">เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณให้ดีที่สุด การใช้งานเว็บไซต์นี้ต่อไปถือว่าคุณยอมรับการใช้คุกกี้ของเรา</p>
-        <button id="accept-cookies-btn" class="mt-3 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">ยอมรับ</button>
-    </div>
-
     <!-- Emergency Button -->
-    <button id="emergency-btn" class="fixed bottom-6 right-6 bg-red-600 text-white rounded-full p-3 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 4a1 1 0 012 0v5a1 1 0 11-2 0V4zm2 8a1 1 0 10-2 0v.01a1 1 0 102 0V12z" clip-rule="evenodd" />
-        </svg>
+    <button id="emergency-btn" class="fixed bottom-6 right-6 bg-red-600 text-white rounded-full p-4 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
     </button>
 
     <!-- Emergency Modal -->
     <div id="emergencyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50 no-print">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full text-center p-6 flex flex-col">
             <h2 class="text-2xl font-bold text-red-700 font-kanit">ต้องการความช่วยเหลือเร่งด่วน?</h2>
-            <p class="mt-2 text-gray-700">หากคุณรู้สึกไม่ปลอดภัยหรือต้องการความช่วยเหลือทันที</p>
-            <a href="tel:1323" class="mt-4 block w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 text-lg transition-colors duration-300">
+            <p class="mt-2 text-slate-600">หากคุณรู้สึกไม่ปลอดภัยหรือต้องการความช่วยเหลือทันที</p>
+            <a href="tel:1323" class="mt-6 block w-full bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 text-lg transition-colors duration-300 shadow-lg">
                 โทรสายด่วนสุขภาพจิต 1323
             </a>
-            <div class="mt-4 border-t pt-4">
-                <h3 class="text-lg font-bold text-gray-800 font-kanit">เบอร์โทรฉุกเฉินอื่นๆ</h3>
-                <div class="mt-2 space-y-2 text-left overflow-y-auto max-h-[40vh]">
-                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                        <span>ความรุนแรงในครอบครัว</span>
-                        <a href="tel:1300" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1300</a>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                        <span>ยาเสพติด</span>
-                        <a href="tel:1165" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1165</a>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                        <span>เหตุด่วนเหตุร้าย</span>
-                        <a href="tel:191" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">191</a>
-                    </div>
-                     <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                        <span>เจ็บป่วยฉุกเฉิน</span>
-                        <a href="tel:1669" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1669</a>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                        <span>เมาไม่ขับ</span>
-                        <a href="tel:1717" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1717</a>
-                    </div>
+            <div class="mt-6 border-t pt-4">
+                <h3 class="text-lg font-bold text-slate-800 font-kanit">เบอร์โทรฉุกเฉินอื่นๆ</h3>
+                <div class="mt-3 space-y-2 text-left">
+                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>ความรุนแรงในครอบครัว</span><a href="tel:1300" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1300</a></div>
+                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>ยาเสพติด</span><a href="tel:1165" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1165</a></div>
+                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>เหตุด่วนเหตุร้าย</span><a href="tel:191" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">191</a></div>
+                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>เจ็บป่วยฉุกเฉิน</span><a href="tel:1669" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1669</a></div>
                 </div>
             </div>
-            <button id="hide-emergency-btn" class="mt-4 text-gray-500 hover:text-gray-800 underline">ปิด</button>
+            <button id="hide-emergency-btn" class="mt-6 text-slate-500 hover:text-slate-800 underline">ปิด</button>
         </div>
     </div>
 
@@ -292,7 +228,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // --- CONFIGURATION ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfdIFywfaDGgTljKEXFJjbS83SLAhx_2brWWuaWAOg597TRY2_Awi9WMO9o0jd3eNnjA/exec';
-        const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8"; 
+        const API_KEY = ""; // Use gemini-2.5-flash-preview-05-20
 
         // --- DOM ELEMENTS ---
         const homeView = document.getElementById('homeView');
@@ -320,13 +256,14 @@
         const emergencyModal = document.getElementById('emergencyModal');
         const hideEmergencyBtn = document.getElementById('hide-emergency-btn');
         const printableContent = document.getElementById('printable-content');
-
+        
         // --- STATE ---
         let currentAssessmentId = null;
         let questions = [];
         let currentQuestionIndex = 0;
         let userAnswers = {};
         let chatHistory = [];
+        let sessionId = generateSessionId();
 
         // --- ASSESSMENT DATA (UPDATED) ---
         const assessments = {
@@ -343,18 +280,29 @@
                     { id: 'phqa_7', text: "จดจ่อกับสิ่งต่างๆ ได้ยาก เช่น ทำการบ้าน อ่านหนังสือ หรือดูโทรทัศน์" },
                     { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือในทางตรงกันข้ามคือ กระสับกระส่ายหรือกระวนกระวาย จนต้องเคลื่อนไหวไปมามากกว่าปกติ" },
                     { id: 'phqa_9', text: "คิดว่าถ้าตายไปเสียจะดีกว่า หรือคิดจะทำร้ายตัวเองด้วยวิธีใดวิธีหนึ่ง" },
+                    { id: 'phqa_sup_1', text: "ใน 1 เดือนที่ผ่านมา มีช่วงไหนที่คุณมีความคิดอยากตาย หรือไม่อยากมีชีวิตอยู่อย่างจริงจังหรือไม่", isSupplementary: true },
+                    { id: 'phqa_sup_2', text: "ตลอดชีวิตที่ผ่านมา คุณเคยพยายามที่จะทำให้ตัวเองตาย หรือลงมือฆ่าตัวตายหรือไม่", isSupplementary: true },
                 ],
                 options: [
                     { text: "ไม่มีเลย", value: 0 }, { text: "มีบางวัน", value: 1 },
                     { text: "มีมากกว่า 7 วัน", value: 2 }, { text: "มีแทบทุกวัน", value: 3 }
                 ],
-                interpret: (score) => {
+                supplementaryOptions: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
+                interpret: (score, answers) => {
                     let level, advice, colorClass;
                     if (score <= 4) { level = "ไม่มีภาวะซึมเศร้า"; advice = "ขณะนี้ยังไม่พบภาวะซึมเศร้าที่ชัดเจน"; colorClass = 'text-green-600'; }
                     else if (score <= 9) { level = "มีภาวะซึมเศร้าเล็กน้อย"; advice = "ควรหากิจกรรมที่ช่วยผ่อนคลายอารมณ์ หรือปรึกษาบุคคลใกล้ชิดที่ไว้ใจ"; colorClass = 'text-yellow-600'; }
                     else if (score <= 14) { level = "มีภาวะซึมเศร้าปานกลาง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-orange-600'; }
                     else if (score <= 19) { level = "มีภาวะซึมเศร้ามาก"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-600'; }
                     else { level = "มีภาวะซึมเศร้ารุนแรง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-800'; }
+                    
+                    if (answers['phqa_9'] > 0 || answers['phqa_sup_1'] == 1 || answers['phqa_sup_2'] == 1) {
+                        const warningHtml = `<div class="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg">
+                                              <p class="font-bold">ข้อควรระวัง</p>
+                                              <p>จากคำตอบของท่าน พบว่ามีความคิดเกี่ยวกับการทำร้ายตัวเอง แม้คะแนนรวมอาจไม่สูง ท่านควรได้รับการประเมินความเสี่ยงต่อการฆ่าตัวตายเพิ่มเติมและปรึกษาผู้เชี่ยวชาญ</p>
+                                           </div>`;
+                        advice += warningHtml;
+                    }
                     return { level, advice, colorClass };
                 }
             },
@@ -376,9 +324,9 @@
                 interpret: (score) => {
                     let level, advice, colorClass;
                     if (score === 0) { level = "ไม่มีแนวโน้มฆ่าตัวตายในปัจจุบัน"; advice = "ยังไม่พบความเสี่ยง แต่หากมีความคิดเหล่านี้เกิดขึ้น ควรปรึกษาผู้ใกล้ชิดหรือผู้เชี่ยวชาญทันที"; colorClass = 'text-green-600'; }
-                    else if (score <= 8) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับน้อย"; advice = "ควรได้รับการดูแลทางด้านจิตใจ พูดคุยกับคนที่ไว้ใจ และเฝ้าระวังอาการอย่างใกล้ชิด"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 16) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับปานกลาง"; advice = "ควรพบผู้เชี่ยวชาญเพื่อช่วยเหลือแก้ไขปัญหา และให้ญาติดูแลอย่างใกล้ชิด ติดตามประเมินอาการทุกสัปดาห์"; colorClass = 'text-orange-600'; }
-                    else { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับรุนแรง"; advice = "จำเป็นต้องได้รับการดูแลจากแพทย์ผู้เชี่ยวชาญอย่างเร่งด่วนที่สุด อาจจำเป็นต้องเข้ารับการรักษาในโรงพยาบาล"; colorClass = 'text-red-800'; }
+                    else if (score <= 8) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับน้อย"; advice = "ควรติดตามเฝ้าระวังพฤติกรรมทำร้ายตนเองโดยแนะนำให้ญาติดูแลใกล้ชิด และประเมินอาการทางจิตเวชอื่นๆ"; colorClass = 'text-yellow-600'; }
+                    else if (score <= 16) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับปานกลาง"; advice = "ควรให้การช่วยเหลือทางสังคมจิตใจช่วยแก้ไขปัญหาทุกข์ใจที่เร่งด่วน แนะนำให้ญาติดูแลใกล้ชิด และติดตามประเมินอาการทุกสัปดาห์"; colorClass = 'text-orange-600'; }
+                    else { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับรุนแรง"; advice = "จำเป็นต้องได้รับการดูแลจากแพทย์ผู้เชี่ยวชาญอย่างเร่งด่วนที่สุด ควรรับไว้รักษาในโรงพยาบาล และเฝ้าระวังอาการอย่างใกล้ชิดตลอด 24 ชั่วโมง"; colorClass = 'text-red-800'; }
                     return { level, advice, colorClass };
                 }
             },
@@ -401,13 +349,17 @@
                     if (score <= 4) { level = "เครียดน้อย"; advice = "ท่านมีความเครียดอยู่ในเกณฑ์ปกติ ซึ่งอาจเป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้"; colorClass = 'text-green-600'; }
                     else if (score <= 7) { level = "เครียดปานกลาง"; advice = "ท่านมีความเครียดสูงกว่าปกติเล็กน้อย ควรหากิจกรรมผ่อนคลาย เช่น ออกกำลังกาย พักผ่อน"; colorClass = 'text-yellow-600'; }
                     else if (score <= 9) { level = "เครียดมาก"; advice = "ท่านมีความเครียดอยู่ในระดับสูง ควรเร่งแก้ปัญหาและฝึกเทคนิคคลายเครียด เช่น การฝึกหายใจ ทำสมาธิ"; colorClass = 'text-orange-600'; }
-                    else { level = "เครียดมากที่สุด"; advice = "ท่านมีความเครียดสูงมาก อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิต"; colorClass = 'text-red-800'; }
+                    else { level = "เครียดรุนแรง"; advice = "ท่านมีความเครียดสูงมาก อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิต"; colorClass = 'text-red-800'; }
                     return { level, advice, colorClass };
                 }
             }
         };
         
         // --- FUNCTIONS ---
+
+        function generateSessionId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
 
         function switchView(viewId) {
             ['homeView', 'assessmentView', 'loading', 'results'].forEach(id => {
@@ -422,11 +374,15 @@
             });
         }
         
-        window.goBackToMenu = function() {
+        function goBackToMenu() {
             switchView('homeView');
+            currentAssessmentId = null;
+            questions = [];
+            currentQuestionIndex = 0;
+            userAnswers = {};
         }
 
-        window.startAssessment = function(assessmentId) {
+        function startAssessment(assessmentId) {
             currentAssessmentId = assessmentId;
             questions = assessments[assessmentId].questions;
             currentQuestionIndex = 0;
@@ -442,381 +398,226 @@
                 const qData = questions[currentQuestionIndex];
                 if (qData.dependsOn) {
                     const dependencyAnswer = userAnswers[qData.dependsOn.qId];
-                    if (dependencyAnswer !== qData.dependsOn.value) {
+                    if (String(dependencyAnswer) !== String(qData.dependsOn.value)) {
                         currentQuestionIndex++;
                         continue; 
                     }
                 }
-                break; 
+                break;
             }
 
             if (currentQuestionIndex >= questions.length) {
-                submitForm();
+                updateButtonsAndProgress();
                 return;
             }
 
-            questionsContainer.innerHTML = '';
             const qData = questions[currentQuestionIndex];
             
-            const visibleQuestions = questions.filter((q, index) => {
-                if (index > currentQuestionIndex) return false;
-                if (!q.dependsOn) return true;
-                return userAnswers[q.dependsOn.qId] === q.dependsOn.value;
-            });
-            const questionNumber = visibleQuestions.length;
-            const totalVisibleQuestions = questions.filter(q => !q.dependsOn || userAnswers[q.dependsOn.qId] === q.dependsOn.value).length;
-
             const options = qData.isSupplementary ? assessments[currentAssessmentId].supplementaryOptions : assessments[currentAssessmentId].options;
             let optionsHtml = options.map(opt => `
-                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-200 has-[:checked]:bg-blue-100 has-[:checked]:border-blue-400">
-                    <input type="radio" name="${qData.id}" value="${opt.value}" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300" required ${userAnswers[qData.id] == opt.value ? 'checked' : ''}>
-                    <span class="ml-4 text-gray-700">${opt.text}</span>
+                <label class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors duration-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 has-[:checked]:ring-2 has-[:checked]:ring-blue-200">
+                    <input type="radio" name="${qData.id}" value="${opt.value}" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-slate-300" required ${userAnswers[qData.id] == opt.value ? 'checked' : ''}>
+                    <span class="ml-4 text-slate-700 font-medium">${opt.text}</span>
                 </label>
             `).join('');
 
-            questionsContainer.innerHTML = `<p class="text-lg font-semibold text-gray-900">${questionNumber}. ${qData.text}</p><div class="space-y-3 mt-4">${optionsHtml}</div>`;
-
-            updateNavigation(questionNumber, totalVisibleQuestions);
+            questionsContainer.innerHTML = `
+                <div class="question-card" data-question-id="${qData.id}">
+                    <p class="text-xl font-semibold text-center mb-8 text-slate-800">${qData.text}</p>
+                    <div class="space-y-3">${optionsHtml}</div>
+                </div>
+            `;
+            updateButtonsAndProgress();
         }
-        
-        function updateNavigation(current, total) {
-            prevBtn.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
-            const isLastQuestion = current === total;
+
+        function updateButtonsAndProgress() {
+            const progress = questions.length > 0 ? ((currentQuestionIndex) / questions.length) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+            
+            stepCounter.textContent = `คำถาม ${currentQuestionIndex + 1} / ${questions.length}`;
+            prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
+            const isLastQuestion = currentQuestionIndex >= questions.length - 1;
             nextBtn.classList.toggle('hidden', isLastQuestion);
             submitBtn.classList.toggle('hidden', !isLastQuestion);
-            stepCounter.textContent = `คำถามที่ ${current} / ${total}`;
-            progressBar.style.width = `${(current / total) * 100}%`;
         }
 
-        function handleNext() {
-            const qId = questions[currentQuestionIndex].id;
-            const selected = form.querySelector(`input[name="${qId}"]:checked`);
-            if (!selected) {
-                alert('กรุณาเลือกคำตอบ');
-                return;
+        function handleNavigation(direction) {
+            if (currentQuestionIndex >= questions.length) return;
+            const currentQuestionId = questions[currentQuestionIndex].id;
+            const selectedOption = form.querySelector(`input[name="${currentQuestionId}"]:checked`);
+            if (!selectedOption) { return; }
+            userAnswers[currentQuestionId] = selectedOption.value;
+
+            if (direction === 'next') {
+                currentQuestionIndex++;
+            } else if (direction === 'prev') {
+                do {
+                    currentQuestionIndex--;
+                } while (currentQuestionIndex > 0 && questions[currentQuestionIndex].dependsOn && String(userAnswers[questions[currentQuestionIndex].dependsOn.qId]) !== String(questions[currentQuestionIndex].dependsOn.value));
             }
-            userAnswers[qId] = selected.value;
-            currentQuestionIndex++;
             renderQuestion();
         }
 
-        function handlePrev() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                while (currentQuestionIndex > 0) {
-                    const qData = questions[currentQuestionIndex];
-                    if (qData.dependsOn) {
-                        const dependencyAnswer = userAnswers[qData.dependsOn.qId];
-                        if (dependencyAnswer !== qData.dependsOn.value) {
-                           currentQuestionIndex--;
-                           continue;
-                        }
-                    }
-                    break;
-                }
-                renderQuestion();
-            }
-        }
-
-        function calculateResults() {
+        async function submitForm() {
+            switchView('loading');
             let score = 0;
-            const assessment = assessments[currentAssessmentId];
-            assessment.questions.forEach(q => {
-                if (q.isSupplementary) return;
-                const answerVal = userAnswers[q.id];
-                if (answerVal === undefined) return;
-
-                if (currentAssessmentId === 'q8') {
-                    if (answerVal === '1') {
+            if (currentAssessmentId === 'q8') {
+                for (const q of questions) {
+                    if (userAnswers.hasOwnProperty(q.id) && Number(userAnswers[q.id]) === 1) {
                         score += q.weight;
                     }
-                } else {
-                    score += parseInt(answerVal, 10);
-                }
-            });
-            return { score, answers: userAnswers };
-        }
-        
-        function displayResults(resultData) {
-            const { score, answers } = resultData;
-            const assessment = assessments[currentAssessmentId];
-            const interpretation = assessment.interpret(score, answers);
-            let resultsHtml = `<h2 class="text-3xl font-bold text-center text-blue-800 mb-6 font-kanit">ผลการประเมิน: ${assessment.title}</h2>`;
-
-            resultsHtml += `
-                <div class="border-2 rounded-xl p-6 mb-6 shadow-md bg-white">
-                    <p class="text-lg mt-2">คะแนนรวม: <span class="font-bold">${score}</span></p>
-                    <p class="text-lg mt-1">ระดับ: <span class="font-bold ${interpretation.colorClass}">${interpretation.level}</span></p>
-                    <div class="mt-4 pt-4 border-t">
-                        <h4 class="font-semibold text-gray-700 font-kanit">คำแนะนำ:</h4>
-                        <p class="text-gray-600">${interpretation.advice}</p>
-                    </div>
-                </div>`;
-            
-            let recommendationHtml = '';
-            if (currentAssessmentId === 'phqa' && answers['phqa_9'] > 0) {
-                recommendationHtml = `<div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700 no-print">
-                    <p>เนื่องจากคุณมีความคิดเกี่ยวกับการทำร้ายตนเอง เราขอแนะนำให้ทำ <button onclick="startAssessment('q8')" class="font-bold underline">แบบประเมิน 8Q</button> เพื่อประเมินความเสี่ยงเพิ่มเติม</p>
-                </div>`;
-            }
-            
-            resultsHtml += recommendationHtml;
-
-            resultsHtml += `
-                <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 no-print">
-                    <p class="font-bold font-kanit">หากต้องการปรึกษาปัญหาสุขภาพจิต</p>
-                    <p class="mt-2">โทร <a href="tel:1323" class="underline font-semibold">1323</a> (ตลอด 24 ชั่วโมง)</p>
-                    <p class="mt-1">หรือ แชทเพจเฟสบุ๊ค <a href="https://www.facebook.com/share/1EPdhJGFNb/" target="_blank" rel="noopener noreferrer" class="underline font-semibold">1323 ปรึกษาปัญหาสุขภาพจิต</a></p>
-                </div>`;
-
-            resultsHtml += `
-                <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
-                    <p class="font-bold">⚠️หมายเหตุ: ผลการประเมินนี้เป็นเพียงการคัดกรองเบื้องต้น ไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์ได้</p>
-                </div>
-                <div class="text-center mt-8 flex flex-wrap justify-center gap-4 no-print">
-                    <button onclick="goBackToMenu()" class="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600">กลับสู่เมนูหลัก</button>
-                    <button onclick="printResults()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700">พิมพ์/บันทึกผล</button>
-                    <a href="https://forms.gle/E33xuCHJh6k7w6UD6" target="_blank" rel="noopener noreferrer" class="bg-teal-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-600">
-                        ทำแบบสำรวจการใช้งาน
-                    </a>
-                </div>
-            `;
-            resultsDiv.innerHTML = resultsHtml;
-            switchView('results');
-        }
-        
-        async function submitForm(e) {
-            if(e) e.preventDefault();
-
-            const qId = questions[currentQuestionIndex].id;
-            const selected = form.querySelector(`input[name="${qId}"]:checked`);
-            if (!selected) {
-                alert('กรุณาเลือกคำตอบสำหรับคำถามสุดท้าย');
-                return;
-            }
-            userAnswers[qId] = selected.value;
-
-            switchView('loading');
-
-            const resultData = calculateResults();
-            
-            if (SCRIPT_URL) {
-                const formData = new FormData();
-                formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
-                formData.append('assessment_id', currentAssessmentId);
-                formData.append('score', resultData.score);
-                const interpretation = assessments[currentAssessmentId].interpret(resultData.score, resultData.answers);
-                formData.append('interpretation_level', interpretation.level);
-
-                for (const [key, value] of Object.entries(resultData.answers)) {
-                    formData.append(key, value);
-                }
-                
-                try {
-                    await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-                } catch (error) {
-                    console.error('Error saving data to Google Sheet:', error);
                 }
             } else {
-                console.warn('SCRIPT_URL is not set. Data will not be saved.');
+                for (const q of questions) {
+                    if (!q.isSupplementary && userAnswers.hasOwnProperty(q.id)) {
+                        score += parseInt(userAnswers[q.id], 10);
+                    }
+                }
             }
-
-            setTimeout(() => displayResults(resultData), 500);
+            const { level, advice, colorClass } = assessments[currentAssessmentId].interpret(score, userAnswers);
+            setTimeout(() => { displayResults(score, level, advice, colorClass); }, 1000);
+            await saveResultsToSheet(currentAssessmentId, score, level);
+        }
+        
+        function displayResults(score, level, advice, colorClass) {
+            const assessmentInfo = assessments[currentAssessmentId];
+            let adviceHtml = `<p>${advice.split('<div')[0]}</p>`; // Main advice
+            if (advice.includes('<div')) {
+                adviceHtml += advice.substring(advice.indexOf('<div')); // Warning box
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold font-kanit mb-2 text-slate-800">${assessmentInfo.title} - ผลการประเมิน</h2>
+                    <div class="my-8 p-8 rounded-xl bg-slate-100">
+                        <p class="text-lg text-slate-500">คะแนนรวมของคุณคือ</p>
+                        <p class="text-7xl font-bold ${colorClass} my-2">${score}</p>
+                        <p class="text-2xl font-semibold ${colorClass}">${level}</p>
+                    </div>
+                    <div class="text-left p-5 border border-slate-200 rounded-xl">
+                         <h3 class="font-bold font-kanit text-lg mb-2 text-slate-800">คำแนะนำเบื้องต้น</h3>
+                         <div class="text-slate-600 space-y-2">${adviceHtml}</div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-6">หมายเหตุ: การประเมินนี้เป็นการคัดกรองเบื้องต้นเท่านั้น ไม่สามารถใช้แทนการวินิจฉัยจากแพทย์ได้</p>
+                    
+                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="tel:1323" class="flex items-center justify-center gap-2 w-full bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition-colors duration-300 shadow">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                            โทรสายด่วน 1323
+                        </a>
+                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 5a3 3 0 00-3-3H5a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V5zm-7 2a1 1 0 00-1 1v1H8a1 1 0 100 2h2v1a1 1 0 102 0v-1h2a1 1 0 100-2h-2V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                            ปรึกษาทาง Facebook
+                        </a>
+                        <button onclick="goBackToMenu()" class="sm:col-span-2 w-full bg-slate-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-slate-700 transition-colors duration-300">กลับสู่หน้าหลัก</button>
+                    </div>
+                </div>
+            `;
+            switchView('results');
         }
 
-        // --- CHATBOT FUNCTIONS ---
-        const systemPrompt = `You are an AI peer advisor named 'ไทร' (Sai). Your name comes from 'ต้นไทร' (Banyan Tree), symbolizing a dependable refuge, and also relates to 'Psi' (Ψ), the root of the word psychology. Your persona is a wise, calm, and confident older brother figure (พี่ชายที่สุขุม ใจเย็น และพึ่งพาได้). Your communication style must be natural, warm, and supportive, using semi-formal Thai (ภาษากึ่งทางการ) that is respectful but not robotic. You must refer to yourself as 'พี่' and the user as 'เรา'. Your main role is to listen more than you talk, focusing on validating feelings and asking gentle, open-ended questions based on psychological principles to help the user understand their own thoughts better. Your responses should be concise (2-3 sentences) unless the user asks for more. You operate strictly within Thai psychological ethics and laws.
-        **Core Directives & Ethics:**
-        1.  **Confidentiality (PDPA & Mental Health Act):** You must treat all user information as strictly confidential. Do not share it. Remind users not to share highly sensitive personal identifying information.
-        2.  **Beneficence and Nonmaleficence:** Your primary goal is to promote the user's well-being and avoid causing harm.
-        3.  **Competence & Boundaries:** Clearly state you are an AI peer advisor, NOT a licensed professional, psychologist, or therapist. You CANNOT provide diagnoses or formal treatment. Your role is supportive listening and reflection.
-        4.  **Integrity:** Be honest about your limitations as an AI.
-        5.  **Respect for Rights and Dignity:** Respect the user's feelings, experiences, and autonomy without judgment.
-        6.  **SAFETY PROTOCOL (CRITICAL):** If the user mentions any form of self-harm, suicide, wanting to die, or being in immediate danger, you MUST IMMEDIATELY and ONLY respond with this exact message: "เรื่องที่เล่ามามันหนักมากจริงๆ นะ ไม่ต้องเข้มแข็งตลอดเวลาก็ได้ พี่อยู่ตรงนี้และเป็นห่วงเรามากจริงๆ ความปลอดภัยของเราสำคัญที่สุดในตอนนี้นะครับ พี่อยากให้เราคุยกับคนที่จะช่วยเราได้ทันที **โทรหาสายด่วนสุขภาพจิต 1323 ได้เลยนะ** เขารอรับฟังและพร้อมจะอยู่กับเราตอนนี้เลย"
-        7.  **Language:** All responses must be in Thai.
-        8.  **Contextual Emergency Referrals:** In addition to the primary safety protocol, if a user's situation matches a specific crisis, provide the relevant hotline. Your response should be empathetic and directly address their stated problem before offering the number.
-            * If the user mentions **family violence, abuse, or being hurt by family** (e.g., "ความรุนแรงในครอบครัว", "โดนทำร้าย", "พ่อแม่ตี"), or asks what to do in such a situation, your response must prioritize actionable safety advice. Respond with: "พี่ได้ยินแล้วนะ และอยากให้เรารู้ว่าเราเข้มแข็งมากที่ต้องรับมือกับเรื่องแบบนี้อยู่ ความปลอดภัยของเราสำคัญที่สุดนะ ถ้าเรารู้สึกว่าสถานการณ์ตอนนี้มันอันตราย พี่อยากให้เราลองทำตามนี้นะครับ: **1. พาตัวเองออกมา:** ถ้ามีโอกาส ให้ออกจากตรงนั้นมาอยู่ในที่ที่ปลอดภัยก่อน **2. บอกคนที่ไว้ใจ:** ติดต่อเพื่อนสนิท ญาติ หรือผู้ใหญ่ที่ไว้ใจได้ทันที และถ้าไม่รู้จะหันหน้าไปหาใคร **ศูนย์ประชาบดี โทร 1300** คือหน่วยงานที่พร้อมจะปกป้องและหาทางออกที่ปลอดภัยให้เราโดยตรงเลยนะ พี่อยู่ข้างๆ เรานะ"
-            * If the user mentions **drug abuse or addiction** (e.g., "ยาเสพติด", "อยากเลิกยา", "ติดยา"), respond with: "ขอบคุณนะที่ไว้ใจเล่าเรื่องยากๆ แบบนี้ให้พี่ฟัง การยอมรับและคิดที่จะสู้กับมันคือสิ่งที่นับถือมากๆ เลยนะ มันเป็นเส้นทางที่อาจจะไม่ง่าย แต่พี่อยากให้รู้ว่าเราไม่ได้เดินคนเดียว มีคนที่เข้าใจและพร้อมจะช่วยเราให้ผ่านไปได้จริงๆ **สายด่วนยาเสพติด 1165** เขาพร้อมให้คำปรึกษาและสนับสนุนเราทุกขั้นตอนเลยนะ"
-            * For any other general distress, stick to the primary 1323 hotline.
-            * **CRITICAL:** The immediate self-harm protocol (Directive 6) ALWAYS takes precedence over these contextual referrals.`;
-
-        function initChat() {
-            chatHistory = [{ role: "user", parts: [{ text: systemPrompt }] }];
-            const welcomeMessage = "สวัสดีครับ พี่ชื่อไทรนะ ยินดีที่ได้รู้จัก เรามีอะไรไม่สบายใจให้พี่ช่วยรับฟังไหม";
-            appendMessage(welcomeMessage, 'ai');
-            chatHistory.push({ role: "model", parts: [{ text: welcomeMessage }] });
+        async function saveResultsToSheet(assessmentType, score, level) {
+            const formData = new FormData();
+            formData.append('sessionId', sessionId);
+            formData.append('assessmentType', assessmentType);
+            formData.append('score', score);
+            formData.append('level', level);
+            formData.append('timestamp', new Date().toISOString());
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+            } catch (error) {
+                console.error('Could not save data to sheet:', error);
+            }
         }
 
-        function appendMessage(text, sender) {
+        // --- CHAT FUNCTIONS ---
+        function addChatMessage(sender, message) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = `w-full flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            messageDiv.classList.add('max-w-xs', 'sm:max-w-md', 'p-3', 'px-4', 'rounded-lg', 'break-words', 'shadow-sm');
             
-            const bubble = document.createElement('div');
-            bubble.className = `max-w-xs md:max-w-md p-3 ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
-            bubble.textContent = text;
-            
-            messageDiv.appendChild(bubble);
+            if (sender === 'user') {
+                messageDiv.classList.add('chat-bubble-user', 'self-end');
+                messageDiv.textContent = message;
+            } else if (sender === 'ai') {
+                messageDiv.classList.add('chat-bubble-ai', 'self-start');
+                messageDiv.textContent = message;
+            } else { // Typing indicator
+                 messageDiv.classList.add('chat-bubble-ai', 'self-start');
+                 messageDiv.innerHTML = `<div class="flex items-center space-x-1.5">
+                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce"></span>
+                 </div>`;
+                 messageDiv.id = 'typing-indicator';
+            }
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
         }
-        
-        async function triggerAiResponse() {
-            if (chatHistory[chatHistory.length - 1].role !== 'user') {
-                return;
-            }
 
-            chatSendBtn.disabled = true;
-            chatInput.disabled = true;
-            
-            const typingIndicator = document.createElement('div');
-            typingIndicator.id = 'typing-indicator';
-            typingIndicator.className = 'w-full flex justify-start';
-            typingIndicator.innerHTML = `<div class="max-w-xs md:max-w-md p-3 chat-bubble-ai"><span class="animate-pulse">...</span></div>`;
-            chatMessages.appendChild(typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            const payload = { contents: chatHistory };
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error('API request failed');
-
-                const result = await response.json();
-                const aiResponse = result.candidates[0].content.parts[0].text;
-                
-                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
-                
-                document.getElementById('typing-indicator').remove();
-                appendMessage(aiResponse, 'ai');
-
-            } catch (error) {
-                console.error("Error with Chatbot:", error);
-                document.getElementById('typing-indicator').remove();
-                appendMessage("ขออภัยนะ ตอนนี้เราอาจจะยังเชื่อมต่อได้ไม่ดีเท่าไหร่ ลองใหม่อีกครั้งได้ไหม", 'ai');
-            } finally {
-                chatSendBtn.disabled = false;
-                chatInput.disabled = false;
-                chatInput.focus();
-            }
-        }
-        
-        function handleSendMessage() {
-            const userInput = chatInput.value.trim();
-            if (!userInput) return;
-
-            appendMessage(userInput, 'user');
-            chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+        async function handleChatSend() {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+            addChatMessage('user', userMessage);
             chatInput.value = '';
-            
-            if (printChatBtn.classList.contains('hidden')) {
-                printChatBtn.classList.remove('hidden');
+            chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+            const typingIndicator = addChatMessage('typing');
+            try {
+                const payload = { contents: chatHistory };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) { throw new Error(`API request failed with status ${response.status}`); }
+                const result = await response.json();
+                typingIndicator.remove();
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts) {
+                    const aiMessage = result.candidates[0].content.parts[0].text;
+                    addChatMessage('ai', aiMessage);
+                    chatHistory.push({ role: "model", parts: [{ text: aiMessage }] });
+                } else {
+                    addChatMessage('ai', 'ขออภัยค่ะ มีข้อผิดพลาดเกิดขึ้น โปรดลองอีกครั้ง');
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                typingIndicator.remove();
+                addChatMessage('ai', 'ขออภัยค่ะ ไม่สามารถเชื่อมต่อกับระบบได้ในขณะนี้');
             }
-
-            triggerAiResponse();
-        }
-        
-        // --- MODAL & CONSENT FUNCTIONS ---
-        function showConsentModal() {
-            consentModal.classList.remove('hidden');
-            disabledOverlay.classList.remove('hidden');
         }
 
-        function hideConsentModal() {
-            consentModal.classList.add('hidden');
-            disabledOverlay.classList.add('hidden');
-        }
-
-        // --- PRINT FUNCTIONS ---
-        window.prepareChatForPrint = function() {
-            let printableHtml = `<div class="font-sans">`;
-            printableHtml += `<h1 class="text-2xl font-bold font-kanit mb-2">ประวัติการสนทนากับพี่ไทร</h1>`;
-            printableHtml += `<p class="text-sm text-gray-600">แอปพลิเคชัน: Psych Ai Mental assessment</p>`;
-            printableHtml += `<p class="text-sm text-gray-600 mb-4">วันที่พิมพ์: ${new Date().toLocaleString('th-TH')}</p>`;
-            printableHtml += `<hr class="my-4">`;
-
-            const conversation = chatHistory.filter(msg => msg.parts[0].text !== systemPrompt);
-
-            conversation.forEach(msg => {
-                const sender = msg.role === 'user' ? 'คุณ' : 'พี่ไทร';
-                const text = msg.parts[0].text.replace(/\n/g, '<br>');
-                printableHtml += `<p class="my-2"><strong class="font-bold">${sender}:</strong> ${text}</p>`;
+        // --- INITIALIZATION & EVENT LISTENERS ---
+        function init() {
+            if (!localStorage.getItem('consentAccepted')) {
+                consentModal.classList.remove('hidden');
+                disabledOverlay.classList.remove('hidden');
+            }
+            document.getElementById('start-st5-btn').addEventListener('click', () => startAssessment('st5'));
+            document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
+            document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
+            document.getElementById('back-to-menu-btn').addEventListener('click', goBackToMenu);
+            prevBtn.addEventListener('click', () => handleNavigation('prev'));
+            nextBtn.addEventListener('click', () => handleNavigation('next'));
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (currentQuestionIndex < questions.length) {
+                    const currentQuestionId = questions[currentQuestionIndex].id;
+                    const selectedOption = form.querySelector(`input[name="${currentQuestionId}"]:checked`);
+                    if(selectedOption) { userAnswers[currentQuestionId] = selectedOption.value; }
+                }
+                submitForm();
             });
-
-            printableHtml += `<hr class="my-4">`;
-            printableHtml += `<p class="text-xs text-gray-500">หมายเหตุ: นี่คือบทสนทนาสรุปจากการปรึกษาเบื้องต้นกับ AI Peer Advisor และไม่สามารถใช้แทนการวินิจฉัยทางการแพทย์จากผู้เชี่ยวชาญได้</p>`;
-            printableHtml += `</div>`;
-            
-            printableContent.innerHTML = printableHtml;
-            window.print();
+            chatSendBtn.addEventListener('click', handleChatSend);
+            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { handleChatSend(); } });
+            acceptConsentBtn.addEventListener('click', () => {
+                localStorage.setItem('consentAccepted', 'true');
+                consentModal.classList.add('hidden');
+                disabledOverlay.classList.add('hidden');
+            });
+            showEthicsBtn.addEventListener('click', () => { consentModal.classList.remove('hidden'); });
+            emergencyBtn.addEventListener('click', () => emergencyModal.classList.remove('hidden'));
+            hideEmergencyBtn.addEventListener('click', () => emergencyModal.classList.add('hidden'));
+            addChatMessage('ai', 'สวัสดีครับ มีอะไรให้พี่ไทรช่วยไหมครับ?');
         }
-
-        window.printResults = function() {
-            const resultsContent = document.getElementById('results').cloneNode(true);
-            resultsContent.querySelectorAll('.no-print').forEach(el => el.remove());
-            printableContent.innerHTML = resultsContent.innerHTML;
-            window.print();
-        }
-
-
-        // --- EVENT LISTENERS ---
-        nextBtn.addEventListener('click', handleNext);
-        prevBtn.addEventListener('click', handlePrev);
-        form.addEventListener('submit', submitForm);
-        chatSendBtn.addEventListener('click', handleSendMessage);
-        chatInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                handleSendMessage();
-            }
-        });
-
-        document.getElementById('start-st5-btn').addEventListener('click', () => startAssessment('st5'));
-        document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
-        document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
-        document.getElementById('back-to-menu-btn').addEventListener('click', goBackToMenu);
-        showEthicsBtn.addEventListener('click', showConsentModal);
-        printChatBtn.addEventListener('click', prepareChatForPrint);
-
-        emergencyBtn.addEventListener('click', () => {
-            emergencyModal.classList.remove('hidden');
-        });
-        hideEmergencyBtn.addEventListener('click', () => {
-            emergencyModal.classList.add('hidden');
-        });
-        
-        acceptConsentBtn.addEventListener('click', () => {
-            localStorage.setItem('consentGiven', 'true');
-            hideConsentModal();
-        });
-
-
-        // --- INITIALIZE APP ---
-        if (!localStorage.getItem('consentGiven')) {
-            showConsentModal();
-        } else {
-             disabledOverlay.classList.add('hidden');
-             consentModal.classList.add('hidden');
-        }
-
-        const cookieBanner = document.getElementById('cookie-consent-banner');
-        const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
-
-        if (!document.cookie.split(';').some((item) => item.trim().startsWith('cookie_consent='))) {
-            cookieBanner.classList.remove('hidden');
-        }
-
-        acceptCookiesBtn.addEventListener('click', function() {
-            document.cookie = "cookie_consent=true; max-age=31536000; path=/";
-            cookieBanner.style.opacity = '0';
-            setTimeout(() => cookieBanner.classList.add('hidden'), 500);
-        });
-
-        initChat(); 
+        init();
     });
     </script>
 </body>
-</html>
+</html>           
