@@ -7,11 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Kanit:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', 'Sarabun', sans-serif;
-            background-color: #f1f5f9; /* slate-100 */
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
         }
         .font-kanit {
             font-family: 'Kanit', sans-serif;
@@ -48,7 +48,25 @@
             color: #1e293b; /* slate-800 */
             border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
         }
-        
+        .chat-bubble-ai.thinking {
+            display: flex;
+            align-items: center;
+        }
+        .chat-bubble-ai.thinking .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 2px;
+            background-color: #94a3b8; /* slate-400 */
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .chat-bubble-ai.thinking .dot:nth-child(1) { animation-delay: -0.32s; }
+        .chat-bubble-ai.thinking .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
         #printable-content { display: none; }
 
         @media print {
@@ -63,6 +81,9 @@
             z-index: 20;
             backdrop-filter: blur(4px);
         }
+        #cookie-consent-banner {
+            transition: opacity 0.5s, visibility 0.5s;
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -70,8 +91,8 @@
     <div id="printable-content" class="p-8 bg-white"></div>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
-        <div id="main-container" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
-            
+        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
+
             <div id="disabled-overlay" class="disabled-overlay rounded-2xl hidden"></div>
 
             <!-- Home View -->
@@ -83,7 +104,7 @@
 
                 <!-- Chat View -->
                 <div id="chatView" class="mt-8">
-                    <h2 class="text-xl font-bold text-slate-800 font-kanit">คุยกับพี่ไทร</h2>
+                    <h2 class="text-xl font-bold text-slate-800 font-kanit">คุยกับทราย</h2>
                     <div class="mt-3 flex flex-col h-[50vh] bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
                         <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4">
                         </div>
@@ -95,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <h2 class="text-xl font-bold text-slate-800 mt-10 mb-4 font-kanit">แบบประเมินสุขภาพจิต</h2>
                 <div class="space-y-4">
                     <!-- ST-5 Card -->
@@ -160,47 +181,60 @@
         </div>
         <footer class="text-center text-sm text-slate-500 mt-8 no-print space-x-4">
             <span>จัดทำโดย RPG15 Next Gen Youth</span>
-            <button id="show-ethics-btn" class="underline hover:text-blue-600">ข้อตกลงและเงื่อนไข</button>
+            <button id="show-policy-btn" class="underline hover:text-blue-600">นโยบายความเป็นส่วนตัวและข้อกำหนดการใช้งาน</button>
         </footer>
     </div>
-    
-    <!-- Consent Modal -->
-    <div id="consentModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 no-print">
-        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-            <div class="p-5 border-b">
-                <h2 class="text-xl font-bold text-slate-800 font-kanit text-center">ข้อตกลงและเงื่อนไขการใช้งาน</h2>
+
+    <!-- Policy Modal -->
+    <div id="policyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 no-print hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold text-slate-800 font-kanit text-center w-full">ข้อกำหนดและนโยบายความเป็นส่วนตัว</h2>
+                <button id="close-policy-btn" class="text-slate-400 hover:text-slate-600">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto text-sm text-slate-600 leading-relaxed">
-                <p class="font-bold text-center mb-4 text-slate-700">โปรดอ่านและทำความเข้าใจก่อนเริ่มใช้งาน</p>
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div>
-                        <h3 class="font-bold font-kanit text-blue-700">1. ขอบเขตการให้บริการ</h3>
-                        <p>แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือคัดกรองสุขภาพจิตเบื้องต้น และเป็นพื้นที่ปลอดภัยในการให้คำปรึกษาโดย AI Peer Advisor (พี่ไทร) เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</p>
+                        <h3 class="font-bold font-kanit text-blue-700 text-lg">ข้อกำหนดและเงื่อนไขการใช้งาน (Terms and Conditions)</h3>
+                        <p class="mt-2">การเข้าใช้งานแอปพลิเคชันนี้ ถือว่าท่าน (“ผู้ใช้งาน”) ตกลงและยินยอมที่จะปฏิบัติตามข้อกำหนดและเงื่อนไขการใช้งานนี้ทุกประการ หากท่านไม่ตกลงตามข้อกำหนดนี้ กรุณายุติการใช้งานทันที</p>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li><b>วัตถุประสงค์:</b> แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือคัดกรองสุขภาพจิตเบื้องต้น และเป็นพื้นที่ให้คำปรึกษาโดย AI เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</li>
+                            <li><b>ข้อจำกัดความรับผิด:</b> ผู้พัฒนาจะไม่รับผิดต่อความเสียหายใดๆ ที่เกิดขึ้นจากการใช้งานแอปพลิเคชันนี้ การตัดสินใจใดๆ ที่เกิดขึ้นจากการใช้ข้อมูลในแอปนี้ถือเป็นความรับผิดชอบของผู้ใช้งานแต่เพียงผู้เดียว</li>
+                             <li><b>การจัดการภาวะฉุกเฉิน:</b> แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</li>
+                            <li><b>ทรัพย์สินทางปัญญา:</b> เนื้อหาทั้งหมดในแอปพลิเคชันนี้เป็นทรัพย์สินทางปัญญาของผู้พัฒนา ห้ามมิให้ทำซ้ำ ดัดแปลง หรือเผยแพร่โดยไม่ได้รับอนุญาต</li>
+                        </ul>
                     </div>
                     <div>
-                        <h3 class="font-bold font-kanit text-red-700">2. การจัดการภาวะฉุกเฉิน</h3>
-                        <p>AI "พี่ไทร" ถูกออกแบบมาเพื่อแนะนำช่องทางช่วยเหลือที่เหมาะสมหากตรวจพบความเสี่ยง แต่แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</p>
-                    </div>
-                    <div>
-                        <h3 class="font-bold font-kanit text-green-700">3. การคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h3>
-                        <ul class="list-disc pl-5 mt-1 space-y-1">
-                            <li><b>การรักษาความลับ:</b> การสนทนากับ "พี่ไทร" จะถูกเก็บเป็นความลับ</li>
-                            <li><b>การเก็บข้อมูลเพื่อพัฒนา:</b> เพื่อวัตถุประสงค์ในการประเมินผลและพัฒนาโครงการ เราจะมีการเก็บข้อมูลผลการประเมินของท่าน (เช่น คะแนนรวม, ระดับความเสี่ยง) โดยไม่มีการระบุตัวตน (Anonymized Data) ข้อมูลนี้จะไม่สามารถเชื่อมโยงกลับมาถึงตัวท่านได้</li>
-                            <li><b>ความยินยอม:</b> การกดปุ่ม "ยอมรับและเริ่มใช้งาน" ด้านล่าง ถือว่าท่านได้รับทราบและยินยอมให้มีการเก็บข้อมูลตามที่ระบุไว้ข้างต้น</li>
+                        <h3 class="font-bold font-kanit text-green-700 text-lg">นโยบายความเป็นส่วนตัว (Privacy Policy)</h3>
+                        <p class="mt-2">เราให้ความสำคัญกับการคุ้มครองข้อมูลส่วนบุคคลของท่าน ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</p>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li><b>ข้อมูลที่เราจัดเก็บ:</b> เราจัดเก็บข้อมูลผลการประเมินของท่าน (เช่น คำตอบ, คะแนนรวม, ระดับความเสี่ยง) และบทสนทนากับ AI โดยไม่มีการระบุตัวตน (Anonymized Data) และใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งาน</li>
+                            <li><b>วัตถุประสงค์การเก็บข้อมูล:</b> เพื่อประเมินผลและพัฒนาประสิทธิภาพของโครงการและ AI เท่านั้น ข้อมูลจะไม่ถูกนำไปใช้เพื่อวัตถุประสงค์อื่นหรือเปิดเผยแก่บุคคลที่สาม</li>
+                            <li><b>การจัดเก็บและความปลอดภัย:</b> ข้อมูลของท่านจะถูกจัดเก็บในระบบที่มีมาตรการรักษาความปลอดภัยที่เหมาะสม</li>
+                            <li><b>ระยะเวลาการเก็บข้อมูล:</b> เราจะเก็บข้อมูลของท่านไว้เท่าที่จำเป็นเพื่อวัตถุประสงค์ของโครงการเท่านั้น</li>
+                            <li><b>สิทธิ์ของเจ้าของข้อมูล:</b> ท่านมีสิทธิ์ในการเข้าถึง แก้ไข หรือร้องขอให้ลบข้อมูลของท่านได้ โดยติดต่อเราผ่านช่องทางที่ระบุไว้</li>
+                             <li><b>การติดต่อ:</b> หากมีข้อสงสัยเกี่ยวกับนโยบายความเป็นส่วนตัว สามารถติดต่อผู้พัฒนาได้ที่ [email protected]</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="p-4 bg-slate-50 border-t text-center rounded-b-xl">
-                 <button id="accept-consent-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow">ยอมรับและเริ่มใช้งาน</button>
+                 <button id="accept-policy-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow">ยอมรับและเริ่มใช้งาน</button>
             </div>
         </div>
     </div>
 
     <!-- Emergency Button -->
-    <button id="emergency-btn" class="fixed bottom-6 right-6 bg-red-600 text-white rounded-full p-4 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
+    <button id="emergency-btn" class="fixed bottom-24 right-6 bg-red-600 text-white rounded-full p-4 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
     </button>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 bg-slate-800 text-white p-4 flex flex-col sm:flex-row items-center justify-between z-50 hidden no-print">
+        <p class="text-sm mb-4 sm:mb-0">เว็บไซต์นี้ใช้คุกกี้เพื่อเพิ่มประสบการณ์การใช้งานที่ดีขึ้น การเข้าใช้งานต่อถือว่าท่านยอมรับ<a href="#" id="open-policy-from-cookie" class="underline hover:text-blue-300 ml-1">นโยบายความเป็นส่วนตัว</a>ของเรา</p>
+        <button id="accept-cookies-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">ยอมรับ</button>
+    </div>
+
 
     <!-- Emergency Modal -->
     <div id="emergencyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50 no-print">
@@ -228,7 +262,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // --- CONFIGURATION ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfdIFywfaDGgTljKEXFJjbS83SLAhx_2brWWuaWAOg597TRY2_Awi9WMO9o0jd3eNnjA/exec';
-        const API_KEY = ""; // Use gemini-2.5-flash-preview-05-20
+        const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8";
 
         // --- DOM ELEMENTS ---
         const homeView = document.getElementById('homeView');
@@ -247,16 +281,18 @@
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const chatSendBtn = document.getElementById('chat-send-btn');
-        const consentModal = document.getElementById('consentModal');
-        const acceptConsentBtn = document.getElementById('accept-consent-btn');
-        const showEthicsBtn = document.getElementById('show-ethics-btn');
+        const policyModal = document.getElementById('policyModal');
+        const acceptPolicyBtn = document.getElementById('accept-policy-btn');
+        const closePolicyBtn = document.getElementById('close-policy-btn');
+        const showPolicyBtn = document.getElementById('show-policy-btn');
+        const openPolicyFromCookieBtn = document.getElementById('open-policy-from-cookie');
         const disabledOverlay = document.getElementById('disabled-overlay');
-        const printChatBtn = document.getElementById('print-chat-btn');
         const emergencyBtn = document.getElementById('emergency-btn');
         const emergencyModal = document.getElementById('emergencyModal');
         const hideEmergencyBtn = document.getElementById('hide-emergency-btn');
-        const printableContent = document.getElementById('printable-content');
-        
+        const cookieBanner = document.getElementById('cookie-consent-banner');
+        const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
+
         // --- STATE ---
         let currentAssessmentId = null;
         let questions = [];
@@ -265,8 +301,52 @@
         let chatHistory = [];
         let sessionId = generateSessionId();
 
-        // --- ASSESSMENT DATA (UPDATED) ---
+        // --- ASSESSMENT DATA ---
         const assessments = {
+            'st5': {
+                title: 'แบบประเมินความเครียด (ST-5)',
+                description: 'ในช่วง 2 สัปดาห์ที่ผ่านมา ท่านมีอาการเหล่านี้บ่อยแค่ไหน?',
+                questions: [
+                    { id: 'st5_1', text: 'รู้สึกหงุดหงิด รำคาญใจง่าย' },
+                    { id: 'st5_2', text: 'วิตกกังวลกับเรื่องต่างๆ' },
+                    { id: 'st5_3', text: 'พักผ่อนไม่เพียงพอ' },
+                    { id: 'st5_4', text: 'รู้สึกเบื่อหน่าย ไม่อยากทำอะไร' },
+                    { id: 'st5_5', text: 'ไม่อยากพบปะผู้คน' }
+                ],
+                options: [
+                    { text: 'ไม่เลย', value: 0 },
+                    { text: 'เป็นบางครั้ง', value: 1 },
+                    { text: 'เป็นบ่อย', value: 2 },
+                    { text: 'เป็นประจำ', value: 3 }
+                ],
+                interpretation: (score) => {
+                    if (score <= 4) return { level: 'เครียดน้อย', color: 'green', advice: 'ท่านมีความเครียดในระดับปกติ สามารถจัดการได้ดีเยี่ยม' };
+                    if (score <= 7) return { level: 'เครียดปานกลาง', color: 'yellow', advice: 'ท่านมีความเครียดปานกลาง ควรหาวิธีผ่อนคลาย เช่น ออกกำลังกาย ทำกิจกรรมที่ชอบ' };
+                    if (score <= 9) return { level: 'เครียดสูง', color: 'orange', advice: 'ท่านมีความเครียดสูง ควรปรึกษาคนใกล้ชิด หรือพูดคุยกับทรายเพื่อหาทางแก้ไข' };
+                    return { level: 'เครียดรุนแรง', color: 'red', advice: 'ท่านมีความเครียดในระดับรุนแรงมาก ควรพบแพทย์หรือผู้เชี่ยวชาญเพื่อขอคำปรึกษาโดยด่วน' };
+                }
+            },
+            'q8': {
+                title: '8Q แบบประเมินการฆ่าตัวตาย',
+                description: 'ในช่วง 1 เดือนที่ผ่านมา ท่านมีความคิดหรืออาการเหล่านี้หรือไม่?',
+                questions: [
+                    { id: 'q8_1', text: 'คิดอยากตาย หรือคิดว่าตายไปจะดีกว่า', score: 1 },
+                    { id: 'q8_2', text: 'อยากทำร้ายตัวเอง หรือทำให้ตัวเองบาดเจ็บ', score: 2 },
+                    { id: 'q8_3', text: 'คิดเกี่ยวกับการฆ่าตัวตาย', score: 6 },
+                    { id: 'q8_4', text: 'มีแผนการที่จะฆ่าตัวตาย', score: 8 },
+                    { id: 'q8_5', text: 'ได้เตรียมการที่จะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ', score: 9 },
+                    { id: 'q8_6', text: 'ได้ทำให้ตนเองบาดเจ็บ แต่ไม่ตั้งใจที่จะให้เสียชีวิต', score: 4 },
+                    { id: 'q8_7', text: 'ได้พยายามฆ่าตัวตายโดยคาดหวัง/ตั้งใจที่จะให้ตาย', score: 10 },
+                    { id: 'q8_8', text: 'ตลอดชีวิตที่ผ่านมาท่านเคยพยายามฆ่าตัวตาย', score: 4 }
+                ],
+                options: [ { text: 'ใช่', value: 1 }, { text: 'ไม่ใช่', value: 0 } ],
+                interpretation: (score) => {
+                    if (score === 0) return { level: 'ไม่มีแนวโน้ม', color: 'green', advice: 'ท่านไม่มีแนวโน้มในการทำร้ายตัวเองในปัจจุบัน แต่หากรู้สึกไม่สบายใจ สามารถพูดคุยกับทรายได้เสมอ' };
+                    if (score >= 1 && score <= 8) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับน้อย', color: 'yellow', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับน้อย ควรหาเวลาผ่อนคลายและพูดคุยกับคนที่ไว้ใจ หรือปรึกษาทราย' };
+                    if (score >= 9 && score <= 16) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับปานกลาง', color: 'orange', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับปานกลาง ควรปรึกษาผู้เชี่ยวชาญ หรือโทรสายด่วนสุขภาพจิต 1323 โดยเร็ว' };
+                    return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับรุนแรง', color: 'red', advice: 'ท่านมีความเสี่ยงสูงมากในการทำร้ายตัวเอง กรุณาติดต่อสายด่วนสุขภาพจิต 1323 หรือไปโรงพยาบาลที่ใกล้ที่สุดทันที' };
+                }
+            },
             'phqa': {
                 title: 'PHQ-A (ภาวะซึมเศร้าในวัยรุ่น)',
                 description: 'ในช่วง 2 สัปดาห์ที่ผ่านมา คุณมีอาการต่อไปนี้บ่อยแค่ไหน?',
@@ -278,346 +358,343 @@
                     { id: 'phqa_5', text: "รู้สึกเหนื่อยล้า หรือไม่ค่อยมีพลัง" },
                     { id: 'phqa_6', text: "รู้สึกแย่กับตัวเอง หรือรู้สึกว่าตัวเองล้มเหลว หรือทำให้ตัวเองหรือครอบครัวผิดหวัง" },
                     { id: 'phqa_7', text: "จดจ่อกับสิ่งต่างๆ ได้ยาก เช่น ทำการบ้าน อ่านหนังสือ หรือดูโทรทัศน์" },
-                    { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือในทางตรงกันข้ามคือ กระสับกระส่ายหรือกระวนกระวาย จนต้องเคลื่อนไหวไปมามากกว่าปกติ" },
-                    { id: 'phqa_9', text: "คิดว่าถ้าตายไปเสียจะดีกว่า หรือคิดจะทำร้ายตัวเองด้วยวิธีใดวิธีหนึ่ง" },
-                    { id: 'phqa_sup_1', text: "ใน 1 เดือนที่ผ่านมา มีช่วงไหนที่คุณมีความคิดอยากตาย หรือไม่อยากมีชีวิตอยู่อย่างจริงจังหรือไม่", isSupplementary: true },
-                    { id: 'phqa_sup_2', text: "ตลอดชีวิตที่ผ่านมา คุณเคยพยายามที่จะทำให้ตัวเองตาย หรือลงมือฆ่าตัวตายหรือไม่", isSupplementary: true },
+                    { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือตรงกันข้ามคือ กระสับกระส่าย อยู่ไม่นิ่ง หรือกระวนกระวายมากกว่าปกติ" },
+                    { id: 'phqa_9', text: "คิดว่าถ้าตายไปก็คงจะดี หรือคิดทำร้ายตัวเอง" }
                 ],
                 options: [
-                    { text: "ไม่มีเลย", value: 0 }, { text: "มีบางวัน", value: 1 },
-                    { text: "มีมากกว่า 7 วัน", value: 2 }, { text: "มีแทบทุกวัน", value: 3 }
+                    { text: 'ไม่เลย', value: 0 }, { text: 'เป็นบางวัน', value: 1 },
+                    { text: 'เป็นบ่อยกว่าครึ่ง', value: 2 }, { text: 'เป็นเกือบทุกวัน', value: 3 }
                 ],
-                supplementaryOptions: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
-                interpret: (score, answers) => {
-                    let level, advice, colorClass;
-                    if (score <= 4) { level = "ไม่มีภาวะซึมเศร้า"; advice = "ขณะนี้ยังไม่พบภาวะซึมเศร้าที่ชัดเจน"; colorClass = 'text-green-600'; }
-                    else if (score <= 9) { level = "มีภาวะซึมเศร้าเล็กน้อย"; advice = "ควรหากิจกรรมที่ช่วยผ่อนคลายอารมณ์ หรือปรึกษาบุคคลใกล้ชิดที่ไว้ใจ"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 14) { level = "มีภาวะซึมเศร้าปานกลาง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-orange-600'; }
-                    else if (score <= 19) { level = "มีภาวะซึมเศร้ามาก"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-600'; }
-                    else { level = "มีภาวะซึมเศร้ารุนแรง"; advice = "ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา"; colorClass = 'text-red-800'; }
-                    
-                    if (answers['phqa_9'] > 0 || answers['phqa_sup_1'] == 1 || answers['phqa_sup_2'] == 1) {
-                        const warningHtml = `<div class="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg">
-                                              <p class="font-bold">ข้อควรระวัง</p>
-                                              <p>จากคำตอบของท่าน พบว่ามีความคิดเกี่ยวกับการทำร้ายตัวเอง แม้คะแนนรวมอาจไม่สูง ท่านควรได้รับการประเมินความเสี่ยงต่อการฆ่าตัวตายเพิ่มเติมและปรึกษาผู้เชี่ยวชาญ</p>
-                                           </div>`;
-                        advice += warningHtml;
-                    }
-                    return { level, advice, colorClass };
-                }
-            },
-            'q8': {
-                title: '8Q (ความเสี่ยงต่อการฆ่าตัวตาย)',
-                description: 'กรุณาตอบคำถามเกี่ยวกับความคิดและความรู้สึกของคุณใน 1 เดือนที่ผ่านมา',
-                questions: [
-                    { id: 'q8_1', text: "ในเดือนที่ผ่านมารวมทั้งวันนี้คิดอยากตายหรือคิดว่าตายไปจะดีกว่า", weight: 1 },
-                    { id: 'q8_2', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้อยากทำร้ายตัวเองหรือทำให้ตัวเองบาดเจ็บ", weight: 2 },
-                    { id: 'q8_3', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้คิดเกี่ยวกับการฆ่าตัวตาย", weight: 6 },
-                    { id: 'q8_3_followup', text: "ท่านไม่สามารถควบคุมความอยากฆ่าตัวตายที่ท่านคิดอยู่นั้นได้ หรือบอกไม่ได้ว่าคงจะไม่ทำตามความคิดนั้น ในขณะนี้", weight: 8, dependsOn: { qId: 'q8_3', value: '1' } },
-                    { id: 'q8_4', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้มีแผนการที่จะฆ่าตัวตาย", weight: 8 },
-                    { id: 'q8_5', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้เตรียมการที่จะทำร้ายตัวเองหรือเตรียมการจะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ", weight: 9 },
-                    { id: 'q8_6', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ได้ทำให้ตนเองบาดเจ็บแต่ไม่ตั้งใจที่ทำให้เสียชีวิต", weight: 4 },
-                    { id: 'q8_7', text: "ตั้งแต่เดือนก่อนจนถึงวันนี้ ได้พยายามฆ่าตัวตายโดยคาดหวัง/ตั้งใจที่จะให้ตาย", weight: 10 },
-                    { id: 'q8_8', text: "ตลอดชีวิตที่ผ่านมาท่านเคยพยายามฆ่าตัวตาย", weight: 4 }
-                ],
-                options: [{ text: "ใช่", value: 1 }, { text: "ไม่ใช่", value: 0 }],
-                interpret: (score) => {
-                    let level, advice, colorClass;
-                    if (score === 0) { level = "ไม่มีแนวโน้มฆ่าตัวตายในปัจจุบัน"; advice = "ยังไม่พบความเสี่ยง แต่หากมีความคิดเหล่านี้เกิดขึ้น ควรปรึกษาผู้ใกล้ชิดหรือผู้เชี่ยวชาญทันที"; colorClass = 'text-green-600'; }
-                    else if (score <= 8) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับน้อย"; advice = "ควรติดตามเฝ้าระวังพฤติกรรมทำร้ายตนเองโดยแนะนำให้ญาติดูแลใกล้ชิด และประเมินอาการทางจิตเวชอื่นๆ"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 16) { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับปานกลาง"; advice = "ควรให้การช่วยเหลือทางสังคมจิตใจช่วยแก้ไขปัญหาทุกข์ใจที่เร่งด่วน แนะนำให้ญาติดูแลใกล้ชิด และติดตามประเมินอาการทุกสัปดาห์"; colorClass = 'text-orange-600'; }
-                    else { level = "มีแนวโน้มที่จะฆ่าตัวตายระดับรุนแรง"; advice = "จำเป็นต้องได้รับการดูแลจากแพทย์ผู้เชี่ยวชาญอย่างเร่งด่วนที่สุด ควรรับไว้รักษาในโรงพยาบาล และเฝ้าระวังอาการอย่างใกล้ชิดตลอด 24 ชั่วโมง"; colorClass = 'text-red-800'; }
-                    return { level, advice, colorClass };
-                }
-            },
-            'st5': {
-                title: 'แบบประเมินความเครียด (ST-5)',
-                description: 'ในเวลา 2 สัปดาห์ที่ผ่านมานี้ ท่านมีอาการ พฤติกรรมหรือความรู้สึกต่อไปนี้มากน้อยเพียงใด',
-                questions: [
-                    { id: 'st5_1', text: "นอนไม่หลับหรือคิดมากหรือกังวลใจ" },
-                    { id: 'st5_2', text: "รู้สึกหงุดหงิดรำคาญใจ" },
-                    { id: 'st5_3', text: "ทำอะไรไม่ได้เลยเพราะประสาทตึงเครียด" },
-                    { id: 'st5_4', text: "มีความวุ่นวายใจ" },
-                    { id: 'st5_5', text: "ไม่อยากพบปะผู้คน" }
-                ],
-                options: [
-                    { text: "ไม่เคยเลย", value: 0 }, { text: "เป็นครั้งคราว", value: 1 },
-                    { text: "เป็นบ่อยๆ", value: 2 }, { text: "เป็นประจำ", value: 3 }
-                ],
-                interpret: (score) => {
-                    let level, advice, colorClass;
-                    if (score <= 4) { level = "เครียดน้อย"; advice = "ท่านมีความเครียดอยู่ในเกณฑ์ปกติ ซึ่งอาจเป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้"; colorClass = 'text-green-600'; }
-                    else if (score <= 7) { level = "เครียดปานกลาง"; advice = "ท่านมีความเครียดสูงกว่าปกติเล็กน้อย ควรหากิจกรรมผ่อนคลาย เช่น ออกกำลังกาย พักผ่อน"; colorClass = 'text-yellow-600'; }
-                    else if (score <= 9) { level = "เครียดมาก"; advice = "ท่านมีความเครียดอยู่ในระดับสูง ควรเร่งแก้ปัญหาและฝึกเทคนิคคลายเครียด เช่น การฝึกหายใจ ทำสมาธิ"; colorClass = 'text-orange-600'; }
-                    else { level = "เครียดรุนแรง"; advice = "ท่านมีความเครียดสูงมาก อาจกำลังประสบปัญหาวิกฤติในชีวิต ควรแก้ปัญหาโดยด่วนและอาจจำเป็นต้องพบผู้เชี่ยวชาญด้านสุขภาพจิต"; colorClass = 'text-red-800'; }
-                    return { level, advice, colorClass };
+                interpretation: (score) => {
+                    if (score <= 4) return { level: 'ไม่มีอาการ', color: 'green', advice: 'สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ' };
+                    if (score <= 9) return { level: 'มีอาการซึมเศร้าระดับน้อย', color: 'yellow', advice: 'ท่านมีอาการซึมเศร้าเล็กน้อย ควรสังเกตอาการตัวเองเพิ่มเติมและหาเวลาผ่อนคลาย' };
+                    if (score <= 14) return { level: 'มีอาการซึมเศร้าระดับปานกลาง', color: 'orange', advice: 'ท่านมีอาการซึมเศร้าในระดับที่ควรให้ความสนใจ ควรปรึกษาผู้เชี่ยวชาญเพื่อรับการประเมินเพิ่มเติม' };
+                    if (score <= 19) return { level: 'มีอาการซึมเศร้าระดับรุนแรง', color: 'red', advice: 'ท่านมีอาการซึมเศร้าที่น่าเป็นห่วง ควรพบจิตแพทย์เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม' };
+                    return { level: 'มีอาการซึมเศร้าระดับรุนแรงมาก', color: 'red', advice: 'ท่านมีอาการซึมเศร้ารุนแรงมากและมีความเสี่ยงสูง ควรพบจิตแพทย์โดยด่วนที่สุด' };
                 }
             }
         };
-        
+
         // --- FUNCTIONS ---
+        function generateSessionId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
-        function generateSessionId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
-
-        function switchView(viewId) {
-            ['homeView', 'assessmentView', 'loading', 'results'].forEach(id => {
-                const el = document.getElementById(id);
-                if (id === viewId) {
-                    el.classList.remove('hidden-card');
-                    el.classList.add('visible-card');
-                } else {
-                    el.classList.remove('visible-card');
-                    el.classList.add('hidden-card');
-                }
+        function switchView(viewToShow) {
+            [homeView, assessmentView, loading, resultsDiv].forEach(view => {
+                view.classList.toggle('visible-card', view === viewToShow);
+                view.classList.toggle('hidden-card', view !== viewToShow);
             });
         }
-        
-        function goBackToMenu() {
-            switchView('homeView');
-            currentAssessmentId = null;
-            questions = [];
-            currentQuestionIndex = 0;
-            userAnswers = {};
-        }
 
-        function startAssessment(assessmentId) {
-            currentAssessmentId = assessmentId;
-            questions = assessments[assessmentId].questions;
+        function startAssessment(id) {
+            currentAssessmentId = id;
+            questions = assessments[id].questions;
             currentQuestionIndex = 0;
             userAnswers = {};
-            assessmentTitle.textContent = assessments[assessmentId].title;
-            assessmentDescription.textContent = assessments[assessmentId].description;
-            switchView('assessmentView');
+            assessmentTitle.textContent = assessments[id].title;
+            assessmentDescription.textContent = assessments[id].description;
             renderQuestion();
+            switchView(assessmentView);
         }
 
         function renderQuestion() {
-            while (currentQuestionIndex < questions.length) {
-                const qData = questions[currentQuestionIndex];
-                if (qData.dependsOn) {
-                    const dependencyAnswer = userAnswers[qData.dependsOn.qId];
-                    if (String(dependencyAnswer) !== String(qData.dependsOn.value)) {
-                        currentQuestionIndex++;
-                        continue; 
-                    }
-                }
-                break;
-            }
+            questionsContainer.innerHTML = '';
+            const q = questions[currentQuestionIndex];
+            const options = assessments[currentAssessmentId].options;
 
-            if (currentQuestionIndex >= questions.length) {
-                updateButtonsAndProgress();
-                return;
-            }
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'text-center';
+            questionDiv.innerHTML = `<p class="text-xl sm:text-2xl font-semibold text-slate-700">${currentQuestionIndex + 1}. ${q.text}</p>`;
 
-            const qData = questions[currentQuestionIndex];
-            
-            const options = qData.isSupplementary ? assessments[currentAssessmentId].supplementaryOptions : assessments[currentAssessmentId].options;
-            let optionsHtml = options.map(opt => `
-                <label class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors duration-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 has-[:checked]:ring-2 has-[:checked]:ring-blue-200">
-                    <input type="radio" name="${qData.id}" value="${opt.value}" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-slate-300" required ${userAnswers[qData.id] == opt.value ? 'checked' : ''}>
-                    <span class="ml-4 text-slate-700 font-medium">${opt.text}</span>
-                </label>
-            `).join('');
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto';
 
-            questionsContainer.innerHTML = `
-                <div class="question-card" data-question-id="${qData.id}">
-                    <p class="text-xl font-semibold text-center mb-8 text-slate-800">${qData.text}</p>
-                    <div class="space-y-3">${optionsHtml}</div>
-                </div>
-            `;
-            updateButtonsAndProgress();
+            options.forEach(opt => {
+                const isChecked = userAnswers[q.id] === opt.value;
+                const labelClasses = isChecked ? 'bg-blue-500 border-blue-500 text-white shadow-md' : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:bg-blue-50';
+                optionsDiv.innerHTML += `
+                    <div>
+                        <input type="radio" name="${q.id}" id="${q.id}_${opt.value}" value="${opt.value}" class="hidden" ${isChecked ? 'checked' : ''}>
+                        <label for="${q.id}_${opt.value}" class="block text-center p-4 border rounded-lg cursor-pointer transition-all duration-200 ${labelClasses}">${opt.text}</label>
+                    </div>`;
+            });
+
+            questionsContainer.appendChild(questionDiv);
+            questionsContainer.appendChild(optionsDiv);
+
+            options.forEach(opt => {
+                document.getElementById(`${q.id}_${opt.value}`).addEventListener('change', (e) => {
+                    userAnswers[q.id] = parseInt(e.target.value);
+                    setTimeout(() => nextBtn.click(), 200);
+                });
+            });
+            updateNavigation();
         }
 
-        function updateButtonsAndProgress() {
-            const progress = questions.length > 0 ? ((currentQuestionIndex) / questions.length) * 100 : 0;
-            progressBar.style.width = `${progress}%`;
-            
-            stepCounter.textContent = `คำถาม ${currentQuestionIndex + 1} / ${questions.length}`;
+        function updateNavigation() {
+            progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+            stepCounter.textContent = `ข้อ ${currentQuestionIndex + 1} / ${questions.length}`;
             prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
-            const isLastQuestion = currentQuestionIndex >= questions.length - 1;
-            nextBtn.classList.toggle('hidden', isLastQuestion);
-            submitBtn.classList.toggle('hidden', !isLastQuestion);
+            nextBtn.classList.toggle('hidden', currentQuestionIndex === questions.length - 1);
+            submitBtn.classList.toggle('hidden', currentQuestionIndex !== questions.length - 1);
         }
 
         function handleNavigation(direction) {
-            if (currentQuestionIndex >= questions.length) return;
-            const currentQuestionId = questions[currentQuestionIndex].id;
-            const selectedOption = form.querySelector(`input[name="${currentQuestionId}"]:checked`);
-            if (!selectedOption) { return; }
-            userAnswers[currentQuestionId] = selectedOption.value;
+            const selected = document.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
+            if (selected) userAnswers[questions[currentQuestionIndex].id] = parseInt(selected.value);
 
-            if (direction === 'next') {
+            if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
+                 if (!selected) {
+                    const qDiv = questionsContainer.querySelector('p');
+                    qDiv.classList.add('text-red-500');
+                    setTimeout(() => qDiv.classList.remove('text-red-500'), 1500);
+                    return;
+                }
                 currentQuestionIndex++;
-            } else if (direction === 'prev') {
-                do {
-                    currentQuestionIndex--;
-                } while (currentQuestionIndex > 0 && questions[currentQuestionIndex].dependsOn && String(userAnswers[questions[currentQuestionIndex].dependsOn.qId]) !== String(questions[currentQuestionIndex].dependsOn.value));
+                renderQuestion();
+            } else if (direction === 'prev' && currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
             }
-            renderQuestion();
         }
 
-        async function submitForm() {
-            switchView('loading');
-            let score = 0;
+        function calculateScore() {
+            let totalScore = 0;
             if (currentAssessmentId === 'q8') {
-                for (const q of questions) {
-                    if (userAnswers.hasOwnProperty(q.id) && Number(userAnswers[q.id]) === 1) {
-                        score += q.weight;
-                    }
-                }
+                questions.forEach(q => { if (userAnswers[q.id] === 1) totalScore += q.score; });
             } else {
-                for (const q of questions) {
-                    if (!q.isSupplementary && userAnswers.hasOwnProperty(q.id)) {
-                        score += parseInt(userAnswers[q.id], 10);
-                    }
-                }
+                totalScore = Object.values(userAnswers).reduce((sum, val) => sum + val, 0);
             }
-            const { level, advice, colorClass } = assessments[currentAssessmentId].interpret(score, userAnswers);
-            setTimeout(() => { displayResults(score, level, advice, colorClass); }, 1000);
-            await saveResultsToSheet(currentAssessmentId, score, level);
+            return totalScore;
         }
-        
-        function displayResults(score, level, advice, colorClass) {
-            const assessmentInfo = assessments[currentAssessmentId];
-            let adviceHtml = `<p>${advice.split('<div')[0]}</p>`; // Main advice
-            if (advice.includes('<div')) {
-                adviceHtml += advice.substring(advice.indexOf('<div')); // Warning box
-            }
-            
+
+        function displayResults(id, score, interpretation) {
+            const { level, color, advice } = interpretation;
+            const colorClasses = {
+                green: 'bg-green-100 text-green-800 border-green-400',
+                yellow: 'bg-yellow-100 text-yellow-800 border-yellow-400',
+                orange: 'bg-orange-100 text-orange-800 border-orange-400',
+                red: 'bg-red-100 text-red-800 border-red-400'
+            };
             resultsDiv.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-2xl font-bold font-kanit mb-2 text-slate-800">${assessmentInfo.title} - ผลการประเมิน</h2>
-                    <div class="my-8 p-8 rounded-xl bg-slate-100">
-                        <p class="text-lg text-slate-500">คะแนนรวมของคุณคือ</p>
-                        <p class="text-7xl font-bold ${colorClass} my-2">${score}</p>
-                        <p class="text-2xl font-semibold ${colorClass}">${level}</p>
+                    <h2 class="text-3xl font-bold font-kanit text-slate-800">ผลการประเมิน</h2>
+                    <p class="mt-2 text-slate-600">${assessments[id].title}</p>
+                    <div class="my-8 p-6 rounded-xl border-2 ${colorClasses[color]}">
+                        <p class="text-lg font-semibold">ผลคะแนน: ${score} คะแนน</p>
+                        <p class="text-2xl font-bold font-kanit mt-2">${level}</p>
                     </div>
-                    <div class="text-left p-5 border border-slate-200 rounded-xl">
-                         <h3 class="font-bold font-kanit text-lg mb-2 text-slate-800">คำแนะนำเบื้องต้น</h3>
-                         <div class="text-slate-600 space-y-2">${adviceHtml}</div>
+                    <div class="bg-slate-50 p-6 rounded-lg text-left">
+                        <h3 class="font-bold font-kanit text-slate-700">คำแนะนำเบื้องต้น</h3>
+                        <p class="mt-2 text-slate-600">${advice}</p>
                     </div>
-                    <p class="text-xs text-slate-400 mt-6">หมายเหตุ: การประเมินนี้เป็นการคัดกรองเบื้องต้นเท่านั้น ไม่สามารถใช้แทนการวินิจฉัยจากแพทย์ได้</p>
-                    
                     <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <a href="tel:1323" class="flex items-center justify-center gap-2 w-full bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition-colors duration-300 shadow">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                            โทรสายด่วน 1323
-                        </a>
-                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 5a3 3 0 00-3-3H5a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V5zm-7 2a1 1 0 00-1 1v1H8a1 1 0 100 2h2v1a1 1 0 102 0v-1h2a1 1 0 100-2h-2V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                            ปรึกษาทาง Facebook
-                        </a>
-                        <button onclick="goBackToMenu()" class="sm:col-span-2 w-full bg-slate-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-slate-700 transition-colors duration-300">กลับสู่หน้าหลัก</button>
+                        <a href="tel:1323" class="w-full text-center bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition-colors shadow">โทรสายด่วนสุขภาพจิต 1323</a>
+                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" class="w-full text-center bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow">ปรึกษาทาง Facebook</a>
+                        <button id="back-to-menu-results-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition-colors">กลับหน้าหลัก</button>
+                        <button id="print-results-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors">พิมพ์ผล</button>
                     </div>
-                </div>
-            `;
-            switchView('results');
+                </div>`;
+            switchView(resultsDiv);
+            document.getElementById('back-to-menu-results-btn').addEventListener('click', () => switchView(homeView));
+            document.getElementById('print-results-btn').addEventListener('click', () => {
+                printableContent.innerHTML = resultsDiv.innerHTML;
+                window.print();
+            });
         }
 
-        async function saveResultsToSheet(assessmentType, score, level) {
-            const formData = new FormData();
-            formData.append('sessionId', sessionId);
-            formData.append('assessmentType', assessmentType);
-            formData.append('score', score);
-            formData.append('level', level);
-            formData.append('timestamp', new Date().toISOString());
+        async function submitDataToGoogleSheet(assessmentId, score, level) {
+            const data = { timestamp: new Date().toISOString(), sessionId, assessment: assessmentId, score, level };
             try {
-                await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-            } catch (error) {
-                console.error('Could not save data to sheet:', error);
-            }
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            } catch (error) { console.error('Error submitting data:', error); }
         }
 
-        // --- CHAT FUNCTIONS ---
-        function addChatMessage(sender, message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('max-w-xs', 'sm:max-w-md', 'p-3', 'px-4', 'rounded-lg', 'break-words', 'shadow-sm');
-            
-            if (sender === 'user') {
-                messageDiv.classList.add('chat-bubble-user', 'self-end');
-                messageDiv.textContent = message;
-            } else if (sender === 'ai') {
-                messageDiv.classList.add('chat-bubble-ai', 'self-start');
-                messageDiv.textContent = message;
-            } else { // Typing indicator
-                 messageDiv.classList.add('chat-bubble-ai', 'self-start');
-                 messageDiv.innerHTML = `<div class="flex items-center space-x-1.5">
-                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                    <span class="h-2 w-2 bg-slate-400 rounded-full animate-bounce"></span>
-                 </div>`;
-                 messageDiv.id = 'typing-indicator';
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const selected = document.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
+            if (!selected) {
+                const qDiv = questionsContainer.querySelector('p');
+                qDiv.classList.add('text-red-500');
+                setTimeout(() => qDiv.classList.remove('text-red-500'), 1500);
+                return;
             }
+            userAnswers[questions[currentQuestionIndex].id] = parseInt(selected.value);
+            switchView(loading);
+            const score = calculateScore();
+            const interpretation = assessments[currentAssessmentId].interpretation(score);
+            await submitDataToGoogleSheet(currentAssessmentId, score, interpretation.level);
+            setTimeout(() => displayResults(currentAssessmentId, score, interpretation), 1000);
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            const bubble = document.createElement('div');
+            bubble.className = `max-w-xs md:max-w-md lg:max-w-lg px-5 py-3 shadow ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
+            bubble.textContent = text;
+            messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            return messageDiv;
         }
 
-        async function handleChatSend() {
-            const userMessage = chatInput.value.trim();
-            if (!userMessage) return;
-            addChatMessage('user', userMessage);
+        function showThinkingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.id = 'thinking-indicator';
+            messageDiv.className = 'flex justify-start';
+            messageDiv.innerHTML = `<div class="chat-bubble-ai thinking px-5 py-4 shadow"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeThinkingIndicator() {
+            const indicator = document.getElementById('thinking-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        async function handleSendMessage() {
+            const userInput = chatInput.value.trim();
+            if (userInput === '') return;
+            addMessage('user', userInput);
             chatInput.value = '';
-            chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
-            const typingIndicator = addChatMessage('typing');
+            showThinkingIndicator();
+            chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+
+            const systemPrompt = `
+คุณคือ "ทราย" เป็น AI Peer Advisor เพศชาย ที่มีความเห็นอกเห็นใจ เป็นมิตร และใช้ภาษาไทยที่เข้าใจง่ายเหมือนคุยกับรุ่นพี่ที่ไว้ใจ ไม่พูดมากไป ไม่ใช้คำพร่ำพรื่อ สื่อสารตรงประเด็น เน้นรับฟังมากกว่าพูด คุณจะต้องระวังการใช้คำพูด Negative ให้ใช้คำที่ positive 
+
+การก่อประโยชน์ คือ การก่อประโยชน์ให้เกิดแก่ผู้รับบริการ ซึ่งถือว่าเป็นหลักการสำคัญที่สุด โดยนักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงปกป้องสิทธิของผู้รับบริการ พึงมุ่งเน้นที่จะให้บริการอย่างเหมาะสม และระมัดระวังหรือหลีกเลี่ยงการก่อให้เกิดอันตรายที่จะมีขึ้นกับผู้รับบริการ
+ความรับผิดชอบ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงรักษามาตรฐานการให้บริการไว้ในระดับสูง และมีความรับผิดชอบต่อความประพฤติของตนเอง พึงตระหนักถึงความเป็นมืออาชีพ มีจริยธรรม และความรับผิดชอบทางกฎหมายและการรักษาชื่อเสียงทางวิชาชีพของตนเอง
+ความซื่อสัตย์ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงมุ่งมั่นส่งเสริมความซื่อสัตย์และความจริงของการประพฤติปฏิบัติที่เกี่ยวกับการประเมิน วิจัย และการสอน
+ความยุติธรรม คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงปฏิบัติต่องานของตนและผู้ที่ทำงานด้วยทั้งในสาขาวิชาชีพของตนเอง และวิชาชีพอื่น ๆ ด้วยความเป็นธรรมและยุติธรรม พึงใช้เหตุผลอย่างเหมาะสม และควรระวังป้องกันมิให้เกิดการกระทำที่ไม่เหมาะสม อันเนื่องมาจากอคติที่อาจเกิดขึ้นหรือข้อจำกัดต่าง ๆ
+ความเคารพ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงแสดงความเคารพต่อทุกคนและเคารพสิทธิความเป็นส่วนตัวของบุคคล รวมถึงสิทธิส่วนบุคคลในการรักษาความลับและการตัดสินใจต่าง ๆ
+
+
+คุณต้องปฏิบัติตามกรอบจรรยาบรรณสากลของผู้ให้บริการด้านสุขภาพจิตอย่างเคร่งครัดดังนี้:
+1.  **ยึดประโยชน์ของผู้ใช้และไม่ก่ออันตราย (Beneficence & Non-maleficence):** เป้าหมายสูงสุดของคุณคือการช่วยเหลือและเอื้อประโยชน์แก่ผู้ใช้งาน ต้องระมัดระวังและหลีกเลี่ยงการกระทำที่อาจก่อให้เกิดอันตรายทั้งทางตรงและทางอ้อม
+2.  **มีความรับผิดชอบและสร้างความไว้วางใจ (Fidelity & Responsibility):** สร้างสัมพันธภาพที่น่าไว้วางใจ รับผิดชอบต่อคำแนะนำของตนเอง และตระหนักถึงข้อจำกัดในฐานะ AI
+3.  **มีความซื่อสัตย์ (Integrity):** สื่อสารอย่างตรงไปตรงมา ไม่บิดเบือนข้อมูล และโปร่งใสเกี่ยวกับบทบาทของคุณที่เป็นเพียงผู้ให้คำปรึกษาเบื้องต้น
+4.  **มีความยุติธรรม (Justice):** ให้บริการทุกคนอย่างเท่าเทียม ปราศจากอคติทางเพศ, อายุ, เชื้อชาติ, หรือสถานะทางสังคม
+5.  **เคารพในสิทธิและศักดิ์ศรี (Respect for Rights & Dignity):** เคารพในความเป็นส่วนตัว, การรักษาความลับ, และสิทธิ์ในการตัดสินใจของผู้ใช้งาน
+ภารกิจหลักของคุณคือ:
+-   **รับฟังอย่างไม่ตัดสิน:** เป็นพื้นที่ปลอดภัยให้ผู้ใช้ได้ระบายความรู้สึก
+-   **ให้คำแนะนำเบื้องต้น:** เสนอแนะแนวทางจัดการความรู้สึกและปัญหาในเชิงบวกและสร้างสรรค์
+-   **ประเมินความเสี่ยง:** หากบทสนทนามีสัญญาณของความเสี่ยงในการทำร้ายตัวเองหรือภาวะซึมเศร้ารุนแรง (เช่น พูดถึงการตาย, สิ้นหวัง, ทำร้ายตัวเอง) **ต้อง** แนะนำให้ติดต่อสายด่วนสุขภาพจิต 1323 หรือเบอร์ฉุกเฉินอื่นๆ ทันที และให้เบอร์โทรนั้นในคำตอบของคุณอย่างชัดเจน
+-   **ข้อจำกัดที่สำคัญ:** **ห้ามวินิจฉัยโรคหรือให้คำแนะนำทางการแพทย์เด็ดขาด** ให้ย้ำเสมอว่าคุณเป็นเพียง AI สำหรับให้คำปรึกษาเบื้องต้นเท่านั้น และแนะนำให้ปรึกษาผู้เชี่ยวชาญตัวจริงเสมอหากเป็นเรื่องที่ซับซ้อน
+
+การก่อประโยชน์ คือ การทำสิ่งที่ดีและสิ่งที่เป็นประโยชน์ให้แก่บุคคลอื่น เป็นการกระทำเชิงบวกเพื่อช่วยเหลือผู้อื่น อาจหมายถึงการทำความดี มีเมตตากรุณา ปรารถนาดีและเอเฟื้อแก่เพื่อนมนุษย์
+การไม่ก่อให้เกิดอันตราย คือ การไม่ทำอันตรายทั้งต่อร่างกายและจิตใจของผู้รับบริการ หรือไม่ทำในสิ่งที่อาจก่อให้เกิดความไม่ปลอดภัยของผู้รับบริการ และไม่แสดงพฤติกรรมเพิกเฉยละทิ้งหน้าที่การให้บริการ เป็นการกระทำที่ครอบคลุมทั้งการปฏิบัติ ท่าที่ คำพูด สีหน้า แววตาที่แสดงต่อผู้รับบริการ พึงปฏิบัติด้วยความเมตตา เห็นใจ และเคารพในความเป็นมนุษย์ของผู้รับบริการ
+การเคารพเอกสิทธิและความเป็นอิสระ คือ สิทธิของผู้รับบริการในการตัดสินใจเลือกและรับผิดชอบกับพฤติกรรมของตนเองโดยที่ผลของพฤติกรรมนั้นไม่ส่งผลกระทบหรือทำให้ผู้อื่นเดือดร้อน สามารถที่จะกำกับตนเองและอิสระที่จะเลือกด้วยตนเองโดยปราศจารการครอบงำจากผู้อื่น แต่ไม่ควรใช้กับผู้ที่ไม่มีความสามารถในการตัดสินใจหรือปกครองชีวิตตนเองได้อย่างเพียงพอ เช่น ผู้ที่ยังไม่บรรลุนิสิตภาวะ ผู้ที่ด้อยสมรรถภาพ ทั้งนี้การไม่พูดความจริง ไม่เปิดเผยผลการรักษา ส่งผลต่อการตัดสินใจในการจะกระทำใด ๆ ถือว่าเป็นสิ่งที่ละเมิดต่อหลักการเคารพเอกสิทธิ
+ความไว้วางใจ คือ ผู้ให้บริการต้องสร้างความน่าไว้วางใจ เคารพข้อตกลง และคำสั่นสัญญาที่มีร่วมกันระหว่างผู้ให้บริการและผู้รับบริการ และให้ถือว่าการเก็บรักษาความลับและข้อตกลงนั้นเป็นหัวใจสำคัญที่เกิดจากความไว้วางใจของผู้รับบริการ ให้จำกัดการเปิดเผยข้อมูลที่เป็นความลับเกี่ยวกับผู้รับบริการให้เป็นไปตามวัตถุประสงค์หรือเงื่อนไขที่ตกลงไว้เบื้องต้น
+ความยุติธรรม คือ ความเป็นธรรม ความเที่ยงธรรม ความไม่ลำเอียง โดยไม่คำนึงถึงอายุ ฐานะ อาชีพ เพศ เชื้อชาติ หรือระดับการศึกษาของผู้รับบริการ ทุกคนได้รับการปฏิบัติอย่างเป็นธรรมและได้รับความเคารพในสิทธิมนุษยชนและศักดิ์ศรี ผู้ให้บริการต้องยึดมั่นความเท่าเทียมและเป็นกลาง ระมัดระวังไม่ให้เกิดอคติ หลีกเลี่ยงการเลือกปฏิบัติ
+ความเคารพตนเอง คือ การที่ผู้ให้บริการดูแลตนเองทั้งเรื่องความรู้ความสามารถ และสุขภาพกายสุขภาพใจ ใช้หลักการทางจริยธรรมอื่น ๆ อย่างเหมาะสมเพื่อสิทธิของตนเองในแง่ของการเงินและค่าตอบแทนที่สมควรได้รับ รวมถึงการขอคำปรึกษา การบำบัด หรือโอกาสอื่น ๆ ในการพัฒนาตนเองตามที่กำหนด มีความรับผิดชอบทางจริยธรรมในการเข้ารับการนิเทศเพื่อส่งเสริมและพัฒนาทางวิชาชีพและชีวิตส่วนตัว รวมถึงแสวงหาการฝึกอบรมและโอกาสอื่น ๆ สำหรับการพัฒนาทางวิชาชีพอย่างต่อเนื่อง
+
+หมวด A สิทธิประโยชน์แก่ผู้รับบริการและการหาประโยชน์โดยไม่ชอบ คือ นักจิตวิทยาต้องเอื้อประโยชน์แก่ผู้รับบริการหรือผู้ที่ปฏิบัติงานด้วย และมีการดูแลป้องกันมิให้เกิดอันตราย ต้องนำมาซึ่งประโยชน์และสิทธิของผู้เกี่ยวข้อง หากมีความขัดแย้งเกิดขึ้นระหว่างหน้าที่รับผิดชอบและสิ่งที่เกี่ยวข้อง นักจิตวิทยาต้องพยายามแก้ไขความขัดแย้งตามแนวทางที่เหมาะสม หลักเลี่ยงหรือลดอันตรายที่อาจจะเกิดจากความคิดเห็นหรือการกระทำในฐานะนักจิตวิทยาที่จะส่งผลต่อบุคคลอื่น และต้องตระหนักว่าสุขภาพกายและใจของตนเองสามารถส่งผลต่อความสามารถในการให้บริการ
+หมวด B ความรับผิดชอบ คือ นักจิตวิทยาพึงสร้างสัมพันธภาพที่น่าไว้วางใจกับผู้รับบริการหรือผู้ที่เกี่ยวข้อง และมีความรับผิดชอบต่อพฤติกรรมของตนเองอย่างเหมาะสม พยายามจัดการควบคุมความขัดแย้งทางผลประโยชน์ที่อาจก่อให้เกิดผลเสียหายหรืออันตราย พึงปรึกษา ส่งต่อ และร่วมมือกับวิชาชีพอื่น ๆ เพื่อผลประโยชน์สูงสุดแก่ผู้รับบริการหรือผู้ที่ปฏิบัติงานด้วย รวมถึงยอมเสียสละเวลาเพื่อให้บริการแก่ผู้ที่ไม่ได้ค่าตอบแทน หรือให้ค่าตอบแทนเพียงเล็กน้อย
+หมวด C ความซื่อสัตย์ คือ นักจิตวิทยาพึงส่งเสริมความซื่อสัตย์สุจริต และความเป็นจริงในการค้นคว้าวิจัย การเรียนการสอน การปฏิบัติงานต่าง ๆ โดยไม่ขโมย หลอกหลวง หรือปลอมแปลงบิดเบือนข้อมูลต่าง ๆ อีกทั้งต้องรักษาสัญญาและไม่โกหกเพื่อประโยชน์สูงสุดของผู้รับบริการ นักจิตวิทยาต้องพิจารณาถึงผลกระทบที่อาจเกิดขึ้นอย่างรอบคอบ
+หมวด D ความยุติธรรม คือ นักจิตวิทยาต้องตระหนักว่าทุกคนมีสิทธิที่จะเข้าถึงและได้ประโยชน์จากวิชาจิตวิทยาอย่างเท่าเทียมกัน พึงใช้การตัดสินใจอย่างเหมาะสมตามหลักวิชาชีพ และระมัดระวังไม่ให้เกิดอคติที่อาจเป็นอุปสรรคต่อการให้บริการ
+หมวด E ความเคารพในสิทธิและศักดิ์ศรี คือ นักจิตวิทยาพึงเคารพศักดิ์ศรีและคุณค่าความเป็นมนุษย์ของทุกคน รวมถึงสิทธิส่วนบุคคลในการรักษาความลับและการตัดสินใจต่าง ๆ ให้คุณค่ากับความแตกต่างทางวัฒนธรรม ปัจเจกชน และบทบาท โดยมุ่งกำจัดอคติที่อาจเกิดขึ้นจากปัจจัยความต่างเหล่านี้
+
+1. ผู้ให้คำปรึกษาควรมีความตระหนักรู้ในตนเอง (self-awareness)
+ก่อนที่เราจะเข้าใจคนอื่น ผู้ให้คำปรึกษาควรเข้าใจตนเองก่อน (พิชาวีร์ เมฆขยาย, 2562) โดยการสำรวจ เรียนรู้ และตกผลึกอย่างลึกซึ้งเกี่ยวกับความสามารถของตนเอง แรงจูงใจในการทำงาน ทัศนคติของตนเอง รวมถึงความรู้สึกของตนขณะให้การปรึกษาอยู่ จะทำให้เราเกิดความตระหนักรู้ในตนเอง เข้าถึงศักยภาพแห่งตน (self-actualized) และเข้าใจตนเองมากยิ่งขึ้น ซึ่งอาจจะช่วยให้เราเข้าใจ และช่วยเหลือผู้เข้ารับการปรึกษาได้มากยิ่งขึ้น
+
+2. ผู้ให้คำปรึกษาควรมีความไวต่อการรับรู้ (sensitivity)
+ประเด็นที่ควรมีความไวต่อการรับรู้ ได้แก่ การรับรู้ในประเด็นของวัฒนธรรม อารมณ์ จุดแข็ง-จุดอ่อนของผู้รับการปรึกษารวมถึงแนวทางการจัดการปัญหา เพราะจะช่วยให้ผู้ให้คำปรึกษาจับประเด็นได้ดียิ่งขึ้น สามารถรักษาสมดุลระหว่างเหตุผลกับความรู้สึกได้ (Learning hub, 2018) เกิดความเข้าใจผู้เข้ารับการปรึกษาได้มากขึ้น และสามารถช่วยเหลือได้อย่างเหมาะสม เช่น ประเด็นด้านศาสนา ในบางศาสนาอาจจะมีข้อปฏิบัติหรือข้อห้ามต่าง ๆ ที่เราไม่สามารถจัดการได้ด้วยข้อปฏิบัติของศาสนาเรา เป็นต้น
+
+3. ผู้ให้คำปรึกษาควรเปิดใจรับสิ่งต่าง ๆ  (Open-mindedness)
+การเปิดใจรับฟังตลอดจนการยอมรับความแตกต่างทั้งด้านการใช้ชีวิต สังคม วัฒนธรรม ความเชื่อ ฐานะทางเศรษฐกิจ รวมถึงพื้นฐานครอบครัว เป็นคุณสมบัติที่สำคัญซึ่งผู้ให้คำปรึกษาไม่ควรยึดติดกับกรอบใดกรอบหนึ่งของตน (พิชาวีร์ เมฆขยาย, 2562) เนื่องจากการช่วยเหลือด้วยวิธีใดวิธีหนึ่งอาจจะไม่ได้เหมาะสมและไม่สามารถใช้ได้กับทุกคน จึงควรพิจารณาเป็นรายบุคคลไป (Learning hub, 2018) หลายครั้งไม่จำเป็นต้องเห็นด้วยกับสิ่งที่ผู้รับการปรึกษาพูด เพียงแต่ต้องเปิดใจรับฟังและชี้ให้เห็นถึงข้อดี-ข้อเสียในประเด็นเหล่านั้น นอกจากนี้ การเปิดใจรับฟังยังจะทำให้ผู้เข้ารับการปรึกษากล้าที่จะพูดเรื่องราวของเขามากขึ้น ไม่กลัวว่าเราจะตัดสินเขา และส่งผลให้เกิดการสื่อสารที่มีประสิทธิภาพและจริงใจมากขึ้น
+
+4.ผู้ให้คำปรึกษาควรมีจรรยาบรรณในการให้คำปรึกษา (Ethics)
+ในการรักษาความเป็นมืออาชีพ และเพื่อให้เกิดประโยชน์สูงสุดต่อผู้เข้ารับการปรึกษา จรรยาบรรณของการให้คำปรึกษาจึงได้ถูกกำหนดขึ้นเพื่อเป็นกรอบแนวทางในการปฏิบัติ เช่น การรักษาความลับโดยไม่เปิดเผยข้อมูลหรือเรื่องราวของผู้เข้ารับการปรึกษาให้ผู้อื่นทราบ หากไม่ได้รับการอนุญาตหรือเป็นคำสั่งศาล (ส่องโสม พึ่งพงศ์ และ ภัทรานุช แสงจันทร์, 2558)  ขณะเดียวกัน หากเราปรึกษาผู้อื่นที่ไม่ใช่ผู้ให้คำปรึกษา ก็จะไม่สามารถแน่ใจได้ว่าเรื่องของเราจะถูกเก็บเป็นความลับหรือไม่ ดังนั้น จรรยาบรรณในการให้คำปรึกษาจึงเป็นส่วนหนึ่งที่ทำให้การรับการปรึกษาจากผู้ให้คำปรึกษานั้นต่างจากการปรึกษากับคนอื่น ๆ 
+`;
+
+            const payload = { contents: [{ role: "model", parts: [{ text: systemPrompt }] }, ...chatHistory] };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
             try {
-                const payload = { contents: chatHistory };
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) { throw new Error(`API request failed with status ${response.status}`); }
+                if (!response.ok) throw new Error(`API request failed: ${response.status}`);
                 const result = await response.json();
-                typingIndicator.remove();
-                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts) {
-                    const aiMessage = result.candidates[0].content.parts[0].text;
-                    addChatMessage('ai', aiMessage);
-                    chatHistory.push({ role: "model", parts: [{ text: aiMessage }] });
-                } else {
-                    addChatMessage('ai', 'ขออภัยค่ะ มีข้อผิดพลาดเกิดขึ้น โปรดลองอีกครั้ง');
-                }
+                removeThinkingIndicator();
+                if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    const aiResponse = result.candidates[0].content.parts[0].text;
+                    addMessage('ai', aiResponse);
+                    chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                } else { addMessage('ai', 'ขออภัยครับ มีข้อผิดพลาดบางอย่าง ลองใหม่อีกครั้งนะครับ'); }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
-                typingIndicator.remove();
-                addChatMessage('ai', 'ขออภัยค่ะ ไม่สามารถเชื่อมต่อกับระบบได้ในขณะนี้');
+                removeThinkingIndicator();
+                addMessage('ai', 'ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาลองใหม่อีกครั้งในภายหลัง');
             }
         }
 
         // --- INITIALIZATION & EVENT LISTENERS ---
-        function init() {
-            if (!localStorage.getItem('consentAccepted')) {
-                consentModal.classList.remove('hidden');
+        function initialize() {
+            // Policy Modal Logic
+            const showPolicy = () => {
+                policyModal.classList.remove('hidden');
                 disabledOverlay.classList.remove('hidden');
+            };
+            const hidePolicy = () => {
+                policyModal.classList.add('hidden');
+                if (!localStorage.getItem('consentGiven')) {
+                    disabledOverlay.classList.remove('hidden');
+                } else {
+                    disabledOverlay.classList.add('hidden');
+                }
+            };
+            const acceptPolicy = () => {
+                localStorage.setItem('consentGiven', 'true');
+                policyModal.classList.add('hidden');
+                disabledOverlay.classList.add('hidden');
+                if (chatMessages.children.length === 0) {
+                     addMessage('ai', 'สวัสดีครับ มีอะไรให้ทรายช่วยไหมครับ? เล่าให้ฟังได้นะ');
+                }
+            };
+            showPolicyBtn.addEventListener('click', showPolicy);
+            openPolicyFromCookieBtn.addEventListener('click', (e) => { e.preventDefault(); showPolicy(); });
+            closePolicyBtn.addEventListener('click', hidePolicy);
+            acceptPolicyBtn.addEventListener('click', acceptPolicy);
+
+            // Initial Consent Check
+            if (localStorage.getItem('consentGiven') !== 'true') {
+                showPolicy();
+            } else {
+                if (chatMessages.children.length === 0) {
+                     addMessage('ai', 'สวัสดีครับ มีอะไรให้ทรายช่วยไหมครับ? เล่าให้ฟังได้นะ');
+                }
             }
+
+            // Cookie Banner Logic
+            if (!document.cookie.includes('cookie_consent=true')) {
+                cookieBanner.classList.remove('hidden');
+            }
+            acceptCookiesBtn.addEventListener('click', () => {
+                document.cookie = "cookie_consent=true; max-age=31536000; path=/";
+                cookieBanner.style.opacity = '0';
+                setTimeout(() => cookieBanner.classList.add('hidden'), 500);
+            });
+
+            // Emergency Modal
+            emergencyBtn.addEventListener('click', () => emergencyModal.classList.remove('hidden'));
+            hideEmergencyBtn.addEventListener('click', () => emergencyModal.classList.add('hidden'));
+
+            // Assessment Buttons
             document.getElementById('start-st5-btn').addEventListener('click', () => startAssessment('st5'));
             document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
             document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
-            document.getElementById('back-to-menu-btn').addEventListener('click', goBackToMenu);
+            document.getElementById('back-to-menu-btn').addEventListener('click', () => switchView(homeView));
+
+            // Navigation & Form
             prevBtn.addEventListener('click', () => handleNavigation('prev'));
             nextBtn.addEventListener('click', () => handleNavigation('next'));
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (currentQuestionIndex < questions.length) {
-                    const currentQuestionId = questions[currentQuestionIndex].id;
-                    const selectedOption = form.querySelector(`input[name="${currentQuestionId}"]:checked`);
-                    if(selectedOption) { userAnswers[currentQuestionId] = selectedOption.value; }
-                }
-                submitForm();
-            });
-            chatSendBtn.addEventListener('click', handleChatSend);
-            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { handleChatSend(); } });
-            acceptConsentBtn.addEventListener('click', () => {
-                localStorage.setItem('consentAccepted', 'true');
-                consentModal.classList.add('hidden');
-                disabledOverlay.classList.add('hidden');
-            });
-            showEthicsBtn.addEventListener('click', () => { consentModal.classList.remove('hidden'); });
-            emergencyBtn.addEventListener('click', () => emergencyModal.classList.remove('hidden'));
-            hideEmergencyBtn.addEventListener('click', () => emergencyModal.classList.add('hidden'));
-            addChatMessage('ai', 'สวัสดีครับ มีอะไรให้พี่ไทรช่วยไหมครับ?');
+            form.addEventListener('submit', handleFormSubmit);
+
+            // Chat
+            chatSendBtn.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
         }
-        init();
+
+        initialize();
     });
     </script>
 </body>
-</html>           
+</html>
