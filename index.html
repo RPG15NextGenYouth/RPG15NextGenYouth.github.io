@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psych Ai Mental assessment</title>
+    <title>Psych Ai Mental Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            background-color: #f0f9ff; /* sky-50 */
         }
-        .font-kanit {
-            font-family: 'Kanit', sans-serif;
+        .font-mitr {
+            font-family: 'Mitr', sans-serif;
         }
         .card {
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
@@ -37,53 +37,38 @@
         .progress-bar-fill {
             transition: width 0.5s ease-in-out;
         }
-        /* Chat bubbles */
         .chat-bubble-user {
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #38bdf8; /* sky-400 */
             color: white;
             border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
         }
         .chat-bubble-ai {
-            background-color: #e2e8f0; /* slate-200 */
-            color: #1e293b; /* slate-800 */
+            background-color: #ffffff; 
+            color: #334155; /* slate-700 */
             border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
-        }
-        .chat-bubble-ai.thinking {
-            display: flex;
-            align-items: center;
+            border: 1px solid #e2e8f0; /* slate-200 */
         }
         .chat-bubble-ai.thinking .dot {
-            width: 8px;
-            height: 8px;
-            margin: 0 2px;
+            width: 8px; height: 8px; margin: 0 2px;
             background-color: #94a3b8; /* slate-400 */
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
         }
         .chat-bubble-ai.thinking .dot:nth-child(1) { animation-delay: -0.32s; }
         .chat-bubble-ai.thinking .dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
 
         #printable-content { display: none; }
-
         @media print {
-            .no-print { display: none !important; }
             body > *:not(#printable-content) { display: none !important; }
             #printable-content { display: block !important; }
         }
         .disabled-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(255, 255, 255, 0.7);
-            z-index: 20;
-            backdrop-filter: blur(4px);
+            z-index: 20; backdrop-filter: blur(4px);
         }
-        #cookie-consent-banner {
-            transition: opacity 0.5s, visibility 0.5s;
-        }
+        #cookie-consent-banner { transition: opacity 0.5s, visibility 0.5s; }
     </style>
 </head>
 <body class="text-slate-800">
@@ -91,172 +76,141 @@
     <div id="printable-content" class="p-8 bg-white"></div>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
-        <div id="main-container" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden">
+        <div id="main-container" class="bg-white rounded-3xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden flex flex-col justify-center">
 
-            <div id="disabled-overlay" class="disabled-overlay rounded-2xl hidden"></div>
+            <!-- Login View -->
+            <div id="loginView" class="card hidden-card">
+                <div class="text-center max-w-sm mx-auto">
+                    <h1 class="text-5xl font-bold text-sky-600 font-mitr">Psych Ai Mental Assessment</h1>
+                    <p class="mt-2 text-slate-500">ยินดีต้อนรับสู่พื้นที่ปลอดภัย</p>
+                    <div class="mt-8 space-y-4">
+                        <button class="social-login-btn w-full bg-rose-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-rose-600 transition-colors">ลงชื่อเข้าใช้ด้วย Gmail</button>
+                        <button class="social-login-btn w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors">ลงชื่อเข้าใช้ด้วย Facebook</button>
+                        <button class="social-login-btn w-full bg-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-teal-600 transition-colors">ลงชื่อเข้าใช้ด้วย Line</button>
+                        <div class="my-4 text-center text-slate-400">หรือ</div>
+                        <button id="anonymous-btn" class="w-full bg-slate-100 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-200 transition-colors">ใช้งานแบบไม่ระบุตัวตน</button>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Home View -->
-            <div id="homeView" class="card visible-card">
+            <!-- Profile Setup View -->
+            <div id="profileView" class="card hidden-card">
+                 <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-800 font-mitr">สร้างโปรไฟล์ของคุณ</h2>
+                    <p class="mt-2 text-slate-500">ข้อมูลนี้จะช่วยให้ "พี่ทราย" เข้าใจและให้คำปรึกษาได้ดียิ่งขึ้น</p>
+                </div>
+                <form id="profileForm" class="mt-8 max-w-lg mx-auto space-y-4">
+                    <div>
+                        <label for="displayName" class="block text-sm font-medium text-slate-700">ชื่อที่ต้องการให้เรียก</label>
+                        <input type="text" id="displayName" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                    </div>
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-slate-700">อายุ</label>
+                        <input type="number" id="age" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-slate-700">เพศ</label>
+                        <select id="gender" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                            <option value="male">ชาย</option>
+                            <option value="female">หญิง</option>
+                            <option value="other">อื่นๆ</option>
+                            <option value="prefer_not_to_say">ไม่ต้องการระบุ</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="province" class="block text-sm font-medium text-slate-700">จังหวัด (ไม่บังคับ)</label>
+                        <input type="text" id="province" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">อยากให้พี่ทรายเป็นผู้ให้คำปรึกษาแบบไหน?</label>
+                        <div class="mt-2 space-y-2">
+                           <label class="flex items-center"><input type="radio" name="ai-persona" value="listener" class="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300" checked> <span class="ml-2 text-slate-700">เป็นผู้รับฟังที่ดี</span></label>
+                           <label class="flex items-center"><input type="radio" name="ai-persona" value="advisor" class="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300"> <span class="ml-2 text-slate-700">เป็นผู้ให้คำแนะนำ</span></label>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors shadow">บันทึกและเริ่มใช้งาน</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Landing View -->
+            <div id="landingView" class="card hidden-card">
                 <div class="text-center">
-                    <h1 class="text-4xl font-bold text-slate-800 font-kanit">Psych AI</h1>
-                    <p class="mt-2 text-slate-600 max-w-2xl mx-auto">พื้นที่ปลอดภัยสำหรับพูดคุย พร้อมแบบประเมินสุขภาพจิตเบื้องต้น</p>
+                     <h1 class="text-5xl font-bold text-sky-600 font-mitr">Psych Ai Mental Assessment</h1>
+                     <p class="mt-2 text-slate-500 max-w-2xl mx-auto">เลือกบริการที่คุณต้องการ</p>
                 </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <button id="goto-chat-btn" class="text-center p-8 bg-sky-50 rounded-2xl hover:bg-sky-100 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <h2 class="text-2xl font-bold text-sky-700 font-mitr">คุยกับพี่ทราย</h2>
+                        <p class="mt-2 text-slate-600">พื้นที่ปลอดภัยสำหรับรับฟังและให้คำปรึกษาเบื้องต้น</p>
+                    </button>
+                    <button id="goto-assessments-btn" class="text-center p-8 bg-teal-50 rounded-2xl hover:bg-teal-100 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <h2 class="text-2xl font-bold text-teal-700 font-mitr">ทำแบบประเมิน</h2>
+                        <p class="mt-2 text-slate-600">คัดกรองสุขภาพจิตเบื้องต้นด้วยแบบประเมินมาตรฐาน</p>
+                    </button>
+                </div>
+                <div id="history-btn-container" class="text-center mt-8"></div>
+                <div class="mt-8 text-center text-xs text-slate-400 space-y-1">
+                    <p>แอปพลิเคชันชิ้นนี้จัดทำขึ้นเพื่อประกวดโครงงาน เท่ได้ต้องไม่บูลลี่ โครงการ “เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
+                    <p>พัฒนาโดย RPG15 Next Gen Youth Teams โรงเรียนราชประชานุเคราะห์15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
+                </div>
+            </div>
 
-                <!-- Chat View -->
-                <div id="chatView" class="mt-8">
-                    <h2 class="text-xl font-bold text-slate-800 font-kanit">คุยกับทราย</h2>
-                    <div class="mt-3 flex flex-col h-[50vh] bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
-                        <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4">
-                        </div>
-                        <div class="p-3 border-t border-slate-200 flex items-center bg-white">
-                            <input type="text" id="chat-input" class="flex-grow p-3 border border-slate-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ข้อความ...">
-                            <button id="chat-send-btn" class="bg-blue-500 text-white p-3 rounded-r-xl hover:bg-blue-600 transition-colors shadow-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Assessment List View -->
+            <div id="assessmentListView" class="card hidden-card">
+                 <button class="back-to-landing-btn absolute top-6 left-6 text-slate-500 hover:text-slate-800 z-10">&larr; กลับ</button>
+                 <h2 class="text-3xl text-center font-bold text-slate-800 font-mitr">เลือกแบบประเมิน</h2>
+                 <div class="mt-8 space-y-4">
+                    <!-- Assessment cards will be generated by JS -->
+                 </div>
+            </div>
 
-                <h2 class="text-xl font-bold text-slate-800 mt-10 mb-4 font-kanit">แบบประเมินสุขภาพจิต</h2>
-                <div class="space-y-4">
-                    <!-- ST-5 Card -->
-                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-blue-300 transition-all duration-300">
-                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div></div>
-                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">แบบประเมินความเครียด (ST-5)</h3><p class="text-sm text-slate-500">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-st5-btn" class="w-full sm:w-auto bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
-                    </div>
-                    <!-- 8Q Card -->
-                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-red-300 transition-all duration-300">
-                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div></div>
-                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">8Q แบบประเมินการฆ่าตัวตาย</h3><p class="text-sm text-slate-500">ประเมินความคิดและความเสี่ยงในการฆ่าตัวตาย</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-q8-btn" class="w-full sm:w-auto bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
-                    </div>
-                    <!-- PHQ-A Card -->
-                    <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-xl hover:shadow-lg hover:border-green-300 transition-all duration-300">
-                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-5"><div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg></div></div>
-                        <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-kanit text-slate-800">PHQ-A แบบประเมินซึมเศร้า</h3><p class="text-sm text-slate-500">คัดกรองอาการซึมเศร้าในวัยรุ่น</p></div>
-                        <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button id="start-phqa-btn" class="w-full sm:w-auto bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition-all duration-300 shadow-sm group-hover:scale-105">เริ่มทำ</button></div>
+            <!-- Chat View -->
+            <div id="chatView" class="card hidden-card">
+                <button class="back-to-landing-btn absolute top-6 left-6 text-slate-500 hover:text-slate-800 z-10">&larr; กลับ</button>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-slate-800 font-mitr">คุยกับทราย</h2>
+                    <button id="print-chat-btn" class="text-sm bg-slate-200 text-slate-700 font-semibold py-1 px-3 rounded-lg hover:bg-slate-300 transition-colors">พิมพ์บทสนทนา</button>
+                </div>
+                <div class="flex flex-col h-[70vh] bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
+                    <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
+                    <div class="p-3 border-t border-slate-200 flex items-center bg-white">
+                        <input type="text" id="chat-input" class="flex-grow p-3 border border-slate-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="พิมพ์ข้อความ...">
+                        <button id="chat-send-btn" class="bg-sky-500 text-white p-3 rounded-r-xl hover:bg-sky-600 transition-colors shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                        </button>
                     </div>
                 </div>
+            </div>
+
+            <!-- History View -->
+            <div id="historyView" class="card hidden-card">
+                <button class="back-to-landing-btn absolute top-6 left-6 text-slate-500 hover:text-slate-800 z-10">&larr; กลับ</button>
+                <h2 class="text-3xl text-center font-bold text-slate-800 font-mitr">ประวัติการใช้งาน</h2>
+                <div id="history-content" class="mt-8 space-y-6 overflow-y-auto max-h-[75vh]"></div>
             </div>
 
             <!-- Assessment View -->
-            <div id="assessmentView" class="card hidden-card">
-                <button id="back-to-menu-btn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 z-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-                <div class="p-6 sm:p-8">
-                    <div id="header-section">
-                        <h1 id="assessmentTitle" class="text-3xl font-bold text-center text-slate-800 mb-2 font-kanit"></h1>
-                        <p id="assessmentDescription" class="text-center text-slate-500 mb-8"></p>
-                        <div class="w-full bg-slate-200 rounded-full h-3 mb-8 overflow-hidden">
-                            <div id="progressBar" class="bg-blue-500 h-3 rounded-full progress-bar-fill"></div>
-                        </div>
-                    </div>
-                    <form id="assessmentForm">
-                        <div id="questionsContainer"></div>
-                        <div class="flex justify-between items-center mt-10">
-                            <button type="button" id="prevBtn" class="bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition-colors">ย้อนกลับ</button>
-                            <div id="stepCounter" class="text-sm text-slate-500"></div>
-                            <button type="button" id="nextBtn" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow">ถัดไป</button>
-                            <button type="submit" id="submitBtn" class="hidden bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition-colors shadow">ส่งคำตอบ</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
+            <div id="assessmentView" class="card hidden-card"></div>
             <!-- Loading Spinner -->
-            <div id="loading" class="card hidden-card text-center py-8 flex justify-center items-center h-full">
-                <div>
-                    <svg class="animate-spin h-12 w-12 text-blue-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="mt-4 text-slate-500 font-medium">กำลังประมวลผล...</p>
-                </div>
-            </div>
-
+            <div id="loading" class="card hidden-card flex justify-center items-center"></div>
             <!-- Results View -->
-            <div id="results" class="card hidden-card p-6 sm:p-8"></div>
+            <div id="results" class="card hidden-card"></div>
         </div>
         <footer class="text-center text-sm text-slate-500 mt-8 no-print space-x-4">
             <span>จัดทำโดย RPG15 Next Gen Youth</span>
-            <button id="show-policy-btn" class="underline hover:text-blue-600">นโยบายความเป็นส่วนตัวและข้อกำหนดการใช้งาน</button>
+            <button id="show-policy-btn" class="underline hover:text-sky-600">นโยบายความเป็นส่วนตัวและข้อกำหนดการใช้งาน</button>
         </footer>
     </div>
 
-    <!-- Policy Modal -->
-    <div id="policyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 no-print hidden">
-        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
-            <div class="p-5 border-b flex justify-between items-center">
-                <h2 class="text-xl font-bold text-slate-800 font-kanit text-center w-full">ข้อกำหนดและนโยบายความเป็นส่วนตัว</h2>
-                <button id="close-policy-btn" class="text-slate-400 hover:text-slate-600">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto text-sm text-slate-600 leading-relaxed">
-                <div class="space-y-6">
-                    <div>
-                        <h3 class="font-bold font-kanit text-blue-700 text-lg">ข้อกำหนดและเงื่อนไขการใช้งาน (Terms and Conditions)</h3>
-                        <p class="mt-2">การเข้าใช้งานแอปพลิเคชันนี้ ถือว่าท่าน (“ผู้ใช้งาน”) ตกลงและยินยอมที่จะปฏิบัติตามข้อกำหนดและเงื่อนไขการใช้งานนี้ทุกประการ หากท่านไม่ตกลงตามข้อกำหนดนี้ กรุณายุติการใช้งานทันที</p>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li><b>วัตถุประสงค์:</b> แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือคัดกรองสุขภาพจิตเบื้องต้น และเป็นพื้นที่ให้คำปรึกษาโดย AI เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</li>
-                            <li><b>ข้อจำกัดความรับผิด:</b> ผู้พัฒนาจะไม่รับผิดต่อความเสียหายใดๆ ที่เกิดขึ้นจากการใช้งานแอปพลิเคชันนี้ การตัดสินใจใดๆ ที่เกิดขึ้นจากการใช้ข้อมูลในแอปนี้ถือเป็นความรับผิดชอบของผู้ใช้งานแต่เพียงผู้เดียว</li>
-                             <li><b>การจัดการภาวะฉุกเฉิน:</b> แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</li>
-                            <li><b>ทรัพย์สินทางปัญญา:</b> เนื้อหาทั้งหมดในแอปพลิเคชันนี้เป็นทรัพย์สินทางปัญญาของผู้พัฒนา ห้ามมิให้ทำซ้ำ ดัดแปลง หรือเผยแพร่โดยไม่ได้รับอนุญาต</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="font-bold font-kanit text-green-700 text-lg">นโยบายความเป็นส่วนตัว (Privacy Policy)</h3>
-                        <p class="mt-2">เราให้ความสำคัญกับการคุ้มครองข้อมูลส่วนบุคคลของท่าน ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</p>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li><b>ข้อมูลที่เราจัดเก็บ:</b> เราจัดเก็บข้อมูลผลการประเมินของท่าน (เช่น คำตอบ, คะแนนรวม, ระดับความเสี่ยง) และบทสนทนากับ AI โดยไม่มีการระบุตัวตน (Anonymized Data) และใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งาน</li>
-                            <li><b>วัตถุประสงค์การเก็บข้อมูล:</b> เพื่อประเมินผลและพัฒนาประสิทธิภาพของโครงการและ AI เท่านั้น ข้อมูลจะไม่ถูกนำไปใช้เพื่อวัตถุประสงค์อื่นหรือเปิดเผยแก่บุคคลที่สาม</li>
-                            <li><b>การจัดเก็บและความปลอดภัย:</b> ข้อมูลของท่านจะถูกจัดเก็บในระบบที่มีมาตรการรักษาความปลอดภัยที่เหมาะสม</li>
-                            <li><b>ระยะเวลาการเก็บข้อมูล:</b> เราจะเก็บข้อมูลของท่านไว้เท่าที่จำเป็นเพื่อวัตถุประสงค์ของโครงการเท่านั้น</li>
-                            <li><b>สิทธิ์ของเจ้าของข้อมูล:</b> ท่านมีสิทธิ์ในการเข้าถึง แก้ไข หรือร้องขอให้ลบข้อมูลของท่านได้ โดยติดต่อเราผ่านช่องทางที่ระบุไว้</li>
-                             <li><b>การติดต่อ:</b> หากมีข้อสงสัยเกี่ยวกับนโยบายความเป็นส่วนตัว สามารถติดต่อผู้พัฒนาได้ที่ [email protected]</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 bg-slate-50 border-t text-center rounded-b-xl">
-                 <button id="accept-policy-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow">ยอมรับและเริ่มใช้งาน</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Emergency Button -->
-    <button id="emergency-btn" class="fixed bottom-24 right-6 bg-red-600 text-white rounded-full p-4 shadow-lg z-40 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-110 no-print" title="ติดต่อฉุกเฉิน">
+    <!-- Modals & Banners -->
+    <div id="policyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 no-print hidden"></div>
+    <button id="emergency-btn" class="fixed bottom-24 right-6 bg-rose-500 text-white rounded-full p-4 shadow-lg z-40 hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-transform transform hover:scale-110 no-print">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
     </button>
-
-    <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 bg-slate-800 text-white p-4 flex flex-col sm:flex-row items-center justify-between z-50 hidden no-print">
-        <p class="text-sm mb-4 sm:mb-0">เว็บไซต์นี้ใช้คุกกี้เพื่อเพิ่มประสบการณ์การใช้งานที่ดีขึ้น การเข้าใช้งานต่อถือว่าท่านยอมรับ<a href="#" id="open-policy-from-cookie" class="underline hover:text-blue-300 ml-1">นโยบายความเป็นส่วนตัว</a>ของเรา</p>
-        <button id="accept-cookies-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">ยอมรับ</button>
-    </div>
-
-
-    <!-- Emergency Modal -->
-    <div id="emergencyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50 no-print">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full text-center p-6 flex flex-col">
-            <h2 class="text-2xl font-bold text-red-700 font-kanit">ต้องการความช่วยเหลือเร่งด่วน?</h2>
-            <p class="mt-2 text-slate-600">หากคุณรู้สึกไม่ปลอดภัยหรือต้องการความช่วยเหลือทันที</p>
-            <a href="tel:1323" class="mt-6 block w-full bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 text-lg transition-colors duration-300 shadow-lg">
-                โทรสายด่วนสุขภาพจิต 1323
-            </a>
-            <div class="mt-6 border-t pt-4">
-                <h3 class="text-lg font-bold text-slate-800 font-kanit">เบอร์โทรฉุกเฉินอื่นๆ</h3>
-                <div class="mt-3 space-y-2 text-left">
-                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>ความรุนแรงในครอบครัว</span><a href="tel:1300" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1300</a></div>
-                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>ยาเสพติด</span><a href="tel:1165" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1165</a></div>
-                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>เหตุด่วนเหตุร้าย</span><a href="tel:191" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">191</a></div>
-                    <div class="flex justify-between items-center p-3 bg-slate-100 rounded-lg"><span>เจ็บป่วยฉุกเฉิน</span><a href="tel:1669" class="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-blue-600">1669</a></div>
-                </div>
-            </div>
-            <button id="hide-emergency-btn" class="mt-6 text-slate-500 hover:text-slate-800 underline">ปิด</button>
-        </div>
-    </div>
-
+    <div id="emergencyModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50 no-print"></div>
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 bg-slate-800 text-white p-4 flex flex-col sm:flex-row items-center justify-between z-50 hidden no-print"></div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -265,35 +219,23 @@
         const API_KEY = "AIzaSyCZW3olN0nCHSeOBLWRG9rEU9tKttfBaP8";
 
         // --- DOM ELEMENTS ---
-        const homeView = document.getElementById('homeView');
+        const mainContainer = document.getElementById('main-container');
+        const loginView = document.getElementById('loginView');
+        const profileView = document.getElementById('profileView');
+        const landingView = document.getElementById('landingView');
+        const assessmentListView = document.getElementById('assessmentListView');
+        const chatView = document.getElementById('chatView');
+        const historyView = document.getElementById('historyView');
         const assessmentView = document.getElementById('assessmentView');
         const loading = document.getElementById('loading');
         const resultsDiv = document.getElementById('results');
-        const form = document.getElementById('assessmentForm');
-        const questionsContainer = document.getElementById('questionsContainer');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const progressBar = document.getElementById('progressBar');
-        const stepCounter = document.getElementById('stepCounter');
-        const assessmentTitle = document.getElementById('assessmentTitle');
-        const assessmentDescription = document.getElementById('assessmentDescription');
-        const chatMessages = document.getElementById('chat-messages');
-        const chatInput = document.getElementById('chat-input');
-        const chatSendBtn = document.getElementById('chat-send-btn');
         const policyModal = document.getElementById('policyModal');
-        const acceptPolicyBtn = document.getElementById('accept-policy-btn');
-        const closePolicyBtn = document.getElementById('close-policy-btn');
-        const showPolicyBtn = document.getElementById('show-policy-btn');
-        const openPolicyFromCookieBtn = document.getElementById('open-policy-from-cookie');
-        const disabledOverlay = document.getElementById('disabled-overlay');
-        const emergencyBtn = document.getElementById('emergency-btn');
         const emergencyModal = document.getElementById('emergencyModal');
-        const hideEmergencyBtn = document.getElementById('hide-emergency-btn');
         const cookieBanner = document.getElementById('cookie-consent-banner');
-        const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
 
         // --- STATE ---
+        let isLoggedIn = false;
+        let userProfile = {};
         let currentAssessmentId = null;
         let questions = [];
         let currentQuestionIndex = 0;
@@ -301,54 +243,49 @@
         let chatHistory = [];
         let sessionId = generateSessionId();
 
-        // --- ASSESSMENT DATA ---
+        // --- ASSESSMENT DATA (Updated with verbatim questions and options) ---
         const assessments = {
             'st5': {
                 title: 'แบบประเมินความเครียด (ST-5)',
                 description: 'ในช่วง 2 สัปดาห์ที่ผ่านมา ท่านมีอาการเหล่านี้บ่อยแค่ไหน?',
                 questions: [
-                    { id: 'st5_1', text: 'รู้สึกหงุดหงิด รำคาญใจง่าย' },
-                    { id: 'st5_2', text: 'วิตกกังวลกับเรื่องต่างๆ' },
-                    { id: 'st5_3', text: 'พักผ่อนไม่เพียงพอ' },
-                    { id: 'st5_4', text: 'รู้สึกเบื่อหน่าย ไม่อยากทำอะไร' },
+                    { id: 'st5_1', text: 'นอนไม่หลับหรือนอนมาก และคิดมากหรือกังวลใจ' },
+                    { id: 'st5_2', text: 'รู้สึกหงุดหงิด รำคาญใจ/เบื่ออาหารหรือกินมากกว่าปกติ' },
+                    { id: 'st5_3', text: 'ทำอะไรไม่ได้เลยเพราะประสาทตึงเครียด' },
+                    { id: 'st5_4', text: 'มีความวุ่นวายใจ' },
                     { id: 'st5_5', text: 'ไม่อยากพบปะผู้คน' }
                 ],
-                options: [
-                    { text: 'ไม่เลย', value: 0 },
-                    { text: 'เป็นบางครั้ง', value: 1 },
-                    { text: 'เป็นบ่อย', value: 2 },
-                    { text: 'เป็นประจำ', value: 3 }
-                ],
+                options: [ { text: 'ไม่เลย', value: 0 }, { text: 'เป็นบางครั้ง', value: 1 }, { text: 'เป็นบ่อย', value: 2 }, { text: 'เป็นประจำ', value: 3 } ],
                 interpretation: (score) => {
-                    if (score <= 4) return { level: 'เครียดน้อย', color: 'green', advice: 'ท่านมีความเครียดในระดับปกติ สามารถจัดการได้ดีเยี่ยม' };
+                    if (score <= 4) return { level: 'เครียดน้อย', color: 'teal', advice: 'ท่านมีความเครียดในระดับปกติ สามารถจัดการได้ดีเยี่ยม' };
                     if (score <= 7) return { level: 'เครียดปานกลาง', color: 'yellow', advice: 'ท่านมีความเครียดปานกลาง ควรหาวิธีผ่อนคลาย เช่น ออกกำลังกาย ทำกิจกรรมที่ชอบ' };
-                    if (score <= 9) return { level: 'เครียดสูง', color: 'orange', advice: 'ท่านมีความเครียดสูง ควรปรึกษาคนใกล้ชิด หรือพูดคุยกับทรายเพื่อหาทางแก้ไข' };
-                    return { level: 'เครียดรุนแรง', color: 'red', advice: 'ท่านมีความเครียดในระดับรุนแรงมาก ควรพบแพทย์หรือผู้เชี่ยวชาญเพื่อขอคำปรึกษาโดยด่วน' };
+                    if (score <= 9) return { level: 'เครียดสูง', color: 'orange', advice: 'ท่านมีความเครียดสูง ควรปรึกษาคนใกล้ชิด หรือพูดคุยกับพี่ทรายเพื่อหาทางแก้ไข' };
+                    return { level: 'เครียดรุนแรง', color: 'rose', advice: 'ท่านมีความเครียดในระดับรุนแรงมาก ควรพบแพทย์หรือผู้เชี่ยวชาญเพื่อขอคำปรึกษาโดยด่วน' };
                 }
             },
             'q8': {
                 title: '8Q แบบประเมินการฆ่าตัวตาย',
                 description: 'ในช่วง 1 เดือนที่ผ่านมา ท่านมีความคิดหรืออาการเหล่านี้หรือไม่?',
                 questions: [
-                    { id: 'q8_1', text: 'คิดอยากตาย หรือคิดว่าตายไปจะดีกว่า', score: 1 },
-                    { id: 'q8_2', text: 'อยากทำร้ายตัวเอง หรือทำให้ตัวเองบาดเจ็บ', score: 2 },
-                    { id: 'q8_3', text: 'คิดเกี่ยวกับการฆ่าตัวตาย', score: 6 },
-                    { id: 'q8_4', text: 'มีแผนการที่จะฆ่าตัวตาย', score: 8 },
-                    { id: 'q8_5', text: 'ได้เตรียมการที่จะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ', score: 9 },
-                    { id: 'q8_6', text: 'ได้ทำให้ตนเองบาดเจ็บ แต่ไม่ตั้งใจที่จะให้เสียชีวิต', score: 4 },
-                    { id: 'q8_7', text: 'ได้พยายามฆ่าตัวตายโดยคาดหวัง/ตั้งใจที่จะให้ตาย', score: 10 },
+                    { id: 'q8_1', text: 'ในเดือนที่ผ่านมารวมทั้งวันนี้คิดอยากตายหรือคิดว่าตายไปจะดีกว่า', score: 1 },
+                    { id: 'q8_2', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้อยากทำร้ายตัวเองหรือทำให้ตัวเองบาดเจ็บ', score: 2 },
+                    { id: 'q8_3', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้คิดเกี่ยวกับการฆ่าตัวตาย', score: 6 },
+                    { id: 'q8_4', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้มีแผนการที่จะฆ่าตัวตาย', score: 8 },
+                    { id: 'q8_5', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้ได้เตรียมการที่จะทำร้ายตัวเองหรือเตรียมการจะฆ่าตัวตายโดยตั้งใจว่าจะให้ตายจริงๆ', score: 9 },
+                    { id: 'q8_6', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้ได้ทำให้ตนเองบาดเจ็บแต่ไม่ตั้งใจที่ทำให้เสียชีวิต', score: 4 },
+                    { id: 'q8_7', text: 'ตั้งแต่เดือนก่อนจนถึงวันนี้ ได้พยายามฆ่าตัวตายโดยคาดหวัง/ตั้งใจที่จะให้ตาย', score: 10 },
                     { id: 'q8_8', text: 'ตลอดชีวิตที่ผ่านมาท่านเคยพยายามฆ่าตัวตาย', score: 4 }
                 ],
                 options: [ { text: 'ใช่', value: 1 }, { text: 'ไม่ใช่', value: 0 } ],
                 interpretation: (score) => {
-                    if (score === 0) return { level: 'ไม่มีแนวโน้ม', color: 'green', advice: 'ท่านไม่มีแนวโน้มในการทำร้ายตัวเองในปัจจุบัน แต่หากรู้สึกไม่สบายใจ สามารถพูดคุยกับทรายได้เสมอ' };
-                    if (score >= 1 && score <= 8) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับน้อย', color: 'yellow', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับน้อย ควรหาเวลาผ่อนคลายและพูดคุยกับคนที่ไว้ใจ หรือปรึกษาทราย' };
+                    if (score === 0) return { level: 'ไม่มีแนวโน้ม', color: 'teal', advice: 'ท่านไม่มีแนวโน้มในการทำร้ายตัวเองในปัจจุบัน แต่หากรู้สึกไม่สบายใจ สามารถพูดคุยกับพี่ทรายได้เสมอ' };
+                    if (score >= 1 && score <= 8) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับน้อย', color: 'yellow', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับน้อย ควรหาเวลาผ่อนคลายและพูดคุยกับคนที่ไว้ใจ หรือปรึกษาพี่ทราย' };
                     if (score >= 9 && score <= 16) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับปานกลาง', color: 'orange', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับปานกลาง ควรปรึกษาผู้เชี่ยวชาญ หรือโทรสายด่วนสุขภาพจิต 1323 โดยเร็ว' };
-                    return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับรุนแรง', color: 'red', advice: 'ท่านมีความเสี่ยงสูงมากในการทำร้ายตัวเอง กรุณาติดต่อสายด่วนสุขภาพจิต 1323 หรือไปโรงพยาบาลที่ใกล้ที่สุดทันที' };
+                    return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับรุนแรง', color: 'rose', advice: 'ท่านมีความเสี่ยงสูงมากในการทำร้ายตัวเอง กรุณาติดต่อสายด่วนสุขภาพจิต 1323 หรือไปโรงพยาบาลที่ใกล้ที่สุดทันที' };
                 }
             },
             'phqa': {
-                title: 'PHQ-A (ภาวะซึมเศร้าในวัยรุ่น)',
+                title: 'PHQ-A แบบประเมินซึมเศร้า',
                 description: 'ในช่วง 2 สัปดาห์ที่ผ่านมา คุณมีอาการต่อไปนี้บ่อยแค่ไหน?',
                 questions: [
                     { id: 'phqa_1', text: "รู้สึกซึม เศร้า หงุดหงิด หรือสิ้นหวัง" },
@@ -361,28 +298,77 @@
                     { id: 'phqa_8', text: "พูดหรือทำอะไรช้าลงมากจนคนอื่นสังเกตเห็นได้ หรือตรงกันข้ามคือ กระสับกระส่าย อยู่ไม่นิ่ง หรือกระวนกระวายมากกว่าปกติ" },
                     { id: 'phqa_9', text: "คิดว่าถ้าตายไปก็คงจะดี หรือคิดทำร้ายตัวเอง" }
                 ],
-                options: [
-                    { text: 'ไม่เลย', value: 0 }, { text: 'เป็นบางวัน', value: 1 },
-                    { text: 'เป็นบ่อยกว่าครึ่ง', value: 2 }, { text: 'เป็นเกือบทุกวัน', value: 3 }
-                ],
-                interpretation: (score) => {
-                    if (score <= 4) return { level: 'ไม่มีอาการ', color: 'green', advice: 'สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ' };
-                    if (score <= 9) return { level: 'มีอาการซึมเศร้าระดับน้อย', color: 'yellow', advice: 'ท่านมีอาการซึมเศร้าเล็กน้อย ควรสังเกตอาการตัวเองเพิ่มเติมและหาเวลาผ่อนคลาย' };
-                    if (score <= 14) return { level: 'มีอาการซึมเศร้าระดับปานกลาง', color: 'orange', advice: 'ท่านมีอาการซึมเศร้าในระดับที่ควรให้ความสนใจ ควรปรึกษาผู้เชี่ยวชาญเพื่อรับการประเมินเพิ่มเติม' };
-                    if (score <= 19) return { level: 'มีอาการซึมเศร้าระดับรุนแรง', color: 'red', advice: 'ท่านมีอาการซึมเศร้าที่น่าเป็นห่วง ควรพบจิตแพทย์เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม' };
-                    return { level: 'มีอาการซึมเศร้าระดับรุนแรงมาก', color: 'red', advice: 'ท่านมีอาการซึมเศร้ารุนแรงมากและมีความเสี่ยงสูง ควรพบจิตแพทย์โดยด่วนที่สุด' };
+                options: [ { text: 'ไม่มีเลย', value: 0 }, { text: 'มีบางวัน', value: 1 }, { text: 'มีมากกว่า 7 วัน', value: 2 }, { text: 'มีแทบทุกวัน', value: 3 } ],
+                 interpretation: (score) => {
+                    if (score <= 4) return { level: 'ไม่มีอาการซึมเศร้า (None-minimal)', color: 'teal', advice: 'สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ' };
+                    if (score <= 9) return { level: 'มีอาการซึมเศร้าระดับน้อย (Mild)', color: 'yellow', advice: 'ท่านมีอาการซึมเศร้าเล็กน้อย ควรสังเกตอาการตัวเองเพิ่มเติมและหาเวลาผ่อนคลาย' };
+                    if (score <= 14) return { level: 'มีอาการซึมเศร้าระดับปานกลาง (Moderate)', color: 'orange', advice: 'ท่านมีอาการซึมเศร้าในระดับที่ควรให้ความสนใจ ควรปรึกษาผู้เชี่ยวชาญเพื่อรับการประเมินเพิ่มเติม' };
+                    if (score <= 19) return { level: 'มีอาการซึมเศร้าระดับรุนแรง (Moderately Severe)', color: 'rose', advice: 'ท่านมีอาการซึมเศร้าที่น่าเป็นห่วง ควรพบจิตแพทย์เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม' };
+                    return { level: 'มีอาการซึมเศร้าระดับรุนแรงมาก (Severe)', color: 'rose', advice: 'ท่านมีอาการซึมเศร้ารุนแรงมากและมีความเสี่ยงสูง ควรพบจิตแพทย์โดยด่วนที่สุด' };
                 }
             }
         };
 
-        // --- FUNCTIONS ---
+        // --- TEMPLATE GENERATORS ---
+        const createPolicyModal = () => {
+            policyModal.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+                    <div class="p-5 border-b flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-slate-800 font-mitr text-center w-full">ข้อกำหนดและนโยบาย</h2>
+                        <button id="close-policy-btn" class="text-3xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+                    </div>
+                    <div class="p-6 overflow-y-auto text-sm text-slate-600 leading-relaxed">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-bold font-mitr text-sky-700 text-lg">ข้อกำหนดและเงื่อนไขการใช้งาน</h3>
+                                <ul class="list-disc pl-5 mt-2 space-y-1">
+                                    <li><b>วัตถุประสงค์:</b> แอปพลิเคชันนี้มีวัตถุประสงค์เพื่อเป็นเครื่องมือคัดกรองสุขภาพจิตเบื้องต้น และเป็นพื้นที่ให้คำปรึกษาโดย AI เท่านั้น ไม่สามารถใช้แทนการวินิจฉัย การบำบัด หรือการรักษาทางการแพทย์จากผู้ประกอบวิชาชีพได้</li>
+                                    <li><b>ข้อจำกัดความรับผิด:</b> ผู้พัฒนาจะไม่รับผิดต่อความเสียหายใดๆ ที่เกิดขึ้นจากการใช้งานแอปพลิเคชันนี้ การตัดสินใจใดๆ ที่เกิดขึ้นจากการใช้ข้อมูลในแอปนี้ถือเป็นความรับผิดชอบของผู้ใช้งานแต่เพียงผู้เดียว</li>
+                                    <li><b>การจัดการภาวะฉุกเฉิน:</b> แอปพลิเคชันนี้ไม่ใช่บริการฉุกเฉิน หากท่านอยู่ในภาวะอันตรายต่อชีวิต โปรดติดต่อสายด่วน 191 หรือ 1669 ทันที</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold font-mitr text-teal-700 text-lg">นโยบายความเป็นส่วนตัว</h3>
+                                <ul class="list-disc pl-5 mt-2 space-y-1">
+                                    <li><b>ข้อมูลที่เราจัดเก็บ:</b> หากท่านใช้งานแบบล็อกอิน เราจะจัดเก็บข้อมูลโปรไฟล์, ผลการประเมิน, และบทสนทนาเพื่อแสดงในหน้าประวัติ หากใช้งานแบบไม่ระบุตัวตน ข้อมูลจะถูกลบเมื่อสิ้นสุดการใช้งาน</li>
+                                    <li><b>วัตถุประสงค์การเก็บข้อมูล:</b> เพื่อแสดงประวัติการใช้งานและพัฒนาประสิทธิภาพของโครงการและ AI เท่านั้น</li>
+                                    <li><b>การติดต่อ:</b> หากมีข้อสงสัย สามารถติดต่อผู้พัฒนาได้ที่ [email protected]</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t text-center rounded-b-2xl">
+                        <button id="accept-policy-btn" class="w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors duration-300 shadow">ยอมรับและดำเนินการต่อ</button>
+                    </div>
+                </div>`;
+        };
+
+        const createEmergencyModal = () => {
+            emergencyModal.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full text-center p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold text-rose-600 font-mitr">ต้องการความช่วยเหลือเร่งด่วน?</h2>
+                    <p class="mt-2 text-slate-600">หากคุณรู้สึกไม่ปลอดภัยหรือต้องการความช่วยเหลือทันที</p>
+                    <a href="tel:1323" class="mt-6 block w-full bg-rose-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-rose-600 text-lg transition-colors duration-300 shadow-lg">โทรสายด่วนสุขภาพจิต 1323</a>
+                    <div class="mt-6 border-t pt-4">
+                        <h3 class="text-lg font-bold text-slate-800 font-mitr">เบอร์โทรฉุกเฉินอื่นๆ</h3>
+                        <div class="mt-3 space-y-2 text-left">
+                            <div class="flex justify-between items-center p-3 bg-slate-100 rounded-xl"><span>ความรุนแรงในครอบครัว</span><a href="tel:1300" class="bg-sky-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-sky-600">1300</a></div>
+                            <div class="flex justify-between items-center p-3 bg-slate-100 rounded-xl"><span>ยาเสพติด</span><a href="tel:1165" class="bg-sky-500 text-white text-sm font-bold py-1 px-3 rounded-md hover:bg-sky-600">1165</a></div>
+                        </div>
+                    </div>
+                    <button id="hide-emergency-btn" class="mt-6 text-slate-500 hover:text-slate-800 underline">ปิด</button>
+                </div>`;
+        };
+
+        // --- CORE FUNCTIONS ---
         function generateSessionId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
         function switchView(viewToShow) {
-            [homeView, assessmentView, loading, resultsDiv].forEach(view => {
+            [loginView, profileView, landingView, assessmentListView, chatView, historyView, assessmentView, loading, resultsDiv].forEach(view => {
                 view.classList.toggle('visible-card', view === viewToShow);
                 view.classList.toggle('hidden-card', view !== viewToShow);
             });
+             mainContainer.classList.toggle('justify-center', [loginView, profileView, landingView].includes(viewToShow));
         }
 
         function startAssessment(id) {
@@ -390,14 +376,42 @@
             questions = assessments[id].questions;
             currentQuestionIndex = 0;
             userAnswers = {};
-            assessmentTitle.textContent = assessments[id].title;
-            assessmentDescription.textContent = assessments[id].description;
+
+            assessmentView.innerHTML = `
+                 <button class="back-to-assessments-btn absolute top-6 left-6 text-slate-500 hover:text-slate-800 z-10">&larr; กลับ</button>
+                <div class="p-6 sm:p-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-center text-slate-800 mb-2 font-mitr">${assessments[id].title}</h1>
+                        <p class="text-center text-slate-500 mb-8">${assessments[id].description}</p>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5 mb-8 overflow-hidden">
+                            <div id="progressBar" class="bg-sky-400 h-2.5 rounded-full progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <form id="assessmentForm">
+                        <div id="questionsContainer"></div>
+                        <div class="flex justify-between items-center mt-10">
+                            <button type="button" id="prevBtn" class="bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-xl hover:bg-slate-300 transition-colors">ย้อนกลับ</button>
+                            <div id="stepCounter" class="text-sm text-slate-500"></div>
+                            <button type="button" id="nextBtn" class="bg-sky-500 text-white font-bold py-3 px-8 rounded-xl hover:bg-sky-600 transition-colors shadow">ถัดไป</button>
+                            <button type="submit" id="submitBtn" class="hidden bg-teal-500 text-white font-bold py-3 px-8 rounded-xl hover:bg-teal-600 transition-colors shadow">ส่งคำตอบ</button>
+                        </div>
+                    </form>
+                </div>`;
+
+            assessmentView.querySelector('.back-to-assessments-btn').addEventListener('click', () => switchView(assessmentListView));
+            assessmentView.querySelector('#prevBtn').addEventListener('click', () => handleNavigation('prev'));
+            assessmentView.querySelector('#nextBtn').addEventListener('click', () => handleNavigation('next'));
+            assessmentView.querySelector('#assessmentForm').addEventListener('submit', handleFormSubmit);
+
             renderQuestion();
             switchView(assessmentView);
         }
 
         function renderQuestion() {
-            questionsContainer.innerHTML = '';
+            const container = assessmentView.querySelector('#questionsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
             const q = questions[currentQuestionIndex];
             const options = assessments[currentAssessmentId].options;
 
@@ -410,45 +424,53 @@
 
             options.forEach(opt => {
                 const isChecked = userAnswers[q.id] === opt.value;
-                const labelClasses = isChecked ? 'bg-blue-500 border-blue-500 text-white shadow-md' : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:bg-blue-50';
+                const labelClasses = isChecked ? 'bg-sky-500 border-sky-500 text-white shadow-md' : 'bg-white border-slate-300 text-slate-700 hover:border-sky-400 hover:bg-sky-50';
                 optionsDiv.innerHTML += `
                     <div>
                         <input type="radio" name="${q.id}" id="${q.id}_${opt.value}" value="${opt.value}" class="hidden" ${isChecked ? 'checked' : ''}>
-                        <label for="${q.id}_${opt.value}" class="block text-center p-4 border rounded-lg cursor-pointer transition-all duration-200 ${labelClasses}">${opt.text}</label>
+                        <label for="${q.id}_${opt.value}" class="block text-center p-4 border rounded-xl cursor-pointer transition-all duration-200 ${labelClasses}">${opt.text}</label>
                     </div>`;
             });
 
-            questionsContainer.appendChild(questionDiv);
-            questionsContainer.appendChild(optionsDiv);
+            container.appendChild(questionDiv);
+            container.appendChild(optionsDiv);
 
             options.forEach(opt => {
                 document.getElementById(`${q.id}_${opt.value}`).addEventListener('change', (e) => {
                     userAnswers[q.id] = parseInt(e.target.value);
-                    setTimeout(() => nextBtn.click(), 200);
+                    const isLastQuestion = currentQuestionIndex === questions.length - 1;
+                    if (isLastQuestion) {
+                         assessmentView.querySelector('#submitBtn').click();
+                    } else {
+                         setTimeout(() => assessmentView.querySelector('#nextBtn').click(), 200);
+                    }
                 });
             });
             updateNavigation();
         }
 
         function updateNavigation() {
+            const progressBar = assessmentView.querySelector('#progressBar');
+            const stepCounter = assessmentView.querySelector('#stepCounter');
+            const prevBtn = assessmentView.querySelector('#prevBtn');
+            const nextBtn = assessmentView.querySelector('#nextBtn');
+            const submitBtn = assessmentView.querySelector('#submitBtn');
+
+            if (!progressBar) return;
+
             progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
             stepCounter.textContent = `ข้อ ${currentQuestionIndex + 1} / ${questions.length}`;
             prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
-            nextBtn.classList.toggle('hidden', currentQuestionIndex === questions.length - 1);
-            submitBtn.classList.toggle('hidden', currentQuestionIndex !== questions.length - 1);
+            const isLastQuestion = currentQuestionIndex === questions.length - 1;
+            nextBtn.classList.toggle('hidden', isLastQuestion);
+            submitBtn.classList.toggle('hidden', !isLastQuestion);
         }
 
         function handleNavigation(direction) {
-            const selected = document.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
+            const selected = assessmentView.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
             if (selected) userAnswers[questions[currentQuestionIndex].id] = parseInt(selected.value);
 
             if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
-                 if (!selected) {
-                    const qDiv = questionsContainer.querySelector('p');
-                    qDiv.classList.add('text-red-500');
-                    setTimeout(() => qDiv.classList.remove('text-red-500'), 1500);
-                    return;
-                }
                 currentQuestionIndex++;
                 renderQuestion();
             } else if (direction === 'prev' && currentQuestionIndex > 0) {
@@ -470,40 +492,41 @@
         function displayResults(id, score, interpretation) {
             const { level, color, advice } = interpretation;
             const colorClasses = {
-                green: 'bg-green-100 text-green-800 border-green-400',
+                teal: 'bg-teal-100 text-teal-800 border-teal-400',
                 yellow: 'bg-yellow-100 text-yellow-800 border-yellow-400',
                 orange: 'bg-orange-100 text-orange-800 border-orange-400',
-                red: 'bg-red-100 text-red-800 border-red-400'
+                rose: 'bg-rose-100 text-rose-800 border-rose-400'
             };
             resultsDiv.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold font-kanit text-slate-800">ผลการประเมิน</h2>
+                    <h2 class="text-3xl font-bold font-mitr text-slate-800">ผลการประเมิน</h2>
                     <p class="mt-2 text-slate-600">${assessments[id].title}</p>
-                    <div class="my-8 p-6 rounded-xl border-2 ${colorClasses[color]}">
+                    <div class="my-8 p-6 rounded-2xl border-2 ${colorClasses[color]}">
                         <p class="text-lg font-semibold">ผลคะแนน: ${score} คะแนน</p>
-                        <p class="text-2xl font-bold font-kanit mt-2">${level}</p>
+                        <p class="text-2xl font-bold font-mitr mt-2">${level}</p>
                     </div>
-                    <div class="bg-slate-50 p-6 rounded-lg text-left">
-                        <h3 class="font-bold font-kanit text-slate-700">คำแนะนำเบื้องต้น</h3>
+                    <div class="bg-slate-50 p-6 rounded-2xl text-left">
+                        <h3 class="font-bold font-mitr text-slate-700">คำแนะนำเบื้องต้น</h3>
                         <p class="mt-2 text-slate-600">${advice}</p>
                     </div>
                     <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <a href="tel:1323" class="w-full text-center bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition-colors shadow">โทรสายด่วนสุขภาพจิต 1323</a>
-                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" class="w-full text-center bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow">ปรึกษาทาง Facebook</a>
-                        <button id="back-to-menu-results-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition-colors">กลับหน้าหลัก</button>
-                        <button id="print-results-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors">พิมพ์ผล</button>
+                        <a href="tel:1323" class="w-full text-center bg-rose-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-rose-600 transition-colors shadow">โทรสายด่วนสุขภาพจิต 1323</a>
+                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" class="w-full text-center bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors shadow">ปรึกษาทาง Facebook</a>
+                        <button id="back-to-menu-results-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-xl hover:bg-slate-300 transition-colors">กลับหน้าหลัก</button>
+                        <button id="print-results-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-700 transition-colors">พิมพ์ผล</button>
                     </div>
                 </div>`;
             switchView(resultsDiv);
-            document.getElementById('back-to-menu-results-btn').addEventListener('click', () => switchView(homeView));
-            document.getElementById('print-results-btn').addEventListener('click', () => {
+            resultsDiv.querySelector('#back-to-menu-results-btn').addEventListener('click', () => switchView(landingView));
+            resultsDiv.querySelector('#print-results-btn').addEventListener('click', () => {
+                const printableContent = document.getElementById('printable-content');
                 printableContent.innerHTML = resultsDiv.innerHTML;
                 window.print();
             });
         }
 
         async function submitDataToGoogleSheet(assessmentId, score, level) {
-            const data = { timestamp: new Date().toISOString(), sessionId, assessment: assessmentId, score, level };
+            const data = { timestamp: new Date().toISOString(), sessionId, assessment: assessmentId, score, level, ...userProfile };
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
             } catch (error) { console.error('Error submitting data:', error); }
@@ -511,26 +534,37 @@
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const selected = document.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
+            const selected = assessmentView.querySelector(`input[name="${questions[currentQuestionIndex].id}"]:checked`);
             if (!selected) {
-                const qDiv = questionsContainer.querySelector('p');
-                qDiv.classList.add('text-red-500');
-                setTimeout(() => qDiv.classList.remove('text-red-500'), 1500);
+                const qDiv = assessmentView.querySelector('#questionsContainer p');
+                qDiv.classList.add('text-rose-500');
+                setTimeout(() => qDiv.classList.remove('text-rose-500'), 1500);
                 return;
             }
             userAnswers[questions[currentQuestionIndex].id] = parseInt(selected.value);
+
+            loading.innerHTML = `<div><svg class="animate-spin h-12 w-12 text-sky-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="mt-4 text-slate-500 font-medium">กำลังประมวลผล...</p></div>`;
             switchView(loading);
+
             const score = calculateScore();
             const interpretation = assessments[currentAssessmentId].interpretation(score);
+
+            if(isLoggedIn) {
+                const history = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
+                history.push({ id: currentAssessmentId, title: assessments[currentAssessmentId].title, score, level: interpretation.level, date: new Date().toLocaleString('th-TH') });
+                localStorage.setItem('assessmentHistory', JSON.stringify(history));
+            }
+
             await submitDataToGoogleSheet(currentAssessmentId, score, interpretation.level);
             setTimeout(() => displayResults(currentAssessmentId, score, interpretation), 1000);
         }
 
         function addMessage(sender, text) {
+            const chatMessages = chatView.querySelector('#chat-messages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
             const bubble = document.createElement('div');
-            bubble.className = `max-w-xs md:max-w-md lg:max-w-lg px-5 py-3 shadow ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
+            bubble.className = `max-w-xs md:max-w-md lg:max-w-lg px-5 py-3 shadow-sm ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
             bubble.textContent = text;
             messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
@@ -538,10 +572,11 @@
         }
 
         function showThinkingIndicator() {
+            const chatMessages = chatView.querySelector('#chat-messages');
             const messageDiv = document.createElement('div');
             messageDiv.id = 'thinking-indicator';
             messageDiv.className = 'flex justify-start';
-            messageDiv.innerHTML = `<div class="chat-bubble-ai thinking px-5 py-4 shadow"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+            messageDiv.innerHTML = `<div class="chat-bubble-ai thinking px-5 py-4 shadow-sm flex items-center"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -552,6 +587,7 @@
         }
 
         async function handleSendMessage() {
+            const chatInput = chatView.querySelector('#chat-input');
             const userInput = chatInput.value.trim();
             if (userInput === '') return;
             addMessage('user', userInput);
@@ -559,53 +595,18 @@
             showThinkingIndicator();
             chatHistory.push({ role: "user", parts: [{ text: userInput }] });
 
-            const systemPrompt = `
-คุณคือ "ทราย" เป็น AI Peer Advisor เพศชาย ที่มีความเห็นอกเห็นใจ เป็นมิตร และใช้ภาษาไทยที่เข้าใจง่ายเหมือนคุยกับรุ่นพี่ที่ไว้ใจ ไม่พูดมากไป ไม่ใช้คำพร่ำพรื่อ สื่อสารตรงประเด็น เน้นรับฟังมากกว่าพูด คุณจะต้องระวังการใช้คำพูด Negative ให้ใช้คำที่ positive 
-
-การก่อประโยชน์ คือ การก่อประโยชน์ให้เกิดแก่ผู้รับบริการ ซึ่งถือว่าเป็นหลักการสำคัญที่สุด โดยนักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงปกป้องสิทธิของผู้รับบริการ พึงมุ่งเน้นที่จะให้บริการอย่างเหมาะสม และระมัดระวังหรือหลีกเลี่ยงการก่อให้เกิดอันตรายที่จะมีขึ้นกับผู้รับบริการ
-ความรับผิดชอบ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงรักษามาตรฐานการให้บริการไว้ในระดับสูง และมีความรับผิดชอบต่อความประพฤติของตนเอง พึงตระหนักถึงความเป็นมืออาชีพ มีจริยธรรม และความรับผิดชอบทางกฎหมายและการรักษาชื่อเสียงทางวิชาชีพของตนเอง
-ความซื่อสัตย์ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงมุ่งมั่นส่งเสริมความซื่อสัตย์และความจริงของการประพฤติปฏิบัติที่เกี่ยวกับการประเมิน วิจัย และการสอน
-ความยุติธรรม คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงปฏิบัติต่องานของตนและผู้ที่ทำงานด้วยทั้งในสาขาวิชาชีพของตนเอง และวิชาชีพอื่น ๆ ด้วยความเป็นธรรมและยุติธรรม พึงใช้เหตุผลอย่างเหมาะสม และควรระวังป้องกันมิให้เกิดการกระทำที่ไม่เหมาะสม อันเนื่องมาจากอคติที่อาจเกิดขึ้นหรือข้อจำกัดต่าง ๆ
-ความเคารพ คือ นักจิตวิทยาคลินิกและนักจิตวิทยาการปรึกษาพึงแสดงความเคารพต่อทุกคนและเคารพสิทธิความเป็นส่วนตัวของบุคคล รวมถึงสิทธิส่วนบุคคลในการรักษาความลับและการตัดสินใจต่าง ๆ
-
-
-คุณต้องปฏิบัติตามกรอบจรรยาบรรณสากลของผู้ให้บริการด้านสุขภาพจิตอย่างเคร่งครัดดังนี้:
-1.  **ยึดประโยชน์ของผู้ใช้และไม่ก่ออันตราย (Beneficence & Non-maleficence):** เป้าหมายสูงสุดของคุณคือการช่วยเหลือและเอื้อประโยชน์แก่ผู้ใช้งาน ต้องระมัดระวังและหลีกเลี่ยงการกระทำที่อาจก่อให้เกิดอันตรายทั้งทางตรงและทางอ้อม
-2.  **มีความรับผิดชอบและสร้างความไว้วางใจ (Fidelity & Responsibility):** สร้างสัมพันธภาพที่น่าไว้วางใจ รับผิดชอบต่อคำแนะนำของตนเอง และตระหนักถึงข้อจำกัดในฐานะ AI
-3.  **มีความซื่อสัตย์ (Integrity):** สื่อสารอย่างตรงไปตรงมา ไม่บิดเบือนข้อมูล และโปร่งใสเกี่ยวกับบทบาทของคุณที่เป็นเพียงผู้ให้คำปรึกษาเบื้องต้น
-4.  **มีความยุติธรรม (Justice):** ให้บริการทุกคนอย่างเท่าเทียม ปราศจากอคติทางเพศ, อายุ, เชื้อชาติ, หรือสถานะทางสังคม
-5.  **เคารพในสิทธิและศักดิ์ศรี (Respect for Rights & Dignity):** เคารพในความเป็นส่วนตัว, การรักษาความลับ, และสิทธิ์ในการตัดสินใจของผู้ใช้งาน
+            const personaPrompt = userProfile.persona === 'listener' ? 'โดยเน้นการเป็นผู้รับฟังที่ดีและสะท้อนความรู้สึก' : 'โดยเน้นการให้คำแนะนำและแนวทางแก้ไขปัญหาที่เป็นรูปธรรม';
+            const systemPrompt = `คุณคือ "ทราย" เป็น AI Peer Advisor เพศชาย ที่มีความเห็นอกเห็นใจ เป็นมิตร และใช้ภาษาไทยกึ่งทางการที่อบอุ่นเหมือนคุยกับรุ่นพี่ที่ไว้ใจ คุณต้องแทนตัวเองว่า "พี่" และลงท้ายด้วย "ครับ" เสมอ คุณต้องปฏิบัติตามกรอบจรรยาบรรณสากลของผู้ให้บริการด้านสุขภาพจิตอย่างเคร่งครัด:
+1.  **ยึดประโยชน์ของผู้ใช้และไม่ก่ออันตราย:** เป้าหมายสูงสุดของคุณคือการช่วยเหลือและเอื้อประโยชน์แก่ผู้ใช้งาน ต้องระมัดระวังและหลีกเลี่ยงการกระทำที่อาจก่อให้เกิดอันตราย
+2.  **มีความรับผิดชอบและสร้างความไว้วางใจ:** สร้างสัมพันธภาพที่น่าไว้วางใจ และตระหนักถึงข้อจำกัดในฐานะ AI
+3.  **มีความซื่อสัตย์:** สื่อสารอย่างตรงไปตรงมา ไม่บิดเบือนข้อมูล และโปร่งใสเกี่ยวกับบทบาทที่เป็นเพียงผู้ให้คำปรึกษาเบื้องต้น
+4.  **มีความยุติธรรม:** ให้บริการทุกคนอย่างเท่าเทียม ปราศจากอคติ
+5.  **เคารพในสิทธิและศักดิ์ศรี:** เคารพในความเป็นส่วนตัว, การรักษาความลับ, และสิทธิ์ในการตัดสินใจของผู้ใช้งาน
 ภารกิจหลักของคุณคือ:
--   **รับฟังอย่างไม่ตัดสิน:** เป็นพื้นที่ปลอดภัยให้ผู้ใช้ได้ระบายความรู้สึก
--   **ให้คำแนะนำเบื้องต้น:** เสนอแนะแนวทางจัดการความรู้สึกและปัญหาในเชิงบวกและสร้างสรรค์
--   **ประเมินความเสี่ยง:** หากบทสนทนามีสัญญาณของความเสี่ยงในการทำร้ายตัวเองหรือภาวะซึมเศร้ารุนแรง (เช่น พูดถึงการตาย, สิ้นหวัง, ทำร้ายตัวเอง) **ต้อง** แนะนำให้ติดต่อสายด่วนสุขภาพจิต 1323 หรือเบอร์ฉุกเฉินอื่นๆ ทันที และให้เบอร์โทรนั้นในคำตอบของคุณอย่างชัดเจน
--   **ข้อจำกัดที่สำคัญ:** **ห้ามวินิจฉัยโรคหรือให้คำแนะนำทางการแพทย์เด็ดขาด** ให้ย้ำเสมอว่าคุณเป็นเพียง AI สำหรับให้คำปรึกษาเบื้องต้นเท่านั้น และแนะนำให้ปรึกษาผู้เชี่ยวชาญตัวจริงเสมอหากเป็นเรื่องที่ซับซ้อน
-
-การก่อประโยชน์ คือ การทำสิ่งที่ดีและสิ่งที่เป็นประโยชน์ให้แก่บุคคลอื่น เป็นการกระทำเชิงบวกเพื่อช่วยเหลือผู้อื่น อาจหมายถึงการทำความดี มีเมตตากรุณา ปรารถนาดีและเอเฟื้อแก่เพื่อนมนุษย์
-การไม่ก่อให้เกิดอันตราย คือ การไม่ทำอันตรายทั้งต่อร่างกายและจิตใจของผู้รับบริการ หรือไม่ทำในสิ่งที่อาจก่อให้เกิดความไม่ปลอดภัยของผู้รับบริการ และไม่แสดงพฤติกรรมเพิกเฉยละทิ้งหน้าที่การให้บริการ เป็นการกระทำที่ครอบคลุมทั้งการปฏิบัติ ท่าที่ คำพูด สีหน้า แววตาที่แสดงต่อผู้รับบริการ พึงปฏิบัติด้วยความเมตตา เห็นใจ และเคารพในความเป็นมนุษย์ของผู้รับบริการ
-การเคารพเอกสิทธิและความเป็นอิสระ คือ สิทธิของผู้รับบริการในการตัดสินใจเลือกและรับผิดชอบกับพฤติกรรมของตนเองโดยที่ผลของพฤติกรรมนั้นไม่ส่งผลกระทบหรือทำให้ผู้อื่นเดือดร้อน สามารถที่จะกำกับตนเองและอิสระที่จะเลือกด้วยตนเองโดยปราศจารการครอบงำจากผู้อื่น แต่ไม่ควรใช้กับผู้ที่ไม่มีความสามารถในการตัดสินใจหรือปกครองชีวิตตนเองได้อย่างเพียงพอ เช่น ผู้ที่ยังไม่บรรลุนิสิตภาวะ ผู้ที่ด้อยสมรรถภาพ ทั้งนี้การไม่พูดความจริง ไม่เปิดเผยผลการรักษา ส่งผลต่อการตัดสินใจในการจะกระทำใด ๆ ถือว่าเป็นสิ่งที่ละเมิดต่อหลักการเคารพเอกสิทธิ
-ความไว้วางใจ คือ ผู้ให้บริการต้องสร้างความน่าไว้วางใจ เคารพข้อตกลง และคำสั่นสัญญาที่มีร่วมกันระหว่างผู้ให้บริการและผู้รับบริการ และให้ถือว่าการเก็บรักษาความลับและข้อตกลงนั้นเป็นหัวใจสำคัญที่เกิดจากความไว้วางใจของผู้รับบริการ ให้จำกัดการเปิดเผยข้อมูลที่เป็นความลับเกี่ยวกับผู้รับบริการให้เป็นไปตามวัตถุประสงค์หรือเงื่อนไขที่ตกลงไว้เบื้องต้น
-ความยุติธรรม คือ ความเป็นธรรม ความเที่ยงธรรม ความไม่ลำเอียง โดยไม่คำนึงถึงอายุ ฐานะ อาชีพ เพศ เชื้อชาติ หรือระดับการศึกษาของผู้รับบริการ ทุกคนได้รับการปฏิบัติอย่างเป็นธรรมและได้รับความเคารพในสิทธิมนุษยชนและศักดิ์ศรี ผู้ให้บริการต้องยึดมั่นความเท่าเทียมและเป็นกลาง ระมัดระวังไม่ให้เกิดอคติ หลีกเลี่ยงการเลือกปฏิบัติ
-ความเคารพตนเอง คือ การที่ผู้ให้บริการดูแลตนเองทั้งเรื่องความรู้ความสามารถ และสุขภาพกายสุขภาพใจ ใช้หลักการทางจริยธรรมอื่น ๆ อย่างเหมาะสมเพื่อสิทธิของตนเองในแง่ของการเงินและค่าตอบแทนที่สมควรได้รับ รวมถึงการขอคำปรึกษา การบำบัด หรือโอกาสอื่น ๆ ในการพัฒนาตนเองตามที่กำหนด มีความรับผิดชอบทางจริยธรรมในการเข้ารับการนิเทศเพื่อส่งเสริมและพัฒนาทางวิชาชีพและชีวิตส่วนตัว รวมถึงแสวงหาการฝึกอบรมและโอกาสอื่น ๆ สำหรับการพัฒนาทางวิชาชีพอย่างต่อเนื่อง
-
-หมวด A สิทธิประโยชน์แก่ผู้รับบริการและการหาประโยชน์โดยไม่ชอบ คือ นักจิตวิทยาต้องเอื้อประโยชน์แก่ผู้รับบริการหรือผู้ที่ปฏิบัติงานด้วย และมีการดูแลป้องกันมิให้เกิดอันตราย ต้องนำมาซึ่งประโยชน์และสิทธิของผู้เกี่ยวข้อง หากมีความขัดแย้งเกิดขึ้นระหว่างหน้าที่รับผิดชอบและสิ่งที่เกี่ยวข้อง นักจิตวิทยาต้องพยายามแก้ไขความขัดแย้งตามแนวทางที่เหมาะสม หลักเลี่ยงหรือลดอันตรายที่อาจจะเกิดจากความคิดเห็นหรือการกระทำในฐานะนักจิตวิทยาที่จะส่งผลต่อบุคคลอื่น และต้องตระหนักว่าสุขภาพกายและใจของตนเองสามารถส่งผลต่อความสามารถในการให้บริการ
-หมวด B ความรับผิดชอบ คือ นักจิตวิทยาพึงสร้างสัมพันธภาพที่น่าไว้วางใจกับผู้รับบริการหรือผู้ที่เกี่ยวข้อง และมีความรับผิดชอบต่อพฤติกรรมของตนเองอย่างเหมาะสม พยายามจัดการควบคุมความขัดแย้งทางผลประโยชน์ที่อาจก่อให้เกิดผลเสียหายหรืออันตราย พึงปรึกษา ส่งต่อ และร่วมมือกับวิชาชีพอื่น ๆ เพื่อผลประโยชน์สูงสุดแก่ผู้รับบริการหรือผู้ที่ปฏิบัติงานด้วย รวมถึงยอมเสียสละเวลาเพื่อให้บริการแก่ผู้ที่ไม่ได้ค่าตอบแทน หรือให้ค่าตอบแทนเพียงเล็กน้อย
-หมวด C ความซื่อสัตย์ คือ นักจิตวิทยาพึงส่งเสริมความซื่อสัตย์สุจริต และความเป็นจริงในการค้นคว้าวิจัย การเรียนการสอน การปฏิบัติงานต่าง ๆ โดยไม่ขโมย หลอกหลวง หรือปลอมแปลงบิดเบือนข้อมูลต่าง ๆ อีกทั้งต้องรักษาสัญญาและไม่โกหกเพื่อประโยชน์สูงสุดของผู้รับบริการ นักจิตวิทยาต้องพิจารณาถึงผลกระทบที่อาจเกิดขึ้นอย่างรอบคอบ
-หมวด D ความยุติธรรม คือ นักจิตวิทยาต้องตระหนักว่าทุกคนมีสิทธิที่จะเข้าถึงและได้ประโยชน์จากวิชาจิตวิทยาอย่างเท่าเทียมกัน พึงใช้การตัดสินใจอย่างเหมาะสมตามหลักวิชาชีพ และระมัดระวังไม่ให้เกิดอคติที่อาจเป็นอุปสรรคต่อการให้บริการ
-หมวด E ความเคารพในสิทธิและศักดิ์ศรี คือ นักจิตวิทยาพึงเคารพศักดิ์ศรีและคุณค่าความเป็นมนุษย์ของทุกคน รวมถึงสิทธิส่วนบุคคลในการรักษาความลับและการตัดสินใจต่าง ๆ ให้คุณค่ากับความแตกต่างทางวัฒนธรรม ปัจเจกชน และบทบาท โดยมุ่งกำจัดอคติที่อาจเกิดขึ้นจากปัจจัยความต่างเหล่านี้
-
-1. ผู้ให้คำปรึกษาควรมีความตระหนักรู้ในตนเอง (self-awareness)
-ก่อนที่เราจะเข้าใจคนอื่น ผู้ให้คำปรึกษาควรเข้าใจตนเองก่อน (พิชาวีร์ เมฆขยาย, 2562) โดยการสำรวจ เรียนรู้ และตกผลึกอย่างลึกซึ้งเกี่ยวกับความสามารถของตนเอง แรงจูงใจในการทำงาน ทัศนคติของตนเอง รวมถึงความรู้สึกของตนขณะให้การปรึกษาอยู่ จะทำให้เราเกิดความตระหนักรู้ในตนเอง เข้าถึงศักยภาพแห่งตน (self-actualized) และเข้าใจตนเองมากยิ่งขึ้น ซึ่งอาจจะช่วยให้เราเข้าใจ และช่วยเหลือผู้เข้ารับการปรึกษาได้มากยิ่งขึ้น
-
-2. ผู้ให้คำปรึกษาควรมีความไวต่อการรับรู้ (sensitivity)
-ประเด็นที่ควรมีความไวต่อการรับรู้ ได้แก่ การรับรู้ในประเด็นของวัฒนธรรม อารมณ์ จุดแข็ง-จุดอ่อนของผู้รับการปรึกษารวมถึงแนวทางการจัดการปัญหา เพราะจะช่วยให้ผู้ให้คำปรึกษาจับประเด็นได้ดียิ่งขึ้น สามารถรักษาสมดุลระหว่างเหตุผลกับความรู้สึกได้ (Learning hub, 2018) เกิดความเข้าใจผู้เข้ารับการปรึกษาได้มากขึ้น และสามารถช่วยเหลือได้อย่างเหมาะสม เช่น ประเด็นด้านศาสนา ในบางศาสนาอาจจะมีข้อปฏิบัติหรือข้อห้ามต่าง ๆ ที่เราไม่สามารถจัดการได้ด้วยข้อปฏิบัติของศาสนาเรา เป็นต้น
-
-3. ผู้ให้คำปรึกษาควรเปิดใจรับสิ่งต่าง ๆ  (Open-mindedness)
-การเปิดใจรับฟังตลอดจนการยอมรับความแตกต่างทั้งด้านการใช้ชีวิต สังคม วัฒนธรรม ความเชื่อ ฐานะทางเศรษฐกิจ รวมถึงพื้นฐานครอบครัว เป็นคุณสมบัติที่สำคัญซึ่งผู้ให้คำปรึกษาไม่ควรยึดติดกับกรอบใดกรอบหนึ่งของตน (พิชาวีร์ เมฆขยาย, 2562) เนื่องจากการช่วยเหลือด้วยวิธีใดวิธีหนึ่งอาจจะไม่ได้เหมาะสมและไม่สามารถใช้ได้กับทุกคน จึงควรพิจารณาเป็นรายบุคคลไป (Learning hub, 2018) หลายครั้งไม่จำเป็นต้องเห็นด้วยกับสิ่งที่ผู้รับการปรึกษาพูด เพียงแต่ต้องเปิดใจรับฟังและชี้ให้เห็นถึงข้อดี-ข้อเสียในประเด็นเหล่านั้น นอกจากนี้ การเปิดใจรับฟังยังจะทำให้ผู้เข้ารับการปรึกษากล้าที่จะพูดเรื่องราวของเขามากขึ้น ไม่กลัวว่าเราจะตัดสินเขา และส่งผลให้เกิดการสื่อสารที่มีประสิทธิภาพและจริงใจมากขึ้น
-
-4.ผู้ให้คำปรึกษาควรมีจรรยาบรรณในการให้คำปรึกษา (Ethics)
-ในการรักษาความเป็นมืออาชีพ และเพื่อให้เกิดประโยชน์สูงสุดต่อผู้เข้ารับการปรึกษา จรรยาบรรณของการให้คำปรึกษาจึงได้ถูกกำหนดขึ้นเพื่อเป็นกรอบแนวทางในการปฏิบัติ เช่น การรักษาความลับโดยไม่เปิดเผยข้อมูลหรือเรื่องราวของผู้เข้ารับการปรึกษาให้ผู้อื่นทราบ หากไม่ได้รับการอนุญาตหรือเป็นคำสั่งศาล (ส่องโสม พึ่งพงศ์ และ ภัทรานุช แสงจันทร์, 2558)  ขณะเดียวกัน หากเราปรึกษาผู้อื่นที่ไม่ใช่ผู้ให้คำปรึกษา ก็จะไม่สามารถแน่ใจได้ว่าเรื่องของเราจะถูกเก็บเป็นความลับหรือไม่ ดังนั้น จรรยาบรรณในการให้คำปรึกษาจึงเป็นส่วนหนึ่งที่ทำให้การรับการปรึกษาจากผู้ให้คำปรึกษานั้นต่างจากการปรึกษากับคนอื่น ๆ 
-`;
+-   **รับฟังอย่างไม่ตัดสิน:** เป็นพื้นที่ปลอดภัยให้ผู้ใช้ได้ระบายความรู้สึก ${personaPrompt}
+-   **ประเมินความเสี่ยง:** หากบทสนทนามีสัญญาณของความเสี่ยงในการทำร้ายตัวเองหรือภาวะซึมเศร้ารุนแรง (เช่น พูดถึงการตาย, สิ้นหวัง, ทำร้ายตัวเอง) **ต้อง** แนะนำให้ติดต่อสายด่วนสุขภาพจิต 1323 ทันที และให้เบอร์โทรนั้นในคำตอบของคุณอย่างชัดเจน
+-   **ข้อจำกัดที่สำคัญ:** **ห้ามวินิจฉัยโรคหรือให้คำแนะนำทางการแพทย์เด็ดขาด** ให้ย้ำเสมอว่าคุณเป็นเพียง AI สำหรับให้คำปรึกษาเบื้องต้นเท่านั้น
+-   **การแนะนำหลังสนทนา:** เมื่อการสนทนาเริ่มคลี่คลายหรือใกล้จบลง ให้ประเมินเนื้อหาและแนะนำแบบประเมินที่เกี่ยวข้องที่สุด (ST-5, 8Q, หรือ PHQ-A) ให้ผู้ใช้ลองทำเพื่อความเข้าใจตนเองมากขึ้น`;
 
             const payload = { contents: [{ role: "model", parts: [{ text: systemPrompt }] }, ...chatHistory] };
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
@@ -618,6 +619,7 @@
                     const aiResponse = result.candidates[0].content.parts[0].text;
                     addMessage('ai', aiResponse);
                     chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                    if(isLoggedIn) localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
                 } else { addMessage('ai', 'ขออภัยครับ มีข้อผิดพลาดบางอย่าง ลองใหม่อีกครั้งนะครับ'); }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
@@ -626,71 +628,172 @@
             }
         }
 
+        function handlePrintChat() {
+            const printableContent = document.getElementById('printable-content');
+            let chatHTML = `<h1 class="text-2xl font-bold font-mitr mb-4">บทสนทนากับทราย</h1><div class="space-y-4">`;
+            chatHistory.forEach(msg => {
+                if(msg.role === 'user' || msg.role === 'model') {
+                    const sender = msg.role === 'user' ? (userProfile.displayName || 'ผู้ใช้งาน') : 'ทราย';
+                    const bubbleClass = msg.role === 'user' ? 'bg-sky-100' : 'bg-slate-100';
+                    chatHTML += `<div class="p-4 rounded-lg ${bubbleClass}"><strong>${sender}:</strong> <p class="whitespace-pre-wrap">${msg.parts[0].text}</p></div>`;
+                }
+            });
+            chatHTML += '</div>';
+            printableContent.innerHTML = chatHTML;
+            window.print();
+        }
+
+        function renderAssessmentList() {
+            const container = assessmentListView.querySelector('.space-y-4');
+            container.innerHTML = `
+                <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-2xl hover:shadow-lg hover:border-sky-300 transition-all duration-300">
+                    <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-mitr text-slate-800">แบบประเมินความเครียด (ST-5)</h3><p class="text-sm text-slate-500">วัดระดับความเครียดในช่วง 2 สัปดาห์ที่ผ่านมา</p></div>
+                    <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button data-id="st5" class="start-btn w-full sm:w-auto bg-sky-500 text-white font-bold py-2 px-6 rounded-xl hover:bg-sky-600">เริ่มทำ</button></div>
+                </div>
+                <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-2xl hover:shadow-lg hover:border-rose-300 transition-all duration-300">
+                    <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-mitr text-slate-800">8Q แบบประเมินการฆ่าตัวตาย</h3><p class="text-sm text-slate-500">ประเมินความคิดและความเสี่ยงในการฆ่าตัวตาย</p></div>
+                    <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button data-id="q8" class="start-btn w-full sm:w-auto bg-rose-500 text-white font-bold py-2 px-6 rounded-xl hover:bg-rose-600">เริ่มทำ</button></div>
+                </div>
+                <div class="group flex flex-col sm:flex-row items-center p-5 border border-slate-200 rounded-2xl hover:shadow-lg hover:border-teal-300 transition-all duration-300">
+                    <div class="flex-grow text-center sm:text-left"><h3 class="font-bold text-lg font-mitr text-slate-800">PHQ-A แบบประเมินซึมเศร้า</h3><p class="text-sm text-slate-500">คัดกรองอาการซึมเศร้าในวัยรุ่น</p></div>
+                    <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-4"><button data-id="phqa" class="start-btn w-full sm:w-auto bg-teal-500 text-white font-bold py-2 px-6 rounded-xl hover:bg-teal-600">เริ่มทำ</button></div>
+                </div>`;
+
+            assessmentListView.querySelectorAll('.start-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => startAssessment(e.target.dataset.id));
+            });
+        }
+
+        function renderHistory() {
+            const content = historyView.querySelector('#history-content');
+            const assessmentHistory = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
+            const savedChatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+
+            content.innerHTML = ''; // Clear previous content
+
+            if (assessmentHistory.length === 0 && savedChatHistory.length === 0) {
+                content.innerHTML = '<p class="text-center text-slate-500">ยังไม่มีประวัติการใช้งาน</p>';
+                return;
+            }
+
+            // Render Assessment History
+            if (assessmentHistory.length > 0) {
+                let assessmentHTML = '<h3 class="text-xl font-bold font-mitr text-slate-700">ประวัติแบบประเมิน</h3><div class="space-y-2">';
+                assessmentHistory.forEach(item => {
+                    assessmentHTML += `<div class="p-3 bg-slate-100 rounded-xl">
+                        <p class="font-semibold">${item.title} - <span class="font-normal">${item.date}</span></p>
+                        <p>ผล: ${item.level} (คะแนน: ${item.score})</p>
+                    </div>`;
+                });
+                assessmentHTML += '</div>';
+                content.innerHTML += assessmentHTML;
+            }
+
+            // Render Chat History
+            if (savedChatHistory.length > 0) {
+                 let chatHTML = '<h3 class="mt-6 text-xl font-bold font-mitr text-slate-700">ประวัติการสนทนาล่าสุด</h3><div class="p-3 bg-slate-100 rounded-xl max-h-60 overflow-y-auto space-y-2">';
+                 savedChatHistory.forEach(msg => {
+                     if(msg.role === 'user' || msg.role === 'model') {
+                        const sender = msg.role === 'user' ? (userProfile.displayName || 'คุณ') : 'พี่ทราย';
+                        chatHTML += `<p><strong>${sender}:</strong> ${msg.parts[0].text}</p>`;
+                     }
+                 });
+                 chatHTML += '</div>';
+                 content.innerHTML += chatHTML;
+            }
+        }
+
         // --- INITIALIZATION & EVENT LISTENERS ---
         function initialize() {
-            // Policy Modal Logic
-            const showPolicy = () => {
-                policyModal.classList.remove('hidden');
-                disabledOverlay.classList.remove('hidden');
-            };
-            const hidePolicy = () => {
-                policyModal.classList.add('hidden');
-                if (!localStorage.getItem('consentGiven')) {
-                    disabledOverlay.classList.remove('hidden');
-                } else {
-                    disabledOverlay.classList.add('hidden');
-                }
-            };
-            const acceptPolicy = () => {
-                localStorage.setItem('consentGiven', 'true');
-                policyModal.classList.add('hidden');
-                disabledOverlay.classList.add('hidden');
-                if (chatMessages.children.length === 0) {
-                     addMessage('ai', 'สวัสดีครับ มีอะไรให้ทรายช่วยไหมครับ? เล่าให้ฟังได้นะ');
-                }
-            };
-            showPolicyBtn.addEventListener('click', showPolicy);
-            openPolicyFromCookieBtn.addEventListener('click', (e) => { e.preventDefault(); showPolicy(); });
-            closePolicyBtn.addEventListener('click', hidePolicy);
-            acceptPolicyBtn.addEventListener('click', acceptPolicy);
+            createPolicyModal();
+            createEmergencyModal();
 
-            // Initial Consent Check
-            if (localStorage.getItem('consentGiven') !== 'true') {
-                showPolicy();
+            // Login & Profile Flow
+            const storedProfile = localStorage.getItem('userProfile');
+            if (storedProfile) {
+                isLoggedIn = true;
+                userProfile = JSON.parse(storedProfile);
+                switchView(landingView);
             } else {
-                if (chatMessages.children.length === 0) {
-                     addMessage('ai', 'สวัสดีครับ มีอะไรให้ทรายช่วยไหมครับ? เล่าให้ฟังได้นะ');
-                }
+                isLoggedIn = false;
+                switchView(loginView);
             }
 
-            // Cookie Banner Logic
-            if (!document.cookie.includes('cookie_consent=true')) {
-                cookieBanner.classList.remove('hidden');
+            document.querySelectorAll('.social-login-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    isLoggedIn = true;
+                    switchView(profileView);
+                });
+            });
+
+            document.getElementById('anonymous-btn').addEventListener('click', () => {
+                isLoggedIn = false;
+                userProfile = { displayName: 'ผู้ใช้งาน', persona: 'listener' }; // Default for anonymous
+                switchView(landingView);
+            });
+
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                userProfile = {
+                    displayName: document.getElementById('displayName').value,
+                    age: document.getElementById('age').value,
+                    gender: document.getElementById('gender').value,
+                    province: document.getElementById('province').value,
+                    persona: document.querySelector('input[name="ai-persona"]:checked').value
+                };
+                localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                switchView(landingView);
+            });
+
+            // Landing View Logic
+             if(isLoggedIn) {
+                document.getElementById('history-btn-container').innerHTML = `<button id="history-btn" class="text-slate-600 underline hover:text-sky-600">ดูประวัติการใช้งาน</button>`;
+                document.getElementById('history-btn').addEventListener('click', () => {
+                    renderHistory();
+                    switchView(historyView);
+                });
             }
-            acceptCookiesBtn.addEventListener('click', () => {
+            document.getElementById('goto-chat-btn').addEventListener('click', () => {
+                chatHistory = isLoggedIn ? JSON.parse(localStorage.getItem('chatHistory')) || [] : [];
+                const chatMessages = chatView.querySelector('#chat-messages');
+                chatMessages.innerHTML = '';
+                if(chatHistory.length === 0) addMessage('ai', `สวัสดีครับคุณ ${userProfile.displayName || 'ผู้ใช้งาน'}, มีอะไรให้พี่ทรายช่วยไหมครับ? เล่าให้พี่ฟังได้นะ`);
+                else chatHistory.forEach(msg => addMessage(msg.role === 'user' ? 'user' : 'ai', msg.parts[0].text));
+                switchView(chatView);
+            });
+            document.getElementById('goto-assessments-btn').addEventListener('click', () => {
+                renderAssessmentList();
+                switchView(assessmentListView);
+            });
+            document.querySelectorAll('.back-to-landing-btn').forEach(btn => btn.addEventListener('click', () => switchView(landingView)));
+
+
+            // Policy Modal Logic
+            const showPolicy = () => { policyModal.classList.remove('hidden'); document.getElementById('disabled-overlay').classList.remove('hidden'); };
+            const hidePolicy = () => { policyModal.classList.add('hidden'); document.getElementById('disabled-overlay').classList.add('hidden'); };
+            document.getElementById('show-policy-btn').addEventListener('click', showPolicy);
+            policyModal.querySelector('#close-policy-btn').addEventListener('click', hidePolicy);
+            policyModal.querySelector('#accept-policy-btn').addEventListener('click', hidePolicy);
+
+            // Cookie Banner
+            cookieBanner.innerHTML = `<p class="text-sm mb-4 sm:mb-0">เว็บไซต์นี้ใช้คุกกี้เพื่อเพิ่มประสบการณ์การใช้งานที่ดีขึ้น การเข้าใช้งานต่อถือว่าท่านยอมรับ<a href="#" id="open-policy-from-cookie" class="underline hover:text-sky-300 ml-1">นโยบายความเป็นส่วนตัว</a>ของเรา</p>
+            <button id="accept-cookies-btn" class="bg-sky-500 text-white font-bold py-2 px-6 rounded-xl hover:bg-sky-600 transition-colors">ยอมรับ</button>`;
+            cookieBanner.querySelector('#open-policy-from-cookie').addEventListener('click', (e) => { e.preventDefault(); showPolicy(); });
+            if (!document.cookie.includes('cookie_consent=true')) cookieBanner.classList.remove('hidden');
+            cookieBanner.querySelector('#accept-cookies-btn').addEventListener('click', () => {
                 document.cookie = "cookie_consent=true; max-age=31536000; path=/";
                 cookieBanner.style.opacity = '0';
                 setTimeout(() => cookieBanner.classList.add('hidden'), 500);
             });
 
             // Emergency Modal
-            emergencyBtn.addEventListener('click', () => emergencyModal.classList.remove('hidden'));
-            hideEmergencyBtn.addEventListener('click', () => emergencyModal.classList.add('hidden'));
-
-            // Assessment Buttons
-            document.getElementById('start-st5-btn').addEventListener('click', () => startAssessment('st5'));
-            document.getElementById('start-q8-btn').addEventListener('click', () => startAssessment('q8'));
-            document.getElementById('start-phqa-btn').addEventListener('click', () => startAssessment('phqa'));
-            document.getElementById('back-to-menu-btn').addEventListener('click', () => switchView(homeView));
-
-            // Navigation & Form
-            prevBtn.addEventListener('click', () => handleNavigation('prev'));
-            nextBtn.addEventListener('click', () => handleNavigation('next'));
-            form.addEventListener('submit', handleFormSubmit);
+            document.getElementById('emergency-btn').addEventListener('click', () => emergencyModal.classList.remove('hidden'));
+            emergencyModal.querySelector('#hide-emergency-btn').addEventListener('click', () => emergencyModal.classList.add('hidden'));
 
             // Chat
-            chatSendBtn.addEventListener('click', handleSendMessage);
-            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
+            chatView.querySelector('#chat-send-btn').addEventListener('click', handleSendMessage);
+            chatView.querySelector('#chat-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
+            chatView.querySelector('#print-chat-btn').addEventListener('click', handlePrintChat);
         }
 
         initialize();
