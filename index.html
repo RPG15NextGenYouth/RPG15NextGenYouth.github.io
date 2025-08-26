@@ -78,67 +78,14 @@
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl no-print">
         <div id="main-container" class="bg-white rounded-3xl shadow-lg p-6 sm:p-8 relative min-h-[600px] overflow-hidden flex flex-col justify-center">
 
-            <!-- Login View -->
-            <div id="loginView" class="card hidden-card">
-                <div class="text-center max-w-sm mx-auto">
-                    <h1 class="text-5xl font-bold text-sky-600 font-mitr">Psych Ai Mental Assessment</h1>
-                    <p class="mt-2 text-slate-500">ยินดีต้อนรับสู่พื้นที่ปลอดภัย</p>
-                    <div class="mt-8 space-y-4">
-                        <button class="social-login-btn w-full bg-rose-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-rose-600 transition-colors">ลงชื่อเข้าใช้ด้วย Gmail</button>
-                        <button class="social-login-btn w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors">ลงชื่อเข้าใช้ด้วย Facebook</button>
-                        <button class="social-login-btn w-full bg-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-teal-600 transition-colors">ลงชื่อเข้าใช้ด้วย Line</button>
-                        <div class="my-4 text-center text-slate-400">หรือ</div>
-                        <button id="anonymous-btn" class="w-full bg-slate-100 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-200 transition-colors">ใช้งานแบบไม่ระบุตัวตน</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Setup View -->
-            <div id="profileView" class="card hidden-card">
-                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-slate-800 font-mitr">สร้างโปรไฟล์ของคุณ</h2>
-                    <p class="mt-2 text-slate-500">ข้อมูลนี้จะช่วยให้ "พี่ทราย" เข้าใจและให้คำปรึกษาได้ดียิ่งขึ้น</p>
-                </div>
-                <form id="profileForm" class="mt-8 max-w-lg mx-auto space-y-4">
-                    <div>
-                        <label for="displayName" class="block text-sm font-medium text-slate-700">ชื่อที่ต้องการให้เรียก</label>
-                        <input type="text" id="displayName" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
-                    </div>
-                    <div>
-                        <label for="age" class="block text-sm font-medium text-slate-700">อายุ</label>
-                        <input type="number" id="age" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
-                    </div>
-                    <div>
-                        <label for="gender" class="block text-sm font-medium text-slate-700">เพศ</label>
-                        <select id="gender" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
-                            <option value="male">ชาย</option>
-                            <option value="female">หญิง</option>
-                            <option value="other">อื่นๆ</option>
-                            <option value="prefer_not_to_say">ไม่ต้องการระบุ</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label for="province" class="block text-sm font-medium text-slate-700">จังหวัด (ไม่บังคับ)</label>
-                        <input type="text" id="province" class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">อยากให้พี่ทรายเป็นผู้ให้คำปรึกษาแบบไหน?</label>
-                        <div class="mt-2 space-y-2">
-                           <label class="flex items-center"><input type="radio" name="ai-persona" value="listener" class="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300" checked> <span class="ml-2 text-slate-700">เป็นผู้รับฟังที่ดี</span></label>
-                           <label class="flex items-center"><input type="radio" name="ai-persona" value="advisor" class="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300"> <span class="ml-2 text-slate-700">เป็นผู้ให้คำแนะนำ</span></label>
-                        </div>
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors shadow">บันทึกและเริ่มใช้งาน</button>
-                    </div>
-                </form>
-            </div>
-
             <!-- Landing View -->
-            <div id="landingView" class="card hidden-card">
+            <div id="landingView" class="card visible-card">
                 <div class="text-center">
                      <h1 class="text-5xl font-bold text-sky-600 font-mitr">Psych Ai Mental Assessment</h1>
-                     <p class="mt-2 text-slate-500 max-w-2xl mx-auto">เลือกบริการที่คุณต้องการ</p>
+                     <div class="mt-4 text-center text-sm text-slate-500 space-y-1">
+                        <p>แอปพลิเคชันชิ้นนี้จัดทำขึ้นเพื่อประกวดโครงงาน เท่ได้ต้องไม่บูลลี่</p>
+                        <p>โครงการ “เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
+                    </div>
                 </div>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <button id="goto-chat-btn" class="text-center p-8 bg-sky-50 rounded-2xl hover:bg-sky-100 hover:shadow-lg transition-all transform hover:-translate-y-1">
@@ -150,10 +97,9 @@
                         <p class="mt-2 text-slate-600">คัดกรองสุขภาพจิตเบื้องต้นด้วยแบบประเมินมาตรฐาน</p>
                     </button>
                 </div>
-                <div id="history-btn-container" class="text-center mt-8"></div>
-                <div class="mt-8 text-center text-xs text-slate-400 space-y-1">
-                    <p>แอปพลิเคชันชิ้นนี้จัดทำขึ้นเพื่อประกวดโครงงาน เท่ได้ต้องไม่บูลลี่ โครงการ “เท่อย่างไทย โดย ไฟ-ฟ้า ทีทีบี”</p>
-                    <p>พัฒนาโดย RPG15 Next Gen Youth Teams โรงเรียนราชประชานุเคราะห์15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
+                <div class="mt-12 text-center text-xs text-slate-400 space-y-1">
+                    <p>พัฒนาโดย RPG15 Next Gen Youth Teams</p>
+                    <p>โรงเรียนราชประชานุเคราะห์15 (เวียงเก่าแสนภูวิทยาประสาท)</p>
                 </div>
             </div>
 
@@ -182,13 +128,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- History View -->
-            <div id="historyView" class="card hidden-card">
-                <button class="back-to-landing-btn absolute top-6 left-6 text-slate-500 hover:text-slate-800 z-10">&larr; กลับ</button>
-                <h2 class="text-3xl text-center font-bold text-slate-800 font-mitr">ประวัติการใช้งาน</h2>
-                <div id="history-content" class="mt-8 space-y-6 overflow-y-auto max-h-[75vh]"></div>
             </div>
 
             <!-- Assessment View -->
@@ -220,12 +159,9 @@
 
         // --- DOM ELEMENTS ---
         const mainContainer = document.getElementById('main-container');
-        const loginView = document.getElementById('loginView');
-        const profileView = document.getElementById('profileView');
         const landingView = document.getElementById('landingView');
         const assessmentListView = document.getElementById('assessmentListView');
         const chatView = document.getElementById('chatView');
-        const historyView = document.getElementById('historyView');
         const assessmentView = document.getElementById('assessmentView');
         const loading = document.getElementById('loading');
         const resultsDiv = document.getElementById('results');
@@ -234,8 +170,6 @@
         const cookieBanner = document.getElementById('cookie-consent-banner');
 
         // --- STATE ---
-        let isLoggedIn = false;
-        let userProfile = {};
         let currentAssessmentId = null;
         let questions = [];
         let currentQuestionIndex = 0;
@@ -243,7 +177,7 @@
         let chatHistory = [];
         let sessionId = generateSessionId();
 
-        // --- ASSESSMENT DATA (Updated with verbatim questions and options) ---
+        // --- ASSESSMENT DATA (Updated with verbatim advice from PDFs) ---
         const assessments = {
             'st5': {
                 title: 'แบบประเมินความเครียด (ST-5)',
@@ -257,10 +191,11 @@
                 ],
                 options: [ { text: 'ไม่เลย', value: 0 }, { text: 'เป็นบางครั้ง', value: 1 }, { text: 'เป็นบ่อย', value: 2 }, { text: 'เป็นประจำ', value: 3 } ],
                 interpretation: (score) => {
-                    if (score <= 4) return { level: 'เครียดน้อย', color: 'teal', advice: 'ท่านมีความเครียดในระดับปกติ สามารถจัดการได้ดีเยี่ยม' };
-                    if (score <= 7) return { level: 'เครียดปานกลาง', color: 'yellow', advice: 'ท่านมีความเครียดปานกลาง ควรหาวิธีผ่อนคลาย เช่น ออกกำลังกาย ทำกิจกรรมที่ชอบ' };
-                    if (score <= 9) return { level: 'เครียดสูง', color: 'orange', advice: 'ท่านมีความเครียดสูง ควรปรึกษาคนใกล้ชิด หรือพูดคุยกับพี่ทรายเพื่อหาทางแก้ไข' };
-                    return { level: 'เครียดรุนแรง', color: 'rose', advice: 'ท่านมีความเครียดในระดับรุนแรงมาก ควรพบแพทย์หรือผู้เชี่ยวชาญเพื่อขอคำปรึกษาโดยด่วน' };
+                    if (score <= 5) return { level: 'เครียดน้อยกว่าปกติ', color: 'teal', advice: 'ท่านมีความเครียดอยู่ในเกณฑ์ที่ต่ำกว่าปกติอย่างมาก ซึ่งอาจหมายความว่าท่านอาจจะตอบคำถามไม่ตรงตามความเป็นจริง หรือเป็นคนที่เฉื่อยชา ขาดแรงจูงใจในการดำเนินชีวิต หรือในขณะนี้มีความพึงพอใจในชีวิตแล้ว' };
+                    if (score <= 8) return { level: 'เครียดปกติ', color: 'teal', advice: 'ท่านมีความเครียดอยู่ในเกณฑ์ปกติซึ่งความเครียดในระดับนี้ถือว่าเป็นประโยชน์ในการดำเนินชีวิตประจำวัน เป็นแรงจูงใจที่จะนำไปสู่ความสำเร็จในชีวิตได้' };
+                    if (score <= 11) return { level: 'เครียดสูงกว่าปกติเล็กน้อย', color: 'yellow', advice: 'ท่านมีความเครียดสูงกว่าปกติเล็กน้อย อาจเป็นเพราะท่านกำลังมีปัญหาบางอย่างและยังไม่สามารถแก้ปัญหาได้ หากท่านรู้จักการผ่อนคลายความเครียดเป็นประจำวัน เช่น ออกกำลังกาย พักผ่อนหย่อนใจ จะช่วยลดความเครียดของท่านเองได้' };
+                    if (score <= 13) return { level: 'เครียดสูงกว่าปกติปานกลาง', color: 'orange', advice: 'ท่านมีความเครียดอยู่ในระดับสูงกว่าปกติปานกลาง ท่านจำเป็นต้องเร่งแก้ปัญหาของท่านโดยเร็วและควรฝึกเทคนิคการคลายเครียดแบบต่างๆ เช่น การฝึกผ่อนคลายกล้ามเนื้อ การฝึกหายใจ การทำสมาธิ' };
+                    return { level: 'เครียดสูงกว่าปกติมาก', color: 'rose', advice: 'ท่านมีความเครียดอยู่ในระดับสูงมาก อาจกำลังประสบปัญหาวิกฤติในชีวิต อาจจำเป็นต้องไปพบผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อปรึกษาปัญหาและขอรับการช่วยเหลือ' };
                 }
             },
             'q8': {
@@ -278,10 +213,10 @@
                 ],
                 options: [ { text: 'ใช่', value: 1 }, { text: 'ไม่ใช่', value: 0 } ],
                 interpretation: (score) => {
-                    if (score === 0) return { level: 'ไม่มีแนวโน้ม', color: 'teal', advice: 'ท่านไม่มีแนวโน้มในการทำร้ายตัวเองในปัจจุบัน แต่หากรู้สึกไม่สบายใจ สามารถพูดคุยกับพี่ทรายได้เสมอ' };
-                    if (score >= 1 && score <= 8) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับน้อย', color: 'yellow', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับน้อย ควรหาเวลาผ่อนคลายและพูดคุยกับคนที่ไว้ใจ หรือปรึกษาพี่ทราย' };
-                    if (score >= 9 && score <= 16) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับปานกลาง', color: 'orange', advice: 'ท่านมีความคิดเกี่ยวกับการทำร้ายตัวเองในระดับปานกลาง ควรปรึกษาผู้เชี่ยวชาญ หรือโทรสายด่วนสุขภาพจิต 1323 โดยเร็ว' };
-                    return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับรุนแรง', color: 'rose', advice: 'ท่านมีความเสี่ยงสูงมากในการทำร้ายตัวเอง กรุณาติดต่อสายด่วนสุขภาพจิต 1323 หรือไปโรงพยาบาลที่ใกล้ที่สุดทันที' };
+                    if (score < 1) return { level: 'ไม่มีแนวโน้ม', color: 'teal', advice: 'ไม่มีแนวโน้มที่จะฆ่าตัวตายในปัจจุบัน' };
+                    if (score <= 8) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับน้อย', color: 'yellow', advice: 'ควรได้รับการดูแลอย่างใกล้ชิดจากญาติ เพื่อเฝ้าระวังพฤติกรรมทำร้ายตนเอง และประเมินปัญหาหรือหาแนวทางช่วยเหลือ' };
+                    if (score <= 16) return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับปานกลาง', color: 'orange', advice: 'ควรได้รับการช่วยเหลือแก้ไขปัญหาทุกข์ใจเร่งด่วน และแนะนำให้ญาติช่วยดูแลจัดการเรื่องอาวุธหรืออุปกรณ์ที่อาจใช้ทำร้ายตนเองได้' };
+                    return { level: 'แนวโน้มที่จะฆ่าตัวตายระดับรุนแรง', color: 'rose', advice: 'มีความเสี่ยงสูงมากต่อการฆ่าตัวตาย ต้องส่งต่อพบจิตแพทย์ทันทีเพื่อประเมินและให้การรักษา' };
                 }
             },
             'phqa': {
@@ -300,11 +235,11 @@
                 ],
                 options: [ { text: 'ไม่มีเลย', value: 0 }, { text: 'มีบางวัน', value: 1 }, { text: 'มีมากกว่า 7 วัน', value: 2 }, { text: 'มีแทบทุกวัน', value: 3 } ],
                  interpretation: (score) => {
-                    if (score <= 4) return { level: 'ไม่มีอาการซึมเศร้า (None-minimal)', color: 'teal', advice: 'สุขภาพจิตของท่านอยู่ในเกณฑ์ปกติ' };
-                    if (score <= 9) return { level: 'มีอาการซึมเศร้าระดับน้อย (Mild)', color: 'yellow', advice: 'ท่านมีอาการซึมเศร้าเล็กน้อย ควรสังเกตอาการตัวเองเพิ่มเติมและหาเวลาผ่อนคลาย' };
-                    if (score <= 14) return { level: 'มีอาการซึมเศร้าระดับปานกลาง (Moderate)', color: 'orange', advice: 'ท่านมีอาการซึมเศร้าในระดับที่ควรให้ความสนใจ ควรปรึกษาผู้เชี่ยวชาญเพื่อรับการประเมินเพิ่มเติม' };
-                    if (score <= 19) return { level: 'มีอาการซึมเศร้าระดับรุนแรง (Moderately Severe)', color: 'rose', advice: 'ท่านมีอาการซึมเศร้าที่น่าเป็นห่วง ควรพบจิตแพทย์เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม' };
-                    return { level: 'มีอาการซึมเศร้าระดับรุนแรงมาก (Severe)', color: 'rose', advice: 'ท่านมีอาการซึมเศร้ารุนแรงมากและมีความเสี่ยงสูง ควรพบจิตแพทย์โดยด่วนที่สุด' };
+                    if (score <= 4) return { level: 'ไม่มีภาวะซึมเศร้า', color: 'teal', advice: 'ขณะนี้ยังไม่พบภาวะซึมเศร้าที่ชัดเจน' };
+                    if (score <= 9) return { level: 'มีภาวะซึมเศร้าเล็กน้อย', color: 'yellow', advice: 'ควรหากิจกรรมที่ช่วยผ่อนคลายอารมณ์ หรือปรึกษาบุคคลใกล้ชิดที่ไว้ใจ' };
+                    if (score <= 14) return { level: 'มีภาวะซึมเศร้าปานกลาง', color: 'orange', advice: 'ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษา' };
+                    if (score <= 19) return { level: 'มีภาวะซึมเศร้ามาก', color: 'rose', advice: 'ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษาโดยเร็ว' };
+                    return { level: 'มีภาวะซึมเศร้ารุนแรง', color: 'rose', advice: 'ควรปรึกษาแพทย์ เพื่อวินิจฉัยและบำบัดรักษาโดยด่วนที่สุด' };
                 }
             }
         };
@@ -330,8 +265,8 @@
                             <div>
                                 <h3 class="font-bold font-mitr text-teal-700 text-lg">นโยบายความเป็นส่วนตัว</h3>
                                 <ul class="list-disc pl-5 mt-2 space-y-1">
-                                    <li><b>ข้อมูลที่เราจัดเก็บ:</b> หากท่านใช้งานแบบล็อกอิน เราจะจัดเก็บข้อมูลโปรไฟล์, ผลการประเมิน, และบทสนทนาเพื่อแสดงในหน้าประวัติ หากใช้งานแบบไม่ระบุตัวตน ข้อมูลจะถูกลบเมื่อสิ้นสุดการใช้งาน</li>
-                                    <li><b>วัตถุประสงค์การเก็บข้อมูล:</b> เพื่อแสดงประวัติการใช้งานและพัฒนาประสิทธิภาพของโครงการและ AI เท่านั้น</li>
+                                    <li><b>ข้อมูลที่เราจัดเก็บ:</b> เราใช้คุกกี้เพื่อการทำงานของเว็บไซต์เท่านั้น ไม่มีการเก็บข้อมูลส่วนบุคคลใดๆ หากท่านไม่ลงชื่อเข้าใช้</li>
+                                    <li><b>วัตถุประสงค์การเก็บข้อมูล:</b> เพื่อพัฒนาประสิทธิภาพของโครงการและ AI เท่านั้น</li>
                                     <li><b>การติดต่อ:</b> หากมีข้อสงสัย สามารถติดต่อผู้พัฒนาได้ที่ [email protected]</li>
                                 </ul>
                             </div>
@@ -364,11 +299,11 @@
         function generateSessionId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
         function switchView(viewToShow) {
-            [loginView, profileView, landingView, assessmentListView, chatView, historyView, assessmentView, loading, resultsDiv].forEach(view => {
+            [landingView, assessmentListView, chatView, assessmentView, loading, resultsDiv].forEach(view => {
                 view.classList.toggle('visible-card', view === viewToShow);
                 view.classList.toggle('hidden-card', view !== viewToShow);
             });
-             mainContainer.classList.toggle('justify-center', [loginView, profileView, landingView].includes(viewToShow));
+             mainContainer.classList.toggle('justify-center', viewToShow === landingView);
         }
 
         function startAssessment(id) {
@@ -510,11 +445,12 @@
                         <p class="mt-2 text-slate-600">${advice}</p>
                     </div>
                     <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button id="ask-ai-advice-btn" class="w-full text-center bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors shadow">ขอคำแนะนำเบื้องต้นจากพี่ทราย</button>
                         <a href="tel:1323" class="w-full text-center bg-rose-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-rose-600 transition-colors shadow">โทรสายด่วนสุขภาพจิต 1323</a>
-                        <a href="https://www.facebook.com/share/1CkKUYL78t/" target="_blank" class="w-full text-center bg-sky-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-sky-600 transition-colors shadow">ปรึกษาทาง Facebook</a>
                         <button id="back-to-menu-results-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-xl hover:bg-slate-300 transition-colors">กลับหน้าหลัก</button>
                         <button id="print-results-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-700 transition-colors">พิมพ์ผล</button>
                     </div>
+                    <p class="mt-6 text-xs text-slate-400">หมายเหตุ: คุณสามารถบันทึกหรือพิมพ์ผลการประเมินนี้เพื่อนำไปปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิตต่อไปได้</p>
                 </div>`;
             switchView(resultsDiv);
             resultsDiv.querySelector('#back-to-menu-results-btn').addEventListener('click', () => switchView(landingView));
@@ -523,10 +459,13 @@
                 printableContent.innerHTML = resultsDiv.innerHTML;
                 window.print();
             });
+            resultsDiv.querySelector('#ask-ai-advice-btn').addEventListener('click', () => {
+                getAiAdviceOnResults(id, score, level, advice);
+            });
         }
 
         async function submitDataToGoogleSheet(assessmentId, score, level) {
-            const data = { timestamp: new Date().toISOString(), sessionId, assessment: assessmentId, score, level, ...userProfile };
+            const data = { timestamp: new Date().toISOString(), sessionId, assessment: assessmentId, score, level };
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
             } catch (error) { console.error('Error submitting data:', error); }
@@ -548,12 +487,6 @@
 
             const score = calculateScore();
             const interpretation = assessments[currentAssessmentId].interpretation(score);
-
-            if(isLoggedIn) {
-                const history = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
-                history.push({ id: currentAssessmentId, title: assessments[currentAssessmentId].title, score, level: interpretation.level, date: new Date().toLocaleString('th-TH') });
-                localStorage.setItem('assessmentHistory', JSON.stringify(history));
-            }
 
             await submitDataToGoogleSheet(currentAssessmentId, score, interpretation.level);
             setTimeout(() => displayResults(currentAssessmentId, score, interpretation), 1000);
@@ -586,6 +519,21 @@
             if (indicator) indicator.remove();
         }
 
+        async function getAiAdviceOnResults(id, score, level, advice) {
+            const chatMessages = chatView.querySelector('#chat-messages');
+            chatMessages.innerHTML = ''; // Clear previous chat
+            chatHistory = [];
+
+            const userPrompt = `พี่ทรายครับ ผมเพิ่งทำแบบประเมิน "${assessments[id].title}" ได้ผลลัพธ์คือ "${level}" (คะแนน ${score}) ซึ่งมีคำแนะนำเบื้องต้นว่า "${advice}" พี่ทรายพอจะช่วยอธิบายเพิ่มเติม หรือให้คำแนะนำอะไรผมเพิ่มเติมได้บ้างไหมครับ`;
+
+            addMessage('user', userPrompt);
+            showThinkingIndicator();
+            switchView(chatView);
+
+            chatHistory.push({ role: "user", parts: [{ text: userPrompt }] });
+            await sendMessageToAI();
+        }
+
         async function handleSendMessage() {
             const chatInput = chatView.querySelector('#chat-input');
             const userInput = chatInput.value.trim();
@@ -594,8 +542,10 @@
             chatInput.value = '';
             showThinkingIndicator();
             chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+            await sendMessageToAI();
+        }
 
-            const personaPrompt = userProfile.persona === 'listener' ? 'โดยเน้นการเป็นผู้รับฟังที่ดีและสะท้อนความรู้สึก' : 'โดยเน้นการให้คำแนะนำและแนวทางแก้ไขปัญหาที่เป็นรูปธรรม';
+        async function sendMessageToAI() {
             const systemPrompt = `คุณคือ "ทราย" เป็น AI Peer Advisor เพศชาย ที่มีความเห็นอกเห็นใจ เป็นมิตร และใช้ภาษาไทยกึ่งทางการที่อบอุ่นเหมือนคุยกับรุ่นพี่ที่ไว้ใจ คุณต้องแทนตัวเองว่า "พี่" และลงท้ายด้วย "ครับ" เสมอ คุณต้องปฏิบัติตามกรอบจรรยาบรรณสากลของผู้ให้บริการด้านสุขภาพจิตอย่างเคร่งครัด:
 1.  **ยึดประโยชน์ของผู้ใช้และไม่ก่ออันตราย:** เป้าหมายสูงสุดของคุณคือการช่วยเหลือและเอื้อประโยชน์แก่ผู้ใช้งาน ต้องระมัดระวังและหลีกเลี่ยงการกระทำที่อาจก่อให้เกิดอันตราย
 2.  **มีความรับผิดชอบและสร้างความไว้วางใจ:** สร้างสัมพันธภาพที่น่าไว้วางใจ และตระหนักถึงข้อจำกัดในฐานะ AI
@@ -603,7 +553,7 @@
 4.  **มีความยุติธรรม:** ให้บริการทุกคนอย่างเท่าเทียม ปราศจากอคติ
 5.  **เคารพในสิทธิและศักดิ์ศรี:** เคารพในความเป็นส่วนตัว, การรักษาความลับ, และสิทธิ์ในการตัดสินใจของผู้ใช้งาน
 ภารกิจหลักของคุณคือ:
--   **รับฟังอย่างไม่ตัดสิน:** เป็นพื้นที่ปลอดภัยให้ผู้ใช้ได้ระบายความรู้สึก ${personaPrompt}
+-   **รับฟังอย่างไม่ตัดสิน:** เป็นพื้นที่ปลอดภัยให้ผู้ใช้ได้ระบายความรู้สึก
 -   **ประเมินความเสี่ยง:** หากบทสนทนามีสัญญาณของความเสี่ยงในการทำร้ายตัวเองหรือภาวะซึมเศร้ารุนแรง (เช่น พูดถึงการตาย, สิ้นหวัง, ทำร้ายตัวเอง) **ต้อง** แนะนำให้ติดต่อสายด่วนสุขภาพจิต 1323 ทันที และให้เบอร์โทรนั้นในคำตอบของคุณอย่างชัดเจน
 -   **ข้อจำกัดที่สำคัญ:** **ห้ามวินิจฉัยโรคหรือให้คำแนะนำทางการแพทย์เด็ดขาด** ให้ย้ำเสมอว่าคุณเป็นเพียง AI สำหรับให้คำปรึกษาเบื้องต้นเท่านั้น
 -   **การแนะนำหลังสนทนา:** เมื่อการสนทนาเริ่มคลี่คลายหรือใกล้จบลง ให้ประเมินเนื้อหาและแนะนำแบบประเมินที่เกี่ยวข้องที่สุด (ST-5, 8Q, หรือ PHQ-A) ให้ผู้ใช้ลองทำเพื่อความเข้าใจตนเองมากขึ้น`;
@@ -619,7 +569,6 @@
                     const aiResponse = result.candidates[0].content.parts[0].text;
                     addMessage('ai', aiResponse);
                     chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
-                    if(isLoggedIn) localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
                 } else { addMessage('ai', 'ขออภัยครับ มีข้อผิดพลาดบางอย่าง ลองใหม่อีกครั้งนะครับ'); }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
@@ -633,7 +582,7 @@
             let chatHTML = `<h1 class="text-2xl font-bold font-mitr mb-4">บทสนทนากับทราย</h1><div class="space-y-4">`;
             chatHistory.forEach(msg => {
                 if(msg.role === 'user' || msg.role === 'model') {
-                    const sender = msg.role === 'user' ? (userProfile.displayName || 'ผู้ใช้งาน') : 'ทราย';
+                    const sender = msg.role === 'user' ? 'ผู้ใช้งาน' : 'ทราย';
                     const bubbleClass = msg.role === 'user' ? 'bg-sky-100' : 'bg-slate-100';
                     chatHTML += `<div class="p-4 rounded-lg ${bubbleClass}"><strong>${sender}:</strong> <p class="whitespace-pre-wrap">${msg.parts[0].text}</p></div>`;
                 }
@@ -664,101 +613,19 @@
             });
         }
 
-        function renderHistory() {
-            const content = historyView.querySelector('#history-content');
-            const assessmentHistory = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
-            const savedChatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-
-            content.innerHTML = ''; // Clear previous content
-
-            if (assessmentHistory.length === 0 && savedChatHistory.length === 0) {
-                content.innerHTML = '<p class="text-center text-slate-500">ยังไม่มีประวัติการใช้งาน</p>';
-                return;
-            }
-
-            // Render Assessment History
-            if (assessmentHistory.length > 0) {
-                let assessmentHTML = '<h3 class="text-xl font-bold font-mitr text-slate-700">ประวัติแบบประเมิน</h3><div class="space-y-2">';
-                assessmentHistory.forEach(item => {
-                    assessmentHTML += `<div class="p-3 bg-slate-100 rounded-xl">
-                        <p class="font-semibold">${item.title} - <span class="font-normal">${item.date}</span></p>
-                        <p>ผล: ${item.level} (คะแนน: ${item.score})</p>
-                    </div>`;
-                });
-                assessmentHTML += '</div>';
-                content.innerHTML += assessmentHTML;
-            }
-
-            // Render Chat History
-            if (savedChatHistory.length > 0) {
-                 let chatHTML = '<h3 class="mt-6 text-xl font-bold font-mitr text-slate-700">ประวัติการสนทนาล่าสุด</h3><div class="p-3 bg-slate-100 rounded-xl max-h-60 overflow-y-auto space-y-2">';
-                 savedChatHistory.forEach(msg => {
-                     if(msg.role === 'user' || msg.role === 'model') {
-                        const sender = msg.role === 'user' ? (userProfile.displayName || 'คุณ') : 'พี่ทราย';
-                        chatHTML += `<p><strong>${sender}:</strong> ${msg.parts[0].text}</p>`;
-                     }
-                 });
-                 chatHTML += '</div>';
-                 content.innerHTML += chatHTML;
-            }
-        }
-
         // --- INITIALIZATION & EVENT LISTENERS ---
         function initialize() {
             createPolicyModal();
             createEmergencyModal();
 
-            // Login & Profile Flow
-            const storedProfile = localStorage.getItem('userProfile');
-            if (storedProfile) {
-                isLoggedIn = true;
-                userProfile = JSON.parse(storedProfile);
-                switchView(landingView);
-            } else {
-                isLoggedIn = false;
-                switchView(loginView);
-            }
-
-            document.querySelectorAll('.social-login-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    isLoggedIn = true;
-                    switchView(profileView);
-                });
-            });
-
-            document.getElementById('anonymous-btn').addEventListener('click', () => {
-                isLoggedIn = false;
-                userProfile = { displayName: 'ผู้ใช้งาน', persona: 'listener' }; // Default for anonymous
-                switchView(landingView);
-            });
-
-            document.getElementById('profileForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                userProfile = {
-                    displayName: document.getElementById('displayName').value,
-                    age: document.getElementById('age').value,
-                    gender: document.getElementById('gender').value,
-                    province: document.getElementById('province').value,
-                    persona: document.querySelector('input[name="ai-persona"]:checked').value
-                };
-                localStorage.setItem('userProfile', JSON.stringify(userProfile));
-                switchView(landingView);
-            });
+            switchView(landingView);
 
             // Landing View Logic
-             if(isLoggedIn) {
-                document.getElementById('history-btn-container').innerHTML = `<button id="history-btn" class="text-slate-600 underline hover:text-sky-600">ดูประวัติการใช้งาน</button>`;
-                document.getElementById('history-btn').addEventListener('click', () => {
-                    renderHistory();
-                    switchView(historyView);
-                });
-            }
             document.getElementById('goto-chat-btn').addEventListener('click', () => {
-                chatHistory = isLoggedIn ? JSON.parse(localStorage.getItem('chatHistory')) || [] : [];
+                chatHistory = [];
                 const chatMessages = chatView.querySelector('#chat-messages');
                 chatMessages.innerHTML = '';
-                if(chatHistory.length === 0) addMessage('ai', `สวัสดีครับคุณ ${userProfile.displayName || 'ผู้ใช้งาน'}, มีอะไรให้พี่ทรายช่วยไหมครับ? เล่าให้พี่ฟังได้นะ`);
-                else chatHistory.forEach(msg => addMessage(msg.role === 'user' ? 'user' : 'ai', msg.parts[0].text));
+                addMessage('ai', `สวัสดีครับ มีอะไรให้พี่ทรายช่วยไหมครับ? เล่าให้พี่ฟังได้นะ`);
                 switchView(chatView);
             });
             document.getElementById('goto-assessments-btn').addEventListener('click', () => {
@@ -766,7 +633,6 @@
                 switchView(assessmentListView);
             });
             document.querySelectorAll('.back-to-landing-btn').forEach(btn => btn.addEventListener('click', () => switchView(landingView)));
-
 
             // Policy Modal Logic
             const showPolicy = () => { policyModal.classList.remove('hidden'); document.getElementById('disabled-overlay').classList.remove('hidden'); };
